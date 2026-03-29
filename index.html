@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0e1a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MasterAI">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="BIST Hisse & Endeks AI Trading Botu">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="https://via.placeholder.com/180/ffd700/0a0e1a?text=MA">
+<title>Master AI Trading</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0a0e1a; --bg2:#111827; --bg3:#1a2235; --border:#1e2d45;
+  --green:#00e676; --red:#ff1744; --gold:#ffd700; --blue:#2979ff;
+  --purple:#aa00ff; --orange:#ff6d00; --cyan:#00e5ff;
+  --text:#e2e8f0; --muted:#64748b;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px;overflow-x:hidden;min-height:100vh;}
+/* HEADER */
+.header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;}
+.header-left{display:flex;align-items:center;gap:12px;}
+.logo{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--gold);letter-spacing:1px;}
+.ticker-badge{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:4px 10px;display:flex;align-items:center;gap:8px;}
+.ticker-name{font-weight:700;font-size:14px;color:var(--cyan);}
+.ticker-price{font-size:16px;font-weight:700;}
+.ticker-change{font-size:11px;}
+.price-up{color:var(--green);}
+.price-dn{color:var(--red);}
+.header-right{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+.status-dot.offline{background:var(--red);animation:none;}
+.kv-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);title:"KV Bağlantı";}
+.kv-dot.ok{background:var(--cyan);}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(1.3);}}
+/* TAB BAR */
+.tab-bar{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);padding:0 10px;overflow-x:auto;}
+.tab{padding:10px 16px;font-size:12px;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;}
+.tab.active{border-bottom:3px solid var(--gold);color:var(--gold);font-weight:700;}
+/* TAB CONTENT */
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+/* SETTINGS PANEL */
+.settings-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;align-items:center;justify-content:center;}
+.settings-overlay.open{display:flex;}
+.settings-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px;width:min(560px,95vw);max-height:90vh;overflow-y:auto;}
+.settings-box h2{font-family:'Space Grotesk',sans-serif;color:var(--gold);margin-bottom:16px;font-size:18px;}
+.settings-group{margin-bottom:14px;}
+.settings-group label{display:block;color:var(--muted);font-size:11px;margin-bottom:4px;}
+.settings-group input,.settings-group select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:var(--text);font-family:inherit;font-size:12px;}
+.settings-group input[type=checkbox]{width:auto;}
+.settings-row{display:flex;gap:12px;}
+.settings-row .settings-group{flex:1;}
+.btn{background:var(--gold);color:#000;border:none;border-radius:6px;padding:8px 16px;font-family:'Space Grotesk',sans-serif;font-weight:700;cursor:pointer;font-size:12px;}
+.btn.secondary{background:var(--bg3);color:var(--text);border:1px solid var(--border);}
+.btn-row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+/* LAYOUT */
+.main{padding:10px;display:grid;gap:10px;}
+/* SYMBOL BAR */
+.symbol-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.symbol-bar input{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:8px 12px;color:var(--text);font-family:inherit;font-size:13px;width:110px;text-transform:uppercase;}
+.symbol-bar select{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:var(--text);font-family:inherit;font-size:12px;}
+.analyze-btn{background:var(--blue);color:#fff;border:none;border-radius:6px;padding:8px 16px;font-family:'Space Grotesk',sans-serif;font-weight:600;cursor:pointer;font-size:13px;white-space:nowrap;}
+.multi-tf-btn{background:var(--purple);color:#fff;border:none;border-radius:6px;padding:8px 16px;font-family:'Space Grotesk',sans-serif;font-weight:600;cursor:pointer;font-size:13px;white-space:nowrap;}
+/* WATCHLIST */
+.watchlist-grid{display:flex;gap:6px;flex-wrap:wrap;}
+.watch-chip{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:4px 10px;cursor:pointer;font-size:11px;transition:all .2s;}
+.watch-chip:hover{border-color:var(--cyan);color:var(--cyan);}
+.watch-chip.active{background:var(--blue);border-color:var(--blue);color:#fff;}
+/* CHART */
+.chart-container{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.chart-header{padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px;}
+.chart-title{font-family:'Space Grotesk',sans-serif;font-weight:600;}
+.chart-meta{display:flex;gap:10px;font-size:10px;color:var(--muted);flex-wrap:wrap;}
+.chart-legend-item{display:flex;align-items:center;gap:4px;}
+.legend-line{width:16px;height:2px;border-radius:1px;}
+canvas#mainChart{width:100%;display:block;}
+canvas#volumeChart{width:100%;display:block;}
+/* PANELS */
+.panels-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;}
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.panel-header{padding:8px 12px;border-bottom:1px solid var(--border);font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:12px;display:flex;align-items:center;justify-content:space-between;}
+.panel-body{padding:0;}
+/* TABLE */
+.data-table{width:100%;border-collapse:collapse;}
+.data-table td,.data-table th{padding:6px 12px;border-bottom:1px solid rgba(30,45,69,.5);font-size:11px;}
+.data-table td:first-child,.data-table th:first-child{color:var(--muted);}
+.data-table td:last-child,.data-table th:last-child{text-align:right;font-weight:600;}
+.data-table tr:last-child td,.data-table tr:last-child th{border-bottom:none;}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;}
+.badge-green{background:rgba(0,230,118,.15);color:var(--green);border:1px solid rgba(0,230,118,.3);}
+.badge-red{background:rgba(255,23,68,.15);color:var(--red);border:1px solid rgba(255,23,68,.3);}
+.badge-gold{background:rgba(255,215,0,.15);color:var(--gold);border:1px solid rgba(255,215,0,.3);}
+.badge-gray{background:rgba(100,116,139,.15);color:var(--muted);border:1px solid rgba(100,116,139,.3);}
+/* AGENT GRID */
+.agent-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);}
+.agent-cell{background:var(--bg2);padding:8px 6px;text-align:center;}
+.agent-cell .agent-name{font-size:10px;color:var(--muted);margin-bottom:2px;}
+.agent-cell .agent-pnl{font-size:12px;font-weight:700;}
+/* SIGNAL LOG */
+.signal-log{max-height:280px;overflow-y:auto;}
+.signal-item{padding:8px 12px;border-bottom:1px solid rgba(30,45,69,.4);display:flex;gap:8px;align-items:flex-start;}
+.signal-item:last-child{border-bottom:none;}
+.signal-time{color:var(--muted);font-size:10px;white-space:nowrap;}
+.signal-body{flex:1;}
+.signal-title{font-weight:700;font-size:11px;}
+.signal-detail{color:var(--muted);font-size:10px;margin-top:2px;line-height:1.4;}
+.sig-buy{color:var(--green);}
+.sig-sell{color:var(--red);}
+.sig-master{color:var(--gold);}
+/* MASTER */
+.consensus-bar{height:8px;border-radius:4px;background:var(--bg3);margin:4px 0 8px;overflow:hidden;}
+.consensus-fill{height:100%;border-radius:4px;transition:width .5s;}
+.price-state-big{padding:10px 12px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;text-align:center;border-radius:6px;margin:8px 12px;}
+/* TOAST */
+.toast-container{position:fixed;top:60px;right:12px;z-index:999;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.toast{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;min-width:240px;max-width:320px;pointer-events:all;animation:slideIn .3s ease;box-shadow:0 8px 24px rgba(0,0,0,.6);}
+.toast.buy{border-left:3px solid var(--green);}
+.toast.sell{border-left:3px solid var(--red);}
+.toast.master{border-left:3px solid var(--gold);}
+.toast.info{border-left:3px solid var(--cyan);}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0;}to{transform:translateX(0);opacity:1;}}
+.toast-title{font-weight:700;font-size:12px;margin-bottom:4px;}
+.toast-body{font-size:11px;color:var(--muted);line-height:1.4;}
+/* LOADING */
+.loading-overlay{position:absolute;inset:0;background:rgba(10,14,26,.8);display:flex;align-items:center;justify-content:center;border-radius:10px;z-index:10;}
+.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+/* QUANTUM BARS */
+.quantum-bars{padding:8px 12px 4px;}
+.qbar-row{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.qbar-label{width:64px;font-size:10px;color:var(--muted);}
+.qbar-track{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;}
+.qbar-fill{height:100%;border-radius:3px;transition:width .5s;}
+.qbar-val{width:36px;text-align:right;font-size:10px;font-weight:600;}
+/* KV SYNC BANNER */
+.kv-banner{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:11px;display:flex;align-items:center;gap:8px;}
+.kv-banner.synced{border-color:var(--cyan);color:var(--cyan);}
+.kv-banner.syncing{border-color:var(--gold);}
+.kv-banner.error{border-color:var(--red);color:var(--red);}
+/* PWA INSTALL BANNER */
+.pwa-banner{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:2px solid var(--gold);padding:16px;z-index:500;align-items:center;gap:12px;}
+.pwa-banner.show{display:flex;}
+/* WATCHLIST MODAL */
+.watchlist-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:400;align-items:center;justify-content:center;}
+.watchlist-modal.open{display:flex;}
+.watchlist-modal .modal-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px;width:min(520px,95vw);max-height:85vh;overflow-y:auto;}
+/* MULTI MODAL */
+.multi-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:300;align-items:center;justify-content:center;}
+.multi-modal.open{display:flex;}
+.multi-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;width:min(520px,95vw);max-height:85vh;overflow-y:auto;padding:20px;}
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+/* RESPONSIVE */
+@media(max-width:600px){
+  .header{padding:8px 10px;}
+  .header-right .btn{display:none;}
+  .main{padding:8px;}
+  .panels-grid{grid-template-columns:1fr;}
+  .symbol-bar{gap:6px;}
+}
+/* SAFE AREA (iPhone notch) */
+@supports(padding:env(safe-area-inset-bottom)){
+  .pwa-banner{padding-bottom:calc(16px + env(safe-area-inset-bottom));}
+  body{padding-bottom:env(safe-area-inset-bottom);}
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════ HEADER ════════════ -->
+<div class="header">
+  <div class="header-left">
+    <div class="logo">⚡ MASTER AI</div>
+    <div class="ticker-badge">
+      <span class="ticker-name" id="hdr-ticker">KONTR</span>
+      <span class="ticker-price" id="hdr-price">—</span>
+      <span class="ticker-change" id="hdr-change"></span>
+    </div>
+  </div>
+  <div class="header-right">
+    <div title="Veri bağlantısı" class="status-dot" id="statusDot"></div>
+    <div title="KV Bulut Sync" class="kv-dot" id="kvDot"></div>
+    <button class="btn secondary" onclick="openSettings()" style="padding:5px 10px">⚙</button>
+    <button onclick="showPWAGuide()" class="btn secondary" style="padding:5px 10px">📲</button>
+    <button onclick="toggleTheme()" class="btn secondary" style="padding:5px 10px" id="themeBtn">🌙</button>
+    <button onclick="forceKVSync()" class="btn secondary" style="padding:5px 10px" title="Bulut Sync">☁</button>
+  </div>
+</div>
+
+<!-- ════════════ TAB BAR ════════════ -->
+<div class="tab-bar">
+  <div class="tab active" onclick="switchTab(0)" id="tab0">Ana Ekran</div>
+  <div class="tab" onclick="switchTab(1)" id="tab1">📌 Pozisyonlar</div>
+  <div class="tab" onclick="switchTab(2)" id="tab2">🛎 Bildirimler</div>
+  <div class="tab" onclick="switchTab(3)" id="tab3">📅 Bugün</div>
+  <div class="tab" onclick="switchTab(4)" id="tab4">🤖 Groq AI</div>
+  <div class="tab" onclick="switchTab(5)" id="tab5">☁ Bulut</div>
+</div>
+
+<!-- ════════════ MAIN ════════════ -->
+<div class="main">
+
+<!-- ── TAB 0: ANA EKRAN ── -->
+<div class="tab-content active" id="content0">
+  <div class="symbol-bar">
+    <input type="text" id="symbolInput" value="XU100" placeholder="Sembol" />
+    <select id="tfSelect">
+      <option value="1m">1D</option>
+      <option value="15m">15D</option>
+      <option value="30m">30D</option>
+      <option value="1h">1Sa</option>
+      <option value="2h" selected>2Sa</option>
+      <option value="4h">4Sa</option>
+      <option value="1d">1G</option>
+    </select>
+    <button class="analyze-btn" id="analyzeBtn" onclick="analyzeSymbol()">▶ Analiz Et</button>
+    <button class="multi-tf-btn" onclick="startMultiTFScan()">🔍 Multi TF</button>
+    <button id="liveScanBtn" onclick="toggleLiveScan()" class="multi-tf-btn" style="background:var(--orange)">🔄 Canlı Tara</button>
+    <button onclick="exportSignalsCSV()" class="multi-tf-btn" style="background:var(--cyan);color:#000;">📤 CSV</button>
+    <span id="lastUpdate" style="font-size:10px;color:var(--muted);"></span>
+  </div>
+
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;">
+    <div style="font-size:10px;color:var(--muted);margin-bottom:6px;">TAKİP LİSTESİ — Tıkla → Analiz Et</div>
+    <div class="watchlist-grid" id="watchlistGrid"></div>
+  </div>
+
+  <div class="chart-container" style="position:relative;">
+    <div id="chartLoading" class="loading-overlay" style="display:none;"><div class="spinner"></div></div>
+    <div class="chart-header">
+      <div>
+        <span class="chart-title" id="chartTitle">XU100 — 2Sa</span>
+        <span style="margin-left:8px;font-size:10px;" id="priceStateBadge"></span>
+      </div>
+      <div class="chart-meta">
+        <span class="chart-legend-item"><span class="legend-line" style="background:#ff6d00;"></span>TMA</span>
+        <span class="chart-legend-item"><span class="legend-line" style="background:#fff;"></span>Bantlar</span>
+        <span class="chart-legend-item"><span class="legend-line" style="background:#00e5ff;"></span>ST</span>
+        <span class="chart-legend-item"><span class="legend-line" style="background:#ffd700;"></span>Stop</span>
+        <button onclick="screenshotChart()" style="background:var(--gold);color:#000;border:none;border-radius:4px;padding:2px 8px;font-size:10px;">📸</button>
+      </div>
+    </div>
+    <canvas id="mainChart" height="420"></canvas>
+    <canvas id="volumeChart" height="80"></canvas>
+  </div>
+
+  <div class="panels-grid">
+    <!-- Master AI -->
+    <div class="panel">
+      <div class="panel-header" style="color:var(--gold);">👑 Master AI <span id="masterPosBadge" class="badge badge-gray">YOK</span></div>
+      <div class="panel-body">
+        <table class="data-table" id="masterTable">
+          <tr><td>Sembol</td><td id="mt-ticker">—</td></tr>
+          <tr><td>Consensus Buy</td><td id="mt-cbuy">—</td></tr>
+          <tr><td>Consensus Sell</td><td id="mt-csell">—</td></tr>
+          <tr><td>Dyn Buy Th</td><td id="mt-dbt">—</td></tr>
+          <tr><td>Dyn Sell Th</td><td id="mt-dst">—</td></tr>
+          <tr><td>Toplam PnL %</td><td id="mt-pnl">—</td></tr>
+        </table>
+        <div style="padding:4px 12px 0;">
+          <div style="font-size:10px;color:var(--muted);">Buy Consensus</div>
+          <div class="consensus-bar"><div class="consensus-fill" id="buyConsBar" style="background:var(--green);width:0%"></div></div>
+          <div style="font-size:10px;color:var(--muted);">Sell Consensus</div>
+          <div class="consensus-bar"><div class="consensus-fill" id="sellConsBar" style="background:var(--red);width:0%"></div></div>
+        </div>
+        <div class="price-state-big" id="priceStateBig" style="background:var(--bg3);">—</div>
+      </div>
+    </div>
+
+    <!-- Sistem 1 -->
+    <div class="panel">
+      <div class="panel-header" style="color:var(--cyan);">🔷 Sistem 1 — ST+TMA <span id="sys1PosBadge" class="badge badge-gray">YOK</span></div>
+      <div class="panel-body">
+        <table class="data-table">
+          <tr><td>Sembol</td><td id="s1-ticker">—</td></tr>
+          <tr><td>Toplam AL</td><td id="s1-al">—</td></tr>
+          <tr><td>Toplam SAT</td><td id="s1-sat">—</td></tr>
+          <tr><td>Kârlı/Zararlı</td><td id="s1-kz">—</td></tr>
+          <tr><td>Toplam %</td><td id="s1-pnl">—</td></tr>
+          <tr><td>Fiyat Durumu</td><td id="s1-fd">—</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Sistem 2 -->
+    <div class="panel">
+      <div class="panel-header" style="color:var(--blue);">🔵 Sistem 2 — PRO <span id="sys2PosBadge" class="badge badge-gray">YOK</span></div>
+      <div class="panel-body">
+        <table class="data-table">
+          <tr><td>Sembol</td><td id="s2-ticker">—</td></tr>
+          <tr><td>Toplam AL</td><td id="s2-al">—</td></tr>
+          <tr><td>Toplam SAT</td><td id="s2-sat">—</td></tr>
+          <tr><td>Kârlı/Zararlı</td><td id="s2-kz">—</td></tr>
+          <tr><td>Toplam %</td><td id="s2-pnl">—</td></tr>
+          <tr><td>PRO Score</td><td id="s2-score">—</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Fusion -->
+    <div class="panel">
+      <div class="panel-header" style="color:var(--green);">⚡ Fusion <span id="fusionPosBadge" class="badge badge-gray">YOK</span></div>
+      <div class="panel-body">
+        <table class="data-table">
+          <tr><td>Sembol</td><td id="fs-ticker">—</td></tr>
+          <tr><td>Toplam AL</td><td id="fs-al">—</td></tr>
+          <tr><td>Toplam SAT</td><td id="fs-sat">—</td></tr>
+          <tr><td>Kârlı/Zararlı</td><td id="fs-kz">—</td></tr>
+          <tr><td>Toplam %</td><td id="fs-pnl">—</td></tr>
+          <tr><td>Durum</td><td id="fs-fd">—</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Quantum + NN -->
+    <div class="panel">
+      <div class="panel-header" style="color:var(--purple);">🔮 Quantum + NN</div>
+      <div class="panel-body">
+        <div class="quantum-bars" id="quantumBars">
+          <div class="qbar-row"><div class="qbar-label">Çok Ucuz</div><div class="qbar-track"><div class="qbar-fill" id="qb0" style="background:var(--green);width:0%"></div></div><div class="qbar-val" id="qv0">0%</div></div>
+          <div class="qbar-row"><div class="qbar-label">Ucuz</div><div class="qbar-track"><div class="qbar-fill" id="qb1" style="background:#76ff03;width:0%"></div></div><div class="qbar-val" id="qv1">0%</div></div>
+          <div class="qbar-row"><div class="qbar-label">Normal</div><div class="qbar-track"><div class="qbar-fill" id="qb2" style="background:var(--orange);width:0%"></div></div><div class="qbar-val" id="qv2">0%</div></div>
+          <div class="qbar-row"><div class="qbar-label">Pahalı</div><div class="qbar-track"><div class="qbar-fill" id="qb3" style="background:var(--red);width:0%"></div></div><div class="qbar-val" id="qv3">0%</div></div>
+          <div class="qbar-row"><div class="qbar-label">Çok Pahalı</div><div class="qbar-track"><div class="qbar-fill" id="qb4" style="background:#b71c1c;width:0%"></div></div><div class="qbar-val" id="qv4">0%</div></div>
+        </div>
+        <table class="data-table">
+          <tr><td>Quantum Prob</td><td id="q-prob">—</td></tr>
+          <tr><td>NN Forecast</td><td id="q-nn">—</td></tr>
+          <tr><td>Fused Prob</td><td id="q-fused">—</td></tr>
+          <tr><td>ADX</td><td id="q-adx">—</td></tr>
+          <tr><td>Z-Score</td><td id="q-zscore">—</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Agentlar -->
+    <div class="panel">
+      <div class="panel-header" style="color:var(--orange);">🤖 Bağımsız Agentlar</div>
+      <div class="panel-body">
+        <div class="agent-grid" id="agentGrid">
+          <div class="agent-cell"><div class="agent-name">A60</div><div class="agent-pnl" id="ag-60">—</div></div>
+          <div class="agent-cell"><div class="agent-name">A61</div><div class="agent-pnl" id="ag-61">—</div></div>
+          <div class="agent-cell"><div class="agent-name">A62</div><div class="agent-pnl" id="ag-62">—</div></div>
+          <div class="agent-cell"><div class="agent-name">A81</div><div class="agent-pnl" id="ag-81">—</div></div>
+          <div class="agent-cell"><div class="agent-name">A120</div><div class="agent-pnl" id="ag-120">—</div></div>
+        </div>
+        <table class="data-table" style="margin-top:1px;">
+          <tr><td>En İyi Agent</td><td id="ba-name" style="color:var(--gold);">—</td></tr>
+          <tr><td>AL / SAT</td><td id="ba-als">—</td></tr>
+          <tr><td>Kârlı/Zararlı</td><td id="ba-kz">—</td></tr>
+          <tr><td>Toplam %</td><td id="ba-pnl">—</td></tr>
+          <tr><td>Pozisyon</td><td id="ba-pos">—</td></tr>
+          <tr><td>Reputation</td><td id="ba-rep">—</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Açık Pozisyonlar -->
+    <div class="panel">
+      <div class="panel-header" style="color:var(--cyan);">📌 Açık Pozisyonlar</div>
+      <div class="panel-body">
+        <table class="data-table" id="openPosTable"></table>
+      </div>
+    </div>
+  </div><!-- /panels-grid -->
+
+  <div class="panel">
+    <div class="panel-header">📋 Sinyal Geçmişi <button class="btn secondary" onclick="clearSignals()" style="padding:2px 8px;font-size:10px;">Temizle</button></div>
+    <div class="signal-log" id="signalLog"></div>
+  </div>
+</div>
+
+<!-- ── TAB 1: POZİSYONLAR ── -->
+<div class="tab-content" id="content1">
+  <h2 style="color:var(--gold);padding:10px 0 8px;">📌 Tüm Açık Pozisyonlar</h2>
+  <table class="data-table" id="allOpenPosTable"></table>
+</div>
+
+<!-- ── TAB 2: BİLDİRİMLER ── -->
+<div class="tab-content" id="content2">
+  <h2 style="color:var(--gold);padding:10px 0 8px;">🛎 Bildirim Geçmişi</h2>
+  <div id="notificationLog" class="signal-log"></div>
+</div>
+
+<!-- ── TAB 3: BUGÜN ── -->
+<div class="tab-content" id="content3">
+  <h2 style="color:var(--gold);padding:10px 0 8px;">📅 Bugün Oluşan Sinyaller</h2>
+  <div id="dailySignalLog" class="signal-log"></div>
+</div>
+
+<!-- ── TAB 4: GROQ AI ── -->
+<div class="tab-content" id="content4">
+  <h2 style="color:var(--gold);padding:10px 0 8px;">🤖 Groq Llama 3.1 AI Asistanı</h2>
+  <div id="aiChatContainer" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px;height:calc(100vh - 200px);display:flex;flex-direction:column;">
+    <div id="aiMessages" style="flex:1;overflow-y:auto;margin-bottom:12px;display:flex;flex-direction:column;gap:8px;"></div>
+    <div style="display:flex;gap:8px;">
+      <input id="aiInput" placeholder="KONTR al mı? Risk nedir? Teknik analiz ver..." style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;color:var(--text);font-family:inherit;font-size:12px;" onkeydown="if(event.key==='Enter')sendToGroq()">
+      <button onclick="sendToGroq()" class="btn" style="background:var(--purple);">Gönder</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TAB 5: BULUT ── -->
+<div class="tab-content" id="content5">
+  <h2 style="color:var(--gold);padding:10px 0 8px;">☁ Cloudflare KV — Bulut Senkronizasyon</h2>
+  <div style="display:grid;gap:12px;">
+    <div class="kv-banner" id="kvStatusBanner">
+      <span>⏳ KV bağlantısı kontrol ediliyor...</span>
+    </div>
+    <div class="panel">
+      <div class="panel-header">Cihaz Kimliği (UID)</div>
+      <div class="panel-body" style="padding:12px;">
+        <p style="color:var(--muted);font-size:11px;margin-bottom:8px;">Aynı UID'yi farklı cihazlarda kullanarak verilerinizi senkronize edebilirsiniz.</p>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input id="uidInput" style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px;color:var(--text);font-family:inherit;" placeholder="örn: telefon1">
+          <button class="btn" onclick="saveUID()">Kaydet</button>
+          <button class="btn secondary" onclick="generateUID()">🎲 Oluştur</button>
+        </div>
+        <p style="color:var(--muted);font-size:10px;margin-top:6px;">Mevcut UID: <strong id="currentUID" style="color:var(--cyan);"></strong></p>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-header">Sync Durumu</div>
+      <div class="panel-body" style="padding:12px;">
+        <table class="data-table">
+          <tr><td>Son Sinyal Sync</td><td id="kv-lastSignalSync">—</td></tr>
+          <tr><td>Son Ayar Sync</td><td id="kv-lastSettingSync">—</td></tr>
+          <tr><td>Son Pozisyon Sync</td><td id="kv-lastPosSync">—</td></tr>
+          <tr><td>Toplam Sinyal</td><td id="kv-signalCount">—</td></tr>
+          <tr><td>Açık Pozisyon</td><td id="kv-posCount">—</td></tr>
+        </table>
+        <div class="btn-row" style="margin-top:12px;">
+          <button class="btn" onclick="kvPushAll()">☁ Tümünü Yükle</button>
+          <button class="btn secondary" onclick="kvPullAll()">⬇ Tümünü İndir</button>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-header">Worker URL Ayarı</div>
+      <div class="panel-body" style="padding:12px;">
+        <p style="color:var(--muted);font-size:11px;margin-bottom:8px;">Cloudflare Worker URL'nizi girin (Ayarlar → Worker URL veya buradan):</p>
+        <div style="display:flex;gap:8px;">
+          <input id="workerUrlInput" style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px;color:var(--text);font-family:inherit;font-size:11px;" placeholder="https://masterai-proxy.KULLANICIADINIZ.workers.dev">
+          <button class="btn" onclick="saveWorkerUrl()">Kaydet</button>
+        </div>
+        <button class="btn secondary" onclick="testWorker()" style="margin-top:8px;">🔍 Worker Test Et</button>
+        <div id="workerTestResult" style="margin-top:8px;font-size:11px;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<!-- ════════ WATCHLIST MODAL ════════ -->
+<div class="watchlist-modal" id="watchlistModal">
+  <div class="modal-box">
+    <h2 style="color:var(--gold);">⚡ Hoş Geldiniz — İlk Kurulum</h2>
+    <p style="color:var(--muted);margin-bottom:16px;font-size:12px;">Takip etmek istediğin hisseleri gir (virgülle ayır):</p>
+    <input type="text" id="initialWatchlist" value="KONTR,THYAO,GARAN,ASELS,EREGL,KCHOL,SAHOL,SISE,TUPRS,YKBNK,XU100" style="width:100%;padding:12px;margin-bottom:12px;border:1px solid var(--border);background:var(--bg3);color:var(--text);border-radius:6px;font-family:inherit;">
+    <p style="color:var(--muted);font-size:11px;margin-bottom:8px;">Cloudflare Worker URL (Render'dan geçiş yapıyorsan yeni URL gir):</p>
+    <input type="text" id="initialWorkerUrl" value="" placeholder="https://masterai-proxy.xxx.workers.dev" style="width:100%;padding:12px;margin-bottom:16px;border:1px solid var(--border);background:var(--bg3);color:var(--text);border-radius:6px;font-family:inherit;font-size:11px;">
+    <div class="btn-row">
+      <button class="btn" onclick="saveInitialWatchlist()">🚀 Başla</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ SETTINGS OVERLAY ════════ -->
+<div class="settings-overlay" id="settingsOverlay">
+  <div class="settings-box">
+    <h2>⚙ Ayarlar</h2>
+    <div class="settings-group">
+      <label>Cloudflare Worker URL (Proxy)</label>
+      <input type="text" id="s_workerUrl" placeholder="https://masterai-proxy.xxx.workers.dev" />
+    </div>
+    <div class="settings-group">
+      <label>Telegram Bot Token</label>
+      <input type="text" id="tgToken" placeholder="123456789:AAF..." />
+    </div>
+    <div class="settings-group">
+      <label>Telegram Chat ID</label>
+      <input type="text" id="tgChatId" placeholder="-100123456789" />
+    </div>
+    <div class="settings-group">
+      <label>Groq API Key (Llama 3.1)</label>
+      <input type="text" id="groqApiKey" placeholder="gsk_..." />
+    </div>
+    <div class="settings-group">
+      <label>Veri Yenileme (saniye)</label>
+      <input type="number" id="refreshSec" value="60" min="30" max="300" />
+    </div>
+    <div class="settings-group">
+      <label>Telegram Özet Aralığı</label>
+      <select id="s_summaryInterval">
+        <option value="900">15 dakika</option>
+        <option value="1800" selected>30 dakika</option>
+        <option value="3600">1 saat</option>
+        <option value="7200">2 saat</option>
+      </select>
+    </div>
+    <div class="settings-row">
+      <div class="settings-group"><label>Master Buy Th</label><input type="number" id="s_masterBuyTh" value="0.7" step="0.05" min="0.5" max="1.0" /></div>
+      <div class="settings-group"><label>Master Sell Th</label><input type="number" id="s_masterSellTh" value="0.3" step="0.05" min="0.0" max="0.5" /></div>
+    </div>
+    <div class="settings-row">
+      <div class="settings-group"><label>Fusion Buy Th</label><input type="number" id="s_fusionBuyTh" value="0.8" step="0.05" min="0.5" max="1.0" /></div>
+      <div class="settings-group"><label>ADX Minimum</label><input type="number" id="s_adxMin" value="25" min="10" max="50" /></div>
+    </div>
+    <div class="settings-group">
+      <label style="font-weight:700;color:var(--gold);">Sistem / Agent Etkin</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;font-size:11px;background:var(--bg3);padding:8px;border-radius:6px;">
+        <label><input type="checkbox" id="enableSys1" checked> Sistem 1</label>
+        <label><input type="checkbox" id="enableSys2" checked> Sistem 2</label>
+        <label><input type="checkbox" id="enableFusion" checked> Fusion</label>
+        <label><input type="checkbox" id="enableMaster" checked> Master AI</label>
+        <label><input type="checkbox" id="enableAgents" checked> 5 Agent</label>
+      </div>
+    </div>
+    <div class="settings-group">
+      <label>Takip Listesi (virgülle)</label>
+      <input type="text" id="s_watchlist" value="KONTR,THYAO,GARAN,ASELS,EREGL,KCHOL,SAHOL,SISE,TUPRS,YKBNK,XU100,XU050,XU030,XBANK" />
+    </div>
+    <div class="settings-group" style="display:flex;align-items:center;gap:8px;">
+      <input type="checkbox" id="s_notifications" checked />
+      <label style="display:inline;margin:0;color:var(--text);">Tarayıcı Bildirimleri</label>
+    </div>
+    <div class="btn-row">
+      <button class="btn" onclick="saveSettings()">💾 Kaydet</button>
+      <button class="btn secondary" onclick="testTelegram()">📱 TG Test</button>
+      <button class="btn secondary" onclick="closeSettings()">İptal</button>
+      <button class="btn secondary" onclick="exportSettings()">📤 İndir</button>
+      <button class="btn secondary" onclick="importSettings()">📥 Yükle</button>
+    </div>
+    <div id="settingsMsg" style="margin-top:8px;font-size:11px;"></div>
+  </div>
+</div>
+
+<!-- ════════ PWA INSTALL BANNER ════════ -->
+<div class="pwa-banner" id="pwaBanner">
+  <div style="font-size:20px;">⚡</div>
+  <div style="flex:1;">
+    <div style="font-weight:700;font-size:13px;color:var(--gold);">Ana Ekrana Ekle</div>
+    <div style="font-size:11px;color:var(--muted);">PWA olarak kur, ağsız çalışır & bildirim alırsın</div>
+  </div>
+  <button class="btn" id="pwaInstallBtn" style="font-size:12px;">Kur</button>
+  <button onclick="document.getElementById('pwaBanner').classList.remove('show')" class="btn secondary" style="font-size:12px;">✕</button>
+</div>
+
+<!-- ════════ TOAST CONTAINER ════════ -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   MASTER AI TRADING v2.5 — Cloudflare Worker + KV Edition
+   ═══════════════════════════════════════════════════════════════ */
+
+// ── Varsayılan Yapılandırma ──────────────────────────────────────
+let CFG = {
+  workerUrl:      'https://screener-zpl5.onrender.com', // başlangıç: Render (sonra Worker ile değiştir)
+  tgToken:        '',
+  tgChatId:       '',
+  groqApiKey:     '',
+  refreshSec:     60,
+  notifications:  true,
+  masterBuyTh:    0.7,
+  masterSellTh:   0.3,
+  fusionBuyTh:    0.8,
+  adxMin:         25,
+  enableSys1:     true,
+  enableSys2:     true,
+  enableFusion:   true,
+  enableMaster:   true,
+  enableAgents:   true,
+  summaryInterval:1800,
+  watchlist:      ['KONTR','THYAO','GARAN','ASELS','EREGL','KCHOL','SAHOL','SISE','TUPRS','YKBNK','XU100'],
+  theme:          'dark',
+};
+
+// ── State ────────────────────────────────────────────────────────
+let currentResult   = null;
+let allSignals      = {};
+let notificationLog = [];
+let dailySignals    = [];
+let openPositions   = {};
+let backgroundInterval    = null;
+let summaryIntervalTimer  = null;
+let lastSummaryTime = 0;
+let isLiveScanning  = false;
+let activeTab       = 0;
+let currentTheme    = 'dark';
+let deviceUID       = '';
+let kvSyncEnabled   = false;
+const LIVE_TFS      = ['15m','30m','1h','2h','4h','1d'];
+
+// KV sync zamanları
+const kvSync = { signals: null, settings: null, positions: null };
+
+// ── Cihaz UID ────────────────────────────────────────────────────
+function getDeviceUID() {
+  let uid = localStorage.getItem('masterai_uid');
+  if (!uid) {
+    uid = 'dev_' + Math.random().toString(36).slice(2, 10);
+    localStorage.setItem('masterai_uid', uid);
+  }
+  return uid;
+}
+
+function generateUID() {
+  const uid = 'dev_' + Math.random().toString(36).slice(2, 10);
+  document.getElementById('uidInput').value = uid;
+}
+
+function saveUID() {
+  const uid = document.getElementById('uidInput').value.trim();
+  if (!uid) return;
+  localStorage.setItem('masterai_uid', uid);
+  deviceUID = uid;
+  document.getElementById('currentUID').textContent = uid;
+  showToast('UID Güncellendi', uid, 'info');
+  kvPullAll();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  KV — Cloudflare Workers KV Senkronizasyon
+// ═══════════════════════════════════════════════════════════════
+
+function kvWorkerUrl() {
+  return CFG.workerUrl ? CFG.workerUrl.replace(/\/$/, '') : '';
+}
+
+async function kvPush(endpoint, data) {
+  const base = kvWorkerUrl();
+  if (!base) return false;
+  try {
+    const r = await fetch(`${base}/kv/${endpoint}?uid=${deviceUID}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    return r.ok;
+  } catch (_) { return false; }
+}
+
+async function kvPull(endpoint) {
+  const base = kvWorkerUrl();
+  if (!base) return null;
+  try {
+    const r = await fetch(`${base}/kv/${endpoint}?uid=${deviceUID}`);
+    if (!r.ok) return null;
+    return await r.json();
+  } catch (_) { return null; }
+}
+
+async function kvPushAll() {
+  setKVDot('syncing');
+  showToast('KV Sync', 'Veriler buluta yükleniyor...', 'info');
+  const ok1 = await kvPush('signals',  allSignals);
+  const ok2 = await kvPush('settings', CFG);
+  const ok3 = await kvPush('positions',openPositions);
+  const now  = new Date().toLocaleTimeString('tr-TR');
+  if (ok1) { kvSync.signals  = now; document.getElementById('kv-lastSignalSync').textContent = now; }
+  if (ok2) { kvSync.settings = now; document.getElementById('kv-lastSettingSync').textContent = now; }
+  if (ok3) { kvSync.positions= now; document.getElementById('kv-lastPosSync').textContent = now; }
+  setKVDot(ok1 && ok2 && ok3 ? 'ok' : 'error');
+  updateKVStats();
+  showToast('KV Sync', ok1 ? '✅ Buluta yüklendi' : '❌ Yükleme başarısız', ok1 ? 'info' : 'sell');
+}
+
+async function kvPullAll() {
+  setKVDot('syncing');
+  const sig = await kvPull('signals');
+  const set = await kvPull('settings');
+  const pos = await kvPull('positions');
+  const now  = new Date().toLocaleTimeString('tr-TR');
+  if (sig && Object.keys(sig).length) {
+    allSignals = sig;
+    saveLocal('masterai_signals', allSignals);
+    kvSync.signals = now;
+  }
+  if (set && Object.keys(set).length) {
+    Object.assign(CFG, set);
+    saveLocal('masterai_cfg', CFG);
+    kvSync.settings = now;
+  }
+  if (pos && Object.keys(pos).length) {
+    openPositions = pos;
+    kvSync.positions = now;
+  }
+  document.getElementById('kv-lastSignalSync').textContent  = kvSync.signals  || '—';
+  document.getElementById('kv-lastSettingSync').textContent = kvSync.settings || '—';
+  document.getElementById('kv-lastPosSync').textContent     = kvSync.positions|| '—';
+  setKVDot(sig || set || pos ? 'ok' : 'error');
+  updateKVStats();
+  showToast('KV Sync', '⬇ Buluttan indirildi', 'info');
+}
+
+async function forceKVSync() {
+  await kvPushAll();
+}
+
+function setKVDot(state) {
+  const dot = document.getElementById('kvDot');
+  dot.className = 'kv-dot' + (state === 'ok' ? ' ok' : '');
+  const banner = document.getElementById('kvStatusBanner');
+  if (banner) {
+    banner.className = 'kv-banner ' + state;
+    if (state === 'ok')       banner.innerHTML = '<span>✅ KV bağlantısı aktif — veriler buluta kaydediliyor</span>';
+    else if (state === 'error') banner.innerHTML = '<span>❌ KV bağlantısı başarısız — Worker URL\'yi kontrol et</span>';
+    else banner.innerHTML = '<span>⏳ KV senkronize ediliyor...</span>';
+  }
+}
+
+function updateKVStats() {
+  const sigCount = Object.values(allSignals).reduce((s, a) => s + a.length, 0);
+  const posCount = Object.keys(openPositions).length;
+  const el1 = document.getElementById('kv-signalCount');
+  const el2 = document.getElementById('kv-posCount');
+  if (el1) el1.textContent = sigCount;
+  if (el2) el2.textContent = posCount;
+}
+
+async function testWorker() {
+  const url = document.getElementById('workerUrlInput')?.value?.trim() || kvWorkerUrl();
+  const res  = document.getElementById('workerTestResult');
+  if (!res) return;
+  res.textContent = '⏳ Test ediliyor...';
+  try {
+    const r = await fetch(url + '/');
+    const d = await r.json();
+    res.textContent = '✅ ' + (d.message || 'Worker aktif');
+    res.style.color = 'var(--green)';
+  } catch (e) {
+    res.textContent = '❌ Bağlantı başarısız: ' + e.message;
+    res.style.color = 'var(--red)';
+  }
+}
+
+function saveWorkerUrl() {
+  const url = document.getElementById('workerUrlInput')?.value?.trim();
+  if (!url) return;
+  CFG.workerUrl = url;
+  saveLocal('masterai_cfg', CFG);
+  showToast('Worker URL', 'Kaydedildi: ' + url, 'info');
+  testWorker();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  LOCAL STORAGE yardımcıları
+// ═══════════════════════════════════════════════════════════════
+function saveLocal(key, data) {
+  try { localStorage.setItem(key, JSON.stringify(data)); } catch(e){}
+}
+function loadLocal(key) {
+  try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch(e){ return null; }
+}
+
+function saveAllSignals() {
+  saveLocal('masterai_signals', allSignals);
+  // KV'ye async push (hata olursa sessizce geç)
+  kvPush('signals', allSignals).catch(() => {});
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SETTINGS
+// ═══════════════════════════════════════════════════════════════
+function loadSettings() {
+  const s = loadLocal('masterai_cfg') || {};
+  Object.assign(CFG, s);
+  document.getElementById('s_workerUrl').value      = CFG.workerUrl || '';
+  document.getElementById('tgToken').value          = CFG.tgToken || '';
+  document.getElementById('tgChatId').value         = CFG.tgChatId || '';
+  document.getElementById('groqApiKey').value       = CFG.groqApiKey || '';
+  document.getElementById('refreshSec').value       = CFG.refreshSec || 60;
+  document.getElementById('s_masterBuyTh').value    = CFG.masterBuyTh || 0.7;
+  document.getElementById('s_masterSellTh').value   = CFG.masterSellTh || 0.3;
+  document.getElementById('s_fusionBuyTh').value    = CFG.fusionBuyTh || 0.8;
+  document.getElementById('s_adxMin').value         = CFG.adxMin || 25;
+  document.getElementById('s_notifications').checked= CFG.notifications !== false;
+  document.getElementById('enableSys1').checked     = CFG.enableSys1 !== false;
+  document.getElementById('enableSys2').checked     = CFG.enableSys2 !== false;
+  document.getElementById('enableFusion').checked   = CFG.enableFusion !== false;
+  document.getElementById('enableMaster').checked   = CFG.enableMaster !== false;
+  document.getElementById('enableAgents').checked   = CFG.enableAgents !== false;
+  document.getElementById('s_summaryInterval').value= CFG.summaryInterval || 1800;
+  document.getElementById('s_watchlist').value      = CFG.watchlist.join(',');
+  currentTheme = CFG.theme || 'dark';
+  applyTheme();
+}
+
+function saveSettings() {
+  CFG.workerUrl      = document.getElementById('s_workerUrl').value.trim();
+  CFG.tgToken        = document.getElementById('tgToken').value.trim();
+  CFG.tgChatId       = document.getElementById('tgChatId').value.trim();
+  CFG.groqApiKey     = document.getElementById('groqApiKey').value.trim();
+  CFG.refreshSec     = +document.getElementById('refreshSec').value;
+  CFG.masterBuyTh    = +document.getElementById('s_masterBuyTh').value;
+  CFG.masterSellTh   = +document.getElementById('s_masterSellTh').value;
+  CFG.fusionBuyTh    = +document.getElementById('s_fusionBuyTh').value;
+  CFG.adxMin         = +document.getElementById('s_adxMin').value;
+  CFG.notifications  = document.getElementById('s_notifications').checked;
+  CFG.enableSys1     = document.getElementById('enableSys1').checked;
+  CFG.enableSys2     = document.getElementById('enableSys2').checked;
+  CFG.enableFusion   = document.getElementById('enableFusion').checked;
+  CFG.enableMaster   = document.getElementById('enableMaster').checked;
+  CFG.enableAgents   = document.getElementById('enableAgents').checked;
+  CFG.summaryInterval= +document.getElementById('s_summaryInterval').value;
+  CFG.watchlist      = document.getElementById('s_watchlist').value.split(',').map(s=>s.trim().toUpperCase()).filter(Boolean);
+  CFG.theme          = currentTheme;
+  saveLocal('masterai_cfg', CFG);
+  document.getElementById('settingsMsg').innerHTML = '<span style="color:var(--green)">✓ Kaydedildi</span>';
+  renderWatchlist();
+  // KV'ye de push et
+  kvPush('settings', CFG).catch(() => {});
+  if (summaryIntervalTimer) clearInterval(summaryIntervalTimer);
+  summaryIntervalTimer = setInterval(sendPeriodicSummary, CFG.summaryInterval * 1000);
+  setTimeout(closeSettings, 1000);
+}
+
+function openSettings()  { loadSettings(); document.getElementById('settingsOverlay').classList.add('open'); }
+function closeSettings() { document.getElementById('settingsOverlay').classList.remove('open'); }
+
+function exportSettings() {
+  const blob = new Blob([JSON.stringify(CFG,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='masterai_settings.json'; a.click();
+}
+function importSettings() {
+  const inp=document.createElement('input'); inp.type='file'; inp.accept='.json';
+  inp.onchange=e=>{ const r=new FileReader(); r.onload=ev=>{Object.assign(CFG,JSON.parse(ev.target.result)); saveLocal('masterai_cfg',CFG); loadSettings(); renderWatchlist(); alert('✅ Yüklendi!'); }; r.readAsText(e.target.files[0]); };
+  inp.click();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  VERİ ÇEKME
+// ═══════════════════════════════════════════════════════════════
+const PROXY_URL = () => CFG.workerUrl || 'https://screener-zpl5.onrender.com';
+
+async function fetchOHLCV(sym, tf) {
+  let yahooInterval='60m', resampleFactor=1;
+  switch(tf) {
+    case '1m':  yahooInterval='1m';  resampleFactor=1; break;
+    case '15m': yahooInterval='15m'; resampleFactor=1; break;
+    case '30m': yahooInterval='30m'; resampleFactor=1; break;
+    case '1h':  yahooInterval='60m'; resampleFactor=1; break;
+    case '2h':  yahooInterval='60m'; resampleFactor=2; break;
+    case '4h':  yahooInterval='60m'; resampleFactor=4; break;
+    case '1d':  yahooInterval='1d';  resampleFactor=1; break;
+  }
+  const url=`${PROXY_URL()}/yahoo?symbol=${sym}&interval=${yahooInterval}&range=2y`;
+  const res=await fetch(url,{headers:{'Accept':'application/json'}});
+  if(!res.ok) throw new Error(`HTTP ${res.status}`);
+  const data=await res.json();
+  const result=data.chart?.result?.[0];
+  if(!result||!result.timestamp) throw new Error('Geçersiz veri');
+  const ts=result.timestamp, q=result.indicators.quote[0];
+  let bars=ts.map((t,i)=>({t:t*1000,o:q.open[i],h:q.high[i],l:q.low[i],c:q.close[i],v:q.volume[i]||0}))
+    .filter(b=>b.o!=null&&b.h!=null&&b.l!=null&&b.c!=null);
+  if(bars.length<60) throw new Error('Yeterli veri yok');
+  if(resampleFactor>1) bars=resample(bars,resampleFactor);
+  return bars;
+}
+
+function resample(bars,n) {
+  const out=[];
+  for(let i=0;i<bars.length;i+=n){
+    const ch=bars.slice(i,i+n); if(!ch.length) continue;
+    out.push({t:ch[0].t,o:ch[0].o,h:Math.max(...ch.map(b=>b.h)),l:Math.min(...ch.map(b=>b.l)),c:ch[ch.length-1].c,v:ch.reduce((a,b)=>a+b.v,0)});
+  }
+  return out;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  İNDİKATÖRLER
+// ═══════════════════════════════════════════════════════════════
+function sma(a,l){return a.map((_,i)=>{if(i<l-1)return null;let s=0;for(let j=i-l+1;j<=i;j++)s+=a[j];return s/l;});}
+function ema(a,l){const k=2/(l+1);const o=[];let e=null;for(let i=0;i<a.length;i++){if(a[i]===null){o.push(null);continue;}if(e===null)e=a[i];else e=a[i]*k+e*(1-k);o.push(e);}return o;}
+function atr(bars,l){const tr=bars.map((b,i)=>i===0?b.h-b.l:Math.max(b.h-b.l,Math.abs(b.h-bars[i-1].c),Math.abs(b.l-bars[i-1].c)));return sma(tr,l);}
+function stdev(a,l){return a.map((_,i)=>{if(i<l-1)return null;const sl=a.slice(i-l+1,i+1).filter(v=>v!==null);if(!sl.length)return null;const m=sl.reduce((a,b)=>a+b,0)/sl.length;return Math.sqrt(sl.reduce((a,b)=>a+(b-m)**2,0)/sl.length);});}
+function highest(a,l){return a.map((_,i)=>i<l-1?null:Math.max(...a.slice(i-l+1,i+1).filter(v=>v!==null)));}
+function lowest(a,l){return a.map((_,i)=>i<l-1?null:Math.min(...a.slice(i-l+1,i+1).filter(v=>v!==null)));}
+function percentileLinear(a,l,p){return a.map((_,i)=>{if(i<l-1)return null;const sl=[...a.slice(i-l+1,i+1).filter(v=>v!==null)].sort((a,b)=>a-b);const idx=(p/100)*(sl.length-1);const lo=Math.floor(idx),hi=Math.ceil(idx);return sl[lo]+(sl[hi]-sl[lo])*(idx-lo);});}
+function rsi(c,l){const o=[];for(let i=0;i<c.length;i++){if(i<l){o.push(null);continue;}let g=0,ls=0;for(let j=i-l+1;j<=i;j++){const d=c[j]-c[j-1];if(d>=0)g+=d;else ls-=d;}const ag=g/l,al=ls/l;o.push(al===0?100:100-(100/(1+ag/al)));}return o;}
+function macd(c,f=12,s=26){const ef=ema(c,f),es=ema(c,s);return ef.map((v,i)=>v!==null&&es[i]!==null?v-es[i]:null);}
+function smoothRMA(a,l){const f=a.filter(v=>v!==null);if(!f.length)return[];const o=[];let p=f.slice(0,l).reduce((a,b)=>a+b,0)/l;o.push(p);for(let i=l;i<f.length;i++){p=(p*(l-1)+f[i])/l;o.push(p);}return o;}
+function dmi(bars,dL,sm){
+  const trs=[],pDMs=[],mDMs=[];
+  for(let i=1;i<bars.length;i++){const b=bars[i],pb=bars[i-1];trs.push(Math.max(b.h-b.l,Math.abs(b.h-pb.c),Math.abs(b.l-pb.c)));const up=b.h-pb.h,dn=pb.l-b.l;pDMs.push(up>dn&&up>0?up:0);mDMs.push(dn>up&&dn>0?dn:0);}
+  const aV=smoothRMA(trs,dL),spDM=smoothRMA(pDMs,dL),smDM=smoothRMA(mDMs,dL);
+  const pDI=spDM.map((v,i)=>aV[i]?v/aV[i]*100:null),mDI=smDM.map((v,i)=>aV[i]?v/aV[i]*100:null);
+  const dx=pDI.map((v,i)=>pDI[i]!==null&&mDI[i]!==null&&(pDI[i]+mDI[i])>0?Math.abs(pDI[i]-mDI[i])/(pDI[i]+mDI[i])*100:null);
+  const adxV=smoothRMA(dx.filter(v=>v!==null),sm);
+  return{pDI,mDI,adx:new Array(dx.length-adxV.length).fill(null).concat(adxV)};
+}
+function supertrend(bars,mult,l){
+  const aV=atr(bars,l);const dirs=[],lines=[];let dir=1,upper=null,lower=null;
+  for(let i=0;i<bars.length;i++){const hl2=(bars[i].h+bars[i].l)/2,a=aV[i]||0,bu=hl2+mult*a,bl=hl2-mult*a;
+    if(i===0){upper=bu;lower=bl;dirs.push(1);lines.push(bu);continue;}
+    const pu=upper,pl=lower;lower=bl>pl||bars[i-1].c<pl?bl:pl;upper=bu<pu||bars[i-1].c>pu?bu:pu;
+    if(bars[i].c>upper)dir=-1;else if(bars[i].c<lower)dir=1;
+    dirs.push(dir);lines.push(dir===1?upper:lower);
+  }
+  return{dirs,lines};
+}
+
+function runIndicators(bars,cfg){
+  const closes=bars.map(b=>b.c),highs=bars.map(b=>b.h),n=bars.length;
+  const tmaRaw=sma(sma(closes,200),200),tmaBack=55;
+  const tma=tmaRaw.map((_,i)=>i>=tmaBack?tmaRaw[i-tmaBack]:null);
+  const atrTMA=atr(bars,20),atrMult=8;
+  const tmaUpper=tma.map((v,i)=>v&&atrTMA[i]?v+atrTMA[i]*atrMult:null);
+  const tmaLower=tma.map((v,i)=>v&&atrTMA[i]?v-atrTMA[i]*atrMult:null);
+  const{dirs:stDir,lines:stLine}=supertrend(bars,3.0,30);
+  const dmiRes=dmi(bars,10,10),adxArr=dmiRes.adx;
+  const ema200=ema(closes,200),rsiArr=rsi(closes,14),macdArr=macd(closes,12,26);
+  const stLen=50,pctile=percentileLinear(closes,stLen,50),smaN=sma(closes,stLen),sdN=stdev(closes,stLen);
+  const zScoreArr=closes.map((_,i)=>smaN[i]&&sdN[i]?(closes[i]-smaN[i])/sdN[i]:null);
+  const atrCh=atr(bars,20);
+  const score2Arr=closes.map((_,i)=>{let s=0;if(rsiArr[i]&&rsiArr[i]>60)s++;if(macdArr[i]&&macdArr[i]>0)s++;if(ema200[i]&&closes[i]>ema200[i])s++;if(adxArr[i]&&adxArr[i]>cfg.adxMin)s++;return s;});
+
+  const nnW1=[0.12,-0.08,0.15,0.22,-0.19,-0.31,0.25,-0.14,0.09,0.18,0.07,0.33,-0.21,0.04,-0.26];
+  const nnB=[0.05,-0.12,0.08],nnW2=[0.42,-0.29,0.37];
+
+  let inT1=false,bP1=0,h1=0,bC1=0,sC1=0,wC1=0,lC1=0,pnl1=0;
+  let inT2=false,e2=0,h2=0,s2=0,bC2=0,sC2=0,wC2=0,lC2=0,pnl2=0;
+  let inF=false,fE=0,fH=0,fBC=0,fSC=0,fWC=0,fLC=0,fPnL=0;
+  let inM=false,mE=0,mH=0,mPnL=0,mBC=0,mSC=0,mWC=0,mLC=0;
+  let dynBTh=cfg.masterBuyTh,dynSTh=cfg.masterSellTh;
+  const agSt=[false,false,false,false,false],agE=[0,0,0,0,0],agH=[0,0,0,0,0];
+  const agBC=[0,0,0,0,0],agSC=[0,0,0,0,0],agWC=[0,0,0,0,0],agLC=[0,0,0,0,0],agPnL=[0,0,0,0,0],agRep=[0.5,0.5,0.5,0.5,0.5];
+  const signals=[],stopLines={s1:[],s2:[],fusion:[],master:[]};
+
+  for(let i=0;i<n;i++){
+    const c=closes[i],h=highs[i],adx_i=adxArr[i]||0,atr_i=atrCh[i]||0;
+    const tmaU=tmaUpper[i],ema2=ema200[i],score2=score2Arr[i]||0;
+    const pct=pctile[i]||0.5,z=zScoreArr[i]||0;
+
+    const vCQ=Math.max(0,(0.15-pct)/0.15)*Math.max(0,(-1.5-z)/-1.5);
+    const cQ=Math.max(0,Math.abs(pct-0.225)/0.075)*Math.max(0,(-0.5-z)/-0.5);
+    const nQ=Math.max(0,1-Math.abs(pct-0.5)/0.2);
+    const eQ=Math.max(0,Math.abs(pct-0.775)/0.075)*Math.max(0,(z-0.5)/0.5);
+    const veQ=Math.max(0,(pct-0.85)/0.15)*Math.max(0,(z-1.5)/1.5);
+    const sSum=vCQ+cQ+nQ+eQ+veQ||1;
+    const qs=[vCQ/sSum,cQ/sSum,nQ/sSum,eQ/sSum,veQ/sSum];
+    let qMat=0;for(let a=0;a<5;a++)for(let b=0;b<5;b++)qMat+=qs[a]*qs[b];
+    const quantumProb=qMat/5*(adx_i/50);
+    const nnIn=[c,tma[i]||c,stLine[i]||c,adx_i,score2];
+    const nnHid=[0,0,0];
+    for(let j=0;j<3;j++){let s=nnB[j];for(let k=0;k<5;k++)s+=nnIn[k]*nnW1[k*3+j];nnHid[j]=1/(1+Math.exp(-s));}
+    let nnRaw=0;for(let j=0;j<3;j++)nnRaw+=nnHid[j]*nnW2[j];
+    const nnForecast=nnRaw*c*1.05,fusedProb=Math.min(1,quantumProb*(nnForecast/c)*10);
+
+    // Sistem 1
+    const longFlipUp=stDir[i]===-1&&i>0&&stDir[i-1]===1;
+    const buyC1=!inT1&&longFlipUp&&tmaU&&c>tmaU&&adx_i>cfg.adxMin;
+    if(buyC1){inT1=true;bP1=c;h1=h;bC1++;}
+    if(inT1)h1=Math.max(h1,h);
+    const chStop1=h1-atr_i*8;
+    if(inT1&&c<chStop1){const p=(c-bP1)/bP1*100;pnl1+=p;sC1++;if(p>=0)wC1++;else lC1++;inT1=false;signals.push({bar:i,type:'SAT',sys:'Sistem 1',price:c,pnl:p,t:bars[i].t});}
+    if(buyC1)signals.push({bar:i,type:'AL',sys:'Sistem 1',price:c,t:bars[i].t});
+    stopLines.s1.push(inT1?chStop1:null);
+
+    // Sistem 2
+    const trend2=ema2&&c>ema2&&adx_i>cfg.adxMin&&tmaU&&c>tmaU;
+    const long2=score2>=5&&trend2;
+    if(long2&&!inT2){inT2=true;e2=c;h2=h;bC2++;signals.push({bar:i,type:'AL',sys:'PRO',price:c,score:score2,t:bars[i].t});}
+    if(inT2)h2=Math.max(h2,h);
+    s2=h2-atr_i*8;
+    if(inT2&&c<s2){const p=(c-e2)/e2*100;pnl2+=p;sC2++;if(p>=0)wC2++;else lC2++;inT2=false;signals.push({bar:i,type:'SAT',sys:'PRO',price:c,pnl:p,t:bars[i].t});}
+    stopLines.s2.push(inT2?s2:null);
+
+    // Fusion
+    const hybridBuy=!inF&&fusedProb>cfg.fusionBuyTh&&tmaU&&c>tmaU;
+    if(hybridBuy){inF=true;fE=c;fH=h;fBC++;signals.push({bar:i,type:'AL',sys:'Fusion',price:c,prob:fusedProb,t:bars[i].t});}
+    if(inF){fH=Math.max(fH,h);const fSt=fH-atr_i*8;stopLines.fusion.push(fSt);if(c<fSt){const p=(c-fE)/fE*100;fPnL+=p;fSC++;if(p>=0)fWC++;else fLC++;inF=false;signals.push({bar:i,type:'SAT',sys:'Fusion',price:c,pnl:p,t:bars[i].t});}}
+    else stopLines.fusion.push(null);
+
+    // 5 Agent
+    const agMults=[8,7.5,9,6.5,8.5];
+    const agProbs=[fusedProb*0.92+Math.sin(i*0.37)*0.05,fusedProb*1.02+score2/20+Math.sin(i*0.42)*0.04,fusedProb*0.98+adx_i/50+Math.sin(i*0.29)*0.06,fusedProb*(1+Math.sin(i*0.21)*0.1),fusedProb*0.88+quantumProb+Math.sin(i*0.15)*0.07];
+    const agBuyC=[
+      !agSt[0]&&agProbs[0]>cfg.fusionBuyTh&&tmaU&&c>tmaU&&adx_i>cfg.adxMin,
+      !agSt[1]&&agProbs[1]>cfg.fusionBuyTh&&tmaU&&c>tmaU&&rsiArr[i]&&rsiArr[i]>55,
+      !agSt[2]&&agProbs[2]>cfg.fusionBuyTh&&ema2&&c>ema2&&macdArr[i]&&macdArr[i]>0&&rsiArr[i]&&rsiArr[i]>55,
+      !agSt[3]&&agProbs[3]>cfg.fusionBuyTh&&tma[i]&&c>tma[i],
+      !agSt[4]&&agProbs[4]>cfg.fusionBuyTh&&ema2&&c>ema2&&h>=(highest(highs,20)[i]||0)
+    ];
+    for(let ai=0;ai<5;ai++){
+      if(agBuyC[ai]){agSt[ai]=true;agE[ai]=c;agH[ai]=h;agBC[ai]++;}
+      if(agSt[ai])agH[ai]=Math.max(agH[ai],h);
+      const agStop=agH[ai]-atr_i*agMults[ai];
+      if(agSt[ai]&&c<agStop){const p=(c-agE[ai])/agE[ai]*100;agPnL[ai]+=p;agSC[ai]++;if(p>=0)agWC[ai]++;else agLC[ai]++;agSt[ai]=false;}
+    }
+
+    // Master AI Consensus
+    const cBuy=[buyC1,long2&&!inT2,hybridBuy,agBuyC[0]||agSt[0],agBuyC[1]||agSt[1],agBuyC[2]||agSt[2],agBuyC[3]||agSt[3],agBuyC[4]||agSt[4]];
+    const cProbs=[adx_i/100,score2/6,fusedProb,agProbs[0],agProbs[1],agProbs[2],agProbs[3],agProbs[4]];
+    const cSell=[inT1&&c<chStop1,inT2&&c<s2,inF&&c<(stopLines.fusion[i]||0),false,false,false,false,false];
+    let buyC=0,sellC=0;
+    for(let k=0;k<8;k++){if(cBuy[k])buyC+=Math.max(0,cProbs[k]);if(cSell[k])sellC+=Math.max(0,cProbs[k]);}
+    buyC/=8;sellC/=8;
+
+    const masterBuy2=!inM&&buyC>dynBTh;
+    const masterSell2=inM&&sellC>(1-dynSTh);
+    const masterStop=inM?(mH-atr_i*8):null;
+    stopLines.master.push(masterStop);
+
+    if(masterBuy2){inM=true;mE=c;mH=h;mBC++;signals.push({bar:i,type:'AL',sys:'Master AI',price:c,consensus:buyC,dynTh:dynBTh,t:bars[i].t});}
+    if(inM)mH=Math.max(mH,h);
+    if(masterSell2||(inM&&masterStop&&c<masterStop)){const p=(c-mE)/mE*100;mPnL+=p;mSC++;if(p>=0)mWC++;else mLC++;if(p>0)dynBTh=Math.max(0.5,dynBTh-0.05);else dynBTh=Math.min(0.9,dynBTh+0.05);inM=false;signals.push({bar:i,type:'SAT',sys:'Master AI',price:c,pnl:p,consensus:sellC,t:bars[i].t});}
+
+    if(i===n-1){
+      return{
+        bars,tma,tmaUpper,tmaLower,stDir,stLine,ema200,adxLast:adxArr[n-1]||0,
+        sys1:{buyCount1:bC1,sellCount1:sC1,winCount1:wC1,lossCount1:lC1,totalPnL1:pnl1,inTrade1:inT1,buyPrice1:bP1},
+        sys2:{buyCount2:bC2,sellCount2:sC2,winCount2:wC2,lossCount2:lC2,totalPnL2:pnl2,inTrade2:inT2,entry2:e2,score2:score2Arr[n-1]},
+        fusion:{fusionBuyCnt:fBC,fusionSellCnt:fSC,fusionWinCnt:fWC,fusionLossCnt:fLC,fusionTotalPnL:fPnL,inFusion:inF,fusionEntry:fE},
+        master:{masterBuyCnt:mBC,masterSellCnt:mSC,masterWinCnt:mWC,masterLossCnt:mLC,masterPnL:mPnL,inMaster:inM,masterEntry:mE,buyConsensus:buyC,sellConsensus:sellC,dynBuyTh,dynSellTh:dynSTh},
+        agents:{agBuyCnt:agBC,agSellCnt:agSC,agWinCnt:agWC,agLossCnt:agLC,agPnL,agStates:agSt,agEntries:agE,agRep},
+        quantum:{qs,quantumProb,nnForecast,fusedProb,zScore:z},
+        priceState:calcPriceState(qs),
+        signals,stopLines,closes,adxArr,rsiArr
+      };
+    }
+  }
+}
+
+function calcPriceState(qs){
+  const[vCQ,cQ,nQ,eQ,veQ]=qs;
+  if(veQ>0.5)return{text:'ÇOK PAHALI',color:'#b71c1c',cls:'badge-red'};
+  if(eQ>0.5)return{text:'PAHALI',color:'#ff1744',cls:'badge-red'};
+  if(nQ>0.5)return{text:'NORMAL',color:'#ff6d00',cls:'badge-gold'};
+  if(cQ>0.5)return{text:'UCUZ',color:'#00e676',cls:'badge-green'};
+  if(vCQ>0.5)return{text:'ÇOK UCUZ',color:'#00c853',cls:'badge-green'};
+  return{text:'—',color:'#64748b',cls:'badge-gray'};
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  GRAFİK
+// ═══════════════════════════════════════════════════════════════
+function drawChart(sym,tf,bars,result){
+  const canvas=document.getElementById('mainChart');
+  const ctx=canvas.getContext('2d');
+  const w=canvas.width=canvas.offsetWidth,h=canvas.height=420;
+  ctx.clearRect(0,0,w,h);
+  if(!bars||bars.length<2)return;
+  const pL=60,pR=20,cW=w-pL-pR,cH=h-40;
+  const minP=Math.min(...bars.map(b=>b.l)),maxP=Math.max(...bars.map(b=>b.h)),pRange=maxP-minP||1;
+  const bW=Math.max(3,cW/bars.length*0.8);
+  ctx.strokeStyle='#1e2d45';ctx.lineWidth=1;
+  for(let i=0;i<8;i++){const y=30+i*(cH/7);ctx.beginPath();ctx.moveTo(pL,y);ctx.lineTo(w-pR,y);ctx.stroke();}
+  for(let i=0;i<bars.length;i++){
+    const bar=bars[i],x=pL+i*(cW/bars.length);
+    const oY=30+cH-((bar.o-minP)/pRange*cH),cY2=30+cH-((bar.c-minP)/pRange*cH);
+    const hY=30+cH-((bar.h-minP)/pRange*cH),lY=30+cH-((bar.l-minP)/pRange*cH);
+    ctx.fillStyle=bar.c>=bar.o?'#00e676':'#ff1744';
+    ctx.fillRect(x-bW/2,Math.min(oY,cY2),bW,Math.abs(oY-cY2));
+    ctx.beginPath();ctx.moveTo(x,hY);ctx.lineTo(x,lY);ctx.strokeStyle=bar.c>=bar.o?'#00e676':'#ff1744';ctx.lineWidth=1;ctx.stroke();
+    if(result.tma[i]!==null){
+      const tY=30+cH-((result.tma[i]-minP)/pRange*cH);
+      if(i>0&&result.tma[i-1]!==null){const pY=30+cH-((result.tma[i-1]-minP)/pRange*cH);ctx.strokeStyle='#ff6d00';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x-(cW/bars.length),pY);ctx.lineTo(x,tY);ctx.stroke();}
+    }
+    if(result.tmaUpper[i]!==null){const uY=30+cH-((result.tmaUpper[i]-minP)/pRange*cH);ctx.strokeStyle='rgba(255,255,255,0.3)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,uY);ctx.lineTo(x+bW,uY);ctx.stroke();}
+    if(result.stLine[i]!==null&&i>0&&result.stLine[i-1]!==null){const sY=30+cH-((result.stLine[i]-minP)/pRange*cH),psY=30+cH-((result.stLine[i-1]-minP)/pRange*cH);ctx.strokeStyle='#00e5ff';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x-(cW/bars.length),psY);ctx.lineTo(x,sY);ctx.stroke();}
+    if(i===bars.length-1&&result.stopLines.master[i]!==null){const stY=30+cH-((result.stopLines.master[i]-minP)/pRange*cH);ctx.strokeStyle='#ffd700';ctx.lineWidth=2;ctx.setLineDash([4,2]);ctx.beginPath();ctx.moveTo(pL,stY);ctx.lineTo(w-pR,stY);ctx.stroke();ctx.setLineDash([]);}
+  }
+  const vC=document.getElementById('volumeChart'),vCtx=vC.getContext('2d');
+  vC.width=w;vC.height=80;vCtx.clearRect(0,0,w,80);
+  const mV=Math.max(...bars.map(b=>b.v)),vBW=Math.max(2,cW/bars.length);
+  for(let i=0;i<bars.length;i++){const bar=bars[i],x=pL+i*(cW/bars.length),vH=(bar.v/mV)*70;vCtx.fillStyle=bar.c>=bar.o?'#00e676':'#ff1744';vCtx.fillRect(x,80-vH,vBW,vH);}
+  ctx.fillStyle='#64748b';ctx.font='10px JetBrains Mono';ctx.textAlign='right';
+  ctx.fillText(maxP.toFixed(2),pL-5,35);ctx.fillText(minP.toFixed(2),pL-5,30+cH);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PANEL GÜNCELLEME
+// ═══════════════════════════════════════════════════════════════
+function fmt(v,d=2){return v!=null?v.toFixed(d):'—';}
+function pnlClass(v){return v>=0?'price-up':'price-dn';}
+function badge(v){return v>=0?'badge-green':'badge-red';}
+
+function updateAllPanels(sym,r){
+  const lc=r.closes[r.closes.length-1],pc=r.closes[r.closes.length-2]||lc,chg=(lc-pc)/pc*100;
+  document.getElementById('hdr-ticker').textContent=sym;
+  document.getElementById('hdr-price').textContent=lc.toFixed(2);
+  document.getElementById('hdr-price').className='ticker-price '+pnlClass(chg);
+  document.getElementById('hdr-change').textContent=(chg>=0?'+':'')+fmt(chg)+'%';
+  document.getElementById('hdr-change').className='ticker-change '+pnlClass(chg);
+
+  const m=r.master;
+  document.getElementById('mt-ticker').textContent=sym;
+  document.getElementById('mt-cbuy').innerHTML=`<span class="${badge(m.buyConsensus-0.5)}">${(m.buyConsensus*100).toFixed(0)}%</span>`;
+  document.getElementById('mt-csell').innerHTML=`<span class="${badge(m.sellConsensus-0.5)}">${(m.sellConsensus*100).toFixed(0)}%</span>`;
+  document.getElementById('mt-dbt').textContent=fmt(m.dynBuyTh);
+  document.getElementById('mt-dst').textContent=fmt(m.dynSellTh);
+  document.getElementById('mt-pnl').innerHTML=`<span class="${pnlClass(m.masterPnL)}">${fmt(m.masterPnL)}%</span>`;
+  document.getElementById('masterPosBadge').textContent=m.inMaster?'A %'+fmt((lc-m.masterEntry)/m.masterEntry*100):'YOK';
+  document.getElementById('masterPosBadge').className='badge '+(m.inMaster?badge((lc-m.masterEntry)/m.masterEntry*100):'badge-gray');
+  document.getElementById('buyConsBar').style.width=Math.min(100,m.buyConsensus*100)+'%';
+  document.getElementById('sellConsBar').style.width=Math.min(100,m.sellConsensus*100)+'%';
+
+  const ps=r.priceState;
+  const psB=document.getElementById('priceStateBig');
+  psB.textContent=ps.text;psB.style.background=ps.color+'30';psB.style.color=ps.color;psB.style.border='1px solid '+ps.color+'60';
+  document.getElementById('priceStateBadge').innerHTML=`<span class="badge ${ps.cls}">${ps.text}</span>`;
+  document.getElementById('chartTitle').textContent=`${sym} — ${document.getElementById('tfSelect').value}`;
+
+  const s1=r.sys1;
+  ['s1-ticker','s1-al','s1-sat','s1-kz','s1-pnl','s1-fd'].forEach((id,i)=>{
+    const vals=[sym,s1.buyCount1,s1.sellCount1,s1.winCount1+'/'+s1.lossCount1,`<span class="${pnlClass(s1.totalPnL1)}">${fmt(s1.totalPnL1)}%</span>`,`<span class="badge ${ps.cls}">${ps.text}</span>`];
+    document.getElementById(id).innerHTML=String(vals[i]);
+  });
+  document.getElementById('sys1PosBadge').textContent=s1.inTrade1?'A %'+fmt((lc-s1.buyPrice1)/s1.buyPrice1*100):'YOK';
+  document.getElementById('sys1PosBadge').className='badge '+(s1.inTrade1?badge((lc-s1.buyPrice1)/s1.buyPrice1*100):'badge-gray');
+
+  const s2=r.sys2;
+  ['s2-ticker','s2-al','s2-sat','s2-kz','s2-pnl','s2-score'].forEach((id,i)=>{
+    const vals=[sym,s2.buyCount2,s2.sellCount2,s2.winCount2+'/'+s2.lossCount2,`<span class="${pnlClass(s2.totalPnL2)}">${fmt(s2.totalPnL2)}%</span>`,s2.score2];
+    document.getElementById(id).innerHTML=String(vals[i]);
+  });
+  document.getElementById('sys2PosBadge').textContent=s2.inTrade2?'A %'+fmt((lc-s2.entry2)/s2.entry2*100):'YOK';
+  document.getElementById('sys2PosBadge').className='badge '+(s2.inTrade2?badge((lc-s2.entry2)/s2.entry2*100):'badge-gray');
+
+  const fs=r.fusion;
+  ['fs-ticker','fs-al','fs-sat','fs-kz','fs-pnl','fs-fd'].forEach((id,i)=>{
+    const vals=[sym,fs.fusionBuyCnt,fs.fusionSellCnt,fs.fusionWinCnt+'/'+fs.fusionLossCnt,`<span class="${pnlClass(fs.fusionTotalPnL)}">${fmt(fs.fusionTotalPnL)}%</span>`,`<span class="badge ${ps.cls}">${ps.text}</span>`];
+    document.getElementById(id).innerHTML=String(vals[i]);
+  });
+  document.getElementById('fusionPosBadge').textContent=fs.inFusion?'A %'+fmt((lc-fs.fusionEntry)/fs.fusionEntry*100):'YOK';
+  document.getElementById('fusionPosBadge').className='badge '+(fs.inFusion?badge((lc-fs.fusionEntry)/fs.fusionEntry*100):'badge-gray');
+
+  const q=r.quantum;
+  for(let i=0;i<5;i++){document.getElementById('qb'+i).style.width=(q.qs[i]*100).toFixed(0)+'%';document.getElementById('qv'+i).textContent=(q.qs[i]*100).toFixed(0)+'%';}
+  document.getElementById('q-prob').textContent=fmt(q.quantumProb*100)+'%';
+  document.getElementById('q-nn').textContent=fmt(q.nnForecast);
+  document.getElementById('q-fused').textContent=fmt(q.fusedProb*100)+'%';
+  document.getElementById('q-adx').textContent=fmt(r.adxLast);
+  document.getElementById('q-zscore').textContent=fmt(q.zScore);
+
+  const ag=r.agents;
+  const agIds=['ag-60','ag-61','ag-62','ag-81','ag-120'];
+  for(let i=0;i<5;i++){const el=document.getElementById(agIds[i]);el.textContent=fmt(ag.agPnL[i])+'%';el.className='agent-pnl '+pnlClass(ag.agPnL[i]);}
+  let bI=0,bPnL=-Infinity;
+  for(let i=0;i<5;i++)if(ag.agPnL[i]>bPnL){bPnL=ag.agPnL[i];bI=i;}
+  const aN=['A60','A61','A62','A81','A120'];
+  document.getElementById('ba-name').textContent=aN[bI];
+  document.getElementById('ba-als').textContent=ag.agBuyCnt[bI]+' / '+ag.agSellCnt[bI];
+  document.getElementById('ba-kz').textContent=ag.agWinCnt[bI]+'/'+ag.agLossCnt[bI];
+  document.getElementById('ba-pnl').innerHTML=`<span class="${pnlClass(bPnL)}">${fmt(bPnL)}%</span>`;
+  const bIT=ag.agStates[bI],bOP=bIT?(lc-ag.agEntries[bI])/ag.agEntries[bI]*100:null;
+  document.getElementById('ba-pos').innerHTML=bIT?`<span class="badge ${badge(bOP)}">A %${fmt(bOP)}</span>`:'<span class="badge badge-gray">YOK</span>';
+  document.getElementById('ba-rep').textContent=fmt(ag.agRep[bI]);
+
+  renderSignalLog(r.signals,sym);
+  updateOpenPositions(r,lc);
+  updateKVStats();
+}
+
+function updateOpenPositions(r,lc){
+  const table=document.getElementById('openPosTable');
+  let rows=`<tr><td style="color:var(--muted);">Sistem</td><td style="color:var(--muted);">Giriş</td><td style="color:var(--muted);">PnL %</td></tr>`;
+  let has=false;
+  if(r.master.inMaster){has=true;const p=((lc-r.master.masterEntry)/r.master.masterEntry)*100;rows+=`<tr><td>👑 Master</td><td>${r.master.masterEntry.toFixed(2)}</td><td class="${pnlClass(p)}">${p.toFixed(2)}%</td></tr>`;}
+  if(r.sys1.inTrade1){has=true;const p=((lc-r.sys1.buyPrice1)/r.sys1.buyPrice1)*100;rows+=`<tr><td>🔷 Sys1</td><td>${r.sys1.buyPrice1.toFixed(2)}</td><td class="${pnlClass(p)}">${p.toFixed(2)}%</td></tr>`;}
+  if(r.sys2.inTrade2){has=true;const p=((lc-r.sys2.entry2)/r.sys2.entry2)*100;rows+=`<tr><td>🔵 Sys2</td><td>${r.sys2.entry2.toFixed(2)}</td><td class="${pnlClass(p)}">${p.toFixed(2)}%</td></tr>`;}
+  if(r.fusion.inFusion){has=true;const p=((lc-r.fusion.fusionEntry)/r.fusion.fusionEntry)*100;rows+=`<tr><td>⚡ Fusion</td><td>${r.fusion.fusionEntry.toFixed(2)}</td><td class="${pnlClass(p)}">${p.toFixed(2)}%</td></tr>`;}
+  const aN=['A60','A61','A62','A81','A120'];
+  for(let i=0;i<5;i++){if(r.agents.agStates[i]){has=true;const p=((lc-r.agents.agEntries[i])/r.agents.agEntries[i])*100;rows+=`<tr><td>🤖 ${aN[i]}</td><td>${r.agents.agEntries[i].toFixed(2)}</td><td class="${pnlClass(p)}">${p.toFixed(2)}%</td></tr>`;}}
+  if(!has)rows+=`<tr><td colspan="3" style="text-align:center;color:var(--muted);padding:16px;">Açık pozisyon yok</td></tr>`;
+  table.innerHTML=rows;
+}
+
+function renderSignalLog(signals,sym){
+  const log=document.getElementById('signalLog');
+  if(!signals.length){log.innerHTML='<div style="padding:20px;text-align:center;color:var(--muted);">Sinyal bulunamadı.</div>';return;}
+  const recent=[...signals].reverse().slice(0,50);
+  log.innerHTML=recent.map(s=>{
+    const d=new Date(s.t),ts=d.toLocaleDateString('tr-TR',{month:'short',day:'numeric'})+' '+d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+    const cls=s.type==='AL'?'sig-buy':(s.sys==='Master AI'?'sig-master':'sig-sell');
+    const icon=s.type==='AL'?'▲':'▼';
+    const detail=s.type==='SAT'?`%${fmt(s.pnl)} PnL`:(s.consensus?`Consensus: ${(s.consensus*100).toFixed(0)}%`:(s.score?`Score: ${s.score}`:(s.prob?`Prob: ${(s.prob*100).toFixed(0)}%`:'')));
+    return `<div class="signal-item"><div class="signal-time">${ts}</div><div class="signal-body"><div class="signal-title ${cls}">${icon} ${s.sys} ${s.type} @ ${fmt(s.price)}</div>${detail?`<div class="signal-detail">${detail}</div>`:''}</div></div>`;
+  }).join('');
+}
+
+function clearSignals(){
+  const sym=document.getElementById('symbolInput').value.trim().toUpperCase(),tf=document.getElementById('tfSelect').value,key=`${sym}-${tf}`;
+  if(allSignals[key])delete allSignals[key];
+  saveAllSignals();
+  document.getElementById('signalLog').innerHTML='<div style="padding:20px;text-align:center;color:var(--muted);">Temizlendi.</div>';
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ANA ANALİZ
+// ═══════════════════════════════════════════════════════════════
+async function analyzeSymbol(){
+  const sym=document.getElementById('symbolInput').value.trim().toUpperCase(),tf=document.getElementById('tfSelect').value;
+  const btn=document.getElementById('analyzeBtn');
+  btn.disabled=true;btn.textContent='Yükleniyor...';
+  document.getElementById('chartLoading').style.display='flex';
+  try{
+    document.getElementById('statusDot').className='status-dot';
+    const bars=await fetchOHLCV(sym,tf);
+    if(!bars||bars.length<60)throw new Error('Yeterli veri yok');
+    const result=runIndicators(bars,{...CFG});
+    currentResult=result;
+    const key=`${sym}-${tf}`,hist=allSignals[key]||[];
+    const maxT=hist.length?Math.max(...hist.map(s=>s.t||0)):0;
+    const newSigs=result.signals.filter(s=>(s.t||0)>maxT);
+    if(newSigs.length){
+      allSignals[key]=[...hist,...newSigs];
+      saveAllSignals();
+      newSigs.forEach(sig=>{
+        if(sig.type==='AL'){
+          if(sig.sys==='Master AI')sendBuyAlert(sig.sys,sym,sig.price,sig.consensus,sig.dynTh);
+          else showToast(`${sig.sys} AL`,`${sym} @ ${sig.price.toFixed(2)}`,'buy');
+        }else if(sig.type==='SAT'&&sig.pnl!==undefined)addSignalNotify(sig.sys,sym,sig.price,sig.pnl);
+      });
+    }
+    updateAllPanels(sym,result);
+    drawChart(sym,tf,bars,result);
+    document.getElementById('lastUpdate').textContent='Son: '+new Date().toLocaleTimeString('tr-TR');
+  }catch(e){
+    document.getElementById('statusDot').className='status-dot offline';
+    showToast('Hata','Veri çekilemedi: '+e.message,'sell');
+  }
+  btn.disabled=false;btn.textContent='▶ Analiz Et';
+  document.getElementById('chartLoading').style.display='none';
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  WATCHLIST
+// ═══════════════════════════════════════════════════════════════
+function renderWatchlist(){
+  document.getElementById('watchlistGrid').innerHTML=CFG.watchlist.map(s=>{
+    const a=document.getElementById('symbolInput').value===s?' active':'';
+    return `<div class="watch-chip${a}" onclick="selectSymbol('${s}')">${s}</div>`;
+  }).join('');
+}
+function selectSymbol(s){document.getElementById('symbolInput').value=s;renderWatchlist();analyzeSymbol();}
+
+function checkFirstLaunch(){
+  if(!localStorage.getItem('masterai_firstlaunch')){
+    document.getElementById('watchlistModal').classList.add('open');
+  }
+}
+function saveInitialWatchlist(){
+  const val=document.getElementById('initialWatchlist').value.trim();
+  const wUrl=document.getElementById('initialWorkerUrl').value.trim();
+  if(val){CFG.watchlist=val.split(',').map(s=>s.trim().toUpperCase()).filter(Boolean);}
+  if(wUrl){CFG.workerUrl=wUrl;}
+  saveLocal('masterai_cfg',CFG);
+  localStorage.setItem('masterai_firstlaunch','true');
+  document.getElementById('watchlistModal').classList.remove('open');
+  renderWatchlist();
+  backgroundScan();
+  kvPullAll(); // Buluttan çek
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  CANLI TARAYICI
+// ═══════════════════════════════════════════════════════════════
+async function toggleLiveScan(){
+  const btn=document.getElementById('liveScanBtn');
+  if(isLiveScanning){
+    isLiveScanning=false;
+    btn.textContent='🔄 Canlı Tara';btn.style.background='var(--orange)';
+    document.getElementById('lastUpdate').textContent='🛑 Tarayıcı durduruldu.';
+    return;
+  }
+  isLiveScanning=true;btn.textContent='⏹ DURDUR';btn.style.background='var(--red)';
+  let sI=0,tI=0;
+  while(isLiveScanning&&sI<CFG.watchlist.length){
+    const sym=CFG.watchlist[sI],tf=LIVE_TFS[tI];
+    document.getElementById('symbolInput').value=sym;document.getElementById('tfSelect').value=tf;renderWatchlist();
+    document.getElementById('lastUpdate').innerHTML=`🔴 <b>CANLI</b> → ${sym} — ${tf} <small>(${sI+1}/${CFG.watchlist.length})</small>`;
+    try{
+      document.getElementById('chartLoading').style.display='flex';
+      const bars=await fetchOHLCV(sym,tf);
+      const result=runIndicators(bars,{...CFG});
+      currentResult=result;updateAllPanels(sym,result);drawChart(sym,tf,bars,result);
+    }catch(e){console.log('Tarama atlandı:',sym,tf);}
+    finally{document.getElementById('chartLoading').style.display='none';}
+    tI++;
+    if(tI>=LIVE_TFS.length){tI=0;sI++;}
+    await new Promise(r=>setTimeout(r,850));
+  }
+  if(isLiveScanning){
+    document.getElementById('lastUpdate').textContent='✅ Tarama tamamlandı. Bekleniyor...';
+    setTimeout(()=>{if(isLiveScanning)toggleLiveScan();},CFG.refreshSec*1000);
+  }
+}
+
+function startMultiTFScan(){analyzeSymbol();}
+
+// ═══════════════════════════════════════════════════════════════
+//  ARKA PLAN TARAMA
+// ═══════════════════════════════════════════════════════════════
+async function backgroundScan(){
+  for(let sym of CFG.watchlist){
+    for(let tf of LIVE_TFS){
+      try{
+        const bars=await fetchOHLCV(sym,tf);
+        if(bars.length<60)continue;
+        const result=runIndicators(bars,{...CFG});
+        const key=`${sym}-${tf}`,hist=allSignals[key]||[];
+        const maxT=hist.length?Math.max(...hist.map(s=>s.t||0)):0;
+        const newSigs=result.signals.filter(s=>(s.t||0)>maxT);
+        if(newSigs.length){
+          allSignals[key]=[...hist,...newSigs];
+          saveAllSignals();
+          newSigs.forEach(sig=>{
+            const ts=new Date(sig.t).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+            const msg=`${sig.sys} ${sig.type} → ${sym} @ ${sig.price.toFixed(2)}`;
+            const tvLink=`https://www.tradingview.com/symbols/BIST-${sym}/`;
+            notificationLog.unshift({time:ts,msg:msg+` | ${tvLink}`,type:sig.type,sym,price:sig.price});
+            if(notificationLog.length>200)notificationLog.pop();
+            if(new Date(sig.t).toDateString()===new Date().toDateString()){
+              dailySignals.unshift({time:ts,msg:msg+` | ${tvLink}`,type:sig.type});
+              if(dailySignals.length>100)dailySignals.pop();
+            }
+            if(sig.type==='AL'){
+              showToast(`${sig.sys} AL`,msg,'master');
+              sendTelegram(`🚨 ${msg}\nTradingView: ${tvLink}`);
+              openPositions[key]={sys:sig.sys,entry:sig.price,highest:sig.price,time:sig.t,stop:null};
+              kvPush('positions',openPositions).catch(()=>{});
+            }else if(sig.type==='SAT'&&sig.pnl!==undefined){
+              addSignalNotify(sig.sys,sym,sig.price,sig.pnl);
+              if(openPositions[key]){
+                const pos=openPositions[key];
+                sendTelegram(`✅ ${sym}(${tf}) ${pos.sys} KAPANDI\nGiriş:${pos.entry.toFixed(2)} Çıkış:${sig.price.toFixed(2)} PnL:%${sig.pnl.toFixed(2)}\n${tvLink}`);
+                delete openPositions[key];
+                kvPush('positions',openPositions).catch(()=>{});
+              }
+            }
+          });
+          if(activeTab===2)renderNotificationLog();
+          if(activeTab===3)renderDailySignals();
+          if(activeTab===1)renderAllOpenPositions();
+        }
+      }catch(e){}
+    }
+  }
+}
+
+async function sendPeriodicSummary(){
+  if(!CFG.tgToken||!CFG.tgChatId)return;
+  const now=Date.now();
+  if(now-lastSummaryTime<CFG.summaryInterval*1000)return;
+  lastSummaryTime=now;
+  let msg=`📊 MASTER AI Özet (${new Date().toLocaleTimeString('tr-TR')})\n\n`;
+  let cnt=0;
+  Object.keys(openPositions).forEach(k=>{
+    const pos=openPositions[k],lc=currentResult?currentResult.closes[currentResult.closes.length-1]:pos.entry,pnl=((lc-pos.entry)/pos.entry)*100;
+    msg+=`• ${k} | ${pos.sys} | Giriş:${pos.entry.toFixed(2)} | PnL:%${pnl.toFixed(2)}\n`;cnt++;
+  });
+  if(!cnt)msg+='Açık pozisyon yok.\n';
+  msg+=`\nToplam: ${cnt}`;
+  sendTelegram(msg);
+}
+
+function sendTelegram(msg){
+  if(!CFG.tgToken||!CFG.tgChatId)return;
+  fetch(`https://api.telegram.org/bot${CFG.tgToken}/sendMessage?chat_id=${CFG.tgChatId}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`).catch(()=>{});
+}
+
+async function testTelegram(){
+  if(!CFG.tgToken||!CFG.tgChatId){alert('Token ve Chat ID giriniz!');return;}
+  const r=await fetch(`https://api.telegram.org/bot${CFG.tgToken}/sendMessage?chat_id=${CFG.tgChatId}&text=${encodeURIComponent('✅ Master AI – Test Mesajı!')}`);
+  alert(r.ok?'✅ Telegram başarılı!':'❌ Hata: '+r.status);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  TAB KONTROL
+// ═══════════════════════════════════════════════════════════════
+function switchTab(n){
+  activeTab=n;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab'+n).classList.add('active');
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  document.getElementById('content'+n).classList.add('active');
+  if(n===1)renderAllOpenPositions();
+  if(n===2)renderNotificationLog();
+  if(n===3)renderDailySignals();
+  if(n===5){
+    document.getElementById('uidInput').value=deviceUID;
+    document.getElementById('currentUID').textContent=deviceUID;
+    const wUrl=document.getElementById('workerUrlInput');
+    if(wUrl)wUrl.value=CFG.workerUrl||'';
+    updateKVStats();
+  }
+}
+
+function renderAllOpenPositions(){
+  const table=document.getElementById('allOpenPosTable');
+  let html=`<tr><th>Sembol-TF</th><th>Sistem</th><th>Giriş</th><th>Güncel</th><th>PnL %</th></tr>`;
+  let has=false;
+  Object.keys(openPositions).forEach(key=>{
+    const pos=openPositions[key],lc=currentResult?currentResult.closes[currentResult.closes.length-1]:pos.entry,pnl=((lc-pos.entry)/pos.entry)*100;
+    html+=`<tr><td>${key}</td><td>${pos.sys}</td><td>${pos.entry.toFixed(2)}</td><td>${lc.toFixed(2)}</td><td class="${pnlClass(pnl)}">${pnl.toFixed(2)}%</td></tr>`;
+    has=true;
+  });
+  if(!has)html+=`<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--muted);">Açık pozisyon yok</td></tr>`;
+  table.innerHTML=html;
+}
+function renderNotificationLog(){
+  document.getElementById('notificationLog').innerHTML=notificationLog.map(n=>`<div class="signal-item"><div class="signal-time">${n.time}</div><div class="signal-body">${n.msg}</div></div>`).join('')||'<div style="padding:20px;text-align:center;color:var(--muted);">Bildirim yok</div>';
+}
+function renderDailySignals(){
+  document.getElementById('dailySignalLog').innerHTML=dailySignals.map(n=>`<div class="signal-item"><div class="signal-time">${n.time}</div><div class="signal-body">${n.msg}</div></div>`).join('')||'<div style="padding:20px;text-align:center;color:var(--muted);">Bugün sinyal yok</div>';
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════════════════════════
+function showToast(title,body,type='buy'){
+  const c=document.getElementById('toastContainer');
+  const t=document.createElement('div');
+  t.className=`toast ${type}`;
+  t.innerHTML=`<div class="toast-title">${title}</div><div class="toast-body">${body}</div>`;
+  c.appendChild(t);
+  setTimeout(()=>t.remove(),5000);
+}
+
+async function sendBuyAlert(sys,sym,price,consensus,dynTh){
+  const tvLink=`https://www.tradingview.com/symbols/BIST-${sym}/`;
+  showToast(`👑 ${sys} BUY`,`${sym} @ ${price.toFixed(2)} | ${(consensus*100).toFixed(0)}% consensus`,'master');
+  sendTelegram(`🚨 ${sys} BUY\n${sym} @ ${price.toFixed(2)}\nConsensus: ${(consensus*100).toFixed(0)}%\n${tvLink}`);
+}
+function addSignalNotify(sys,sym,price,pnl){
+  const tvLink=`https://www.tradingview.com/symbols/BIST-${sym}/`;
+  showToast(`${sys} SAT`,`${sym} %${pnl.toFixed(2)} PnL`,pnl>=0?'buy':'sell');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  TEMA
+// ═══════════════════════════════════════════════════════════════
+function toggleTheme(){currentTheme=currentTheme==='dark'?'light':'dark';CFG.theme=currentTheme;applyTheme();}
+function applyTheme(){
+  if(currentTheme==='light'){
+    document.documentElement.style.setProperty('--bg','#f8fafc');
+    document.documentElement.style.setProperty('--bg2','#e2e8f0');
+    document.documentElement.style.setProperty('--bg3','#cbd5e1');
+    document.documentElement.style.setProperty('--text','#0f172a');
+    document.getElementById('themeBtn').innerHTML='☀️';
+  }else{
+    document.documentElement.style.setProperty('--bg','#0a0e1a');
+    document.documentElement.style.setProperty('--bg2','#111827');
+    document.documentElement.style.setProperty('--bg3','#1a2235');
+    document.documentElement.style.setProperty('--text','#e2e8f0');
+    document.getElementById('themeBtn').innerHTML='🌙';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  EKSTRA
+// ═══════════════════════════════════════════════════════════════
+function screenshotChart(){
+  const canvas=document.getElementById('mainChart');
+  const a=document.createElement('a');a.download=`masterai-${document.getElementById('symbolInput').value}.png`;a.href=canvas.toDataURL();a.click();
+}
+
+function exportSignalsCSV(){
+  let csv='Tarih,Sembol,TF,Sistem,Tür,Fiyat,PnL\n';
+  Object.keys(allSignals).forEach(key=>{
+    allSignals[key].forEach(s=>{
+      const d=new Date(s.t);
+      csv+=`${d.toLocaleString('tr-TR')},${key.split('-')[0]},${key.split('-')[1]},${s.sys},${s.type},${s.price},${s.pnl||''}\n`;
+    });
+  });
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='masterai_signals.csv';a.click();
+}
+
+function showPWAGuide(){
+  const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
+  const msg=isIOS?'iOS: Safari ile aç → Paylaş (□↑) → Ana Ekrana Ekle':'Android: Chrome menüsü → Uygulamayı yükle / Ana ekrana ekle';
+  alert('📲 PWA Kurulum\n\n'+msg+'\n\nKurduktan sonra:\n• İnternet olmadan çalışır\n• Bildirim alırsınız\n• Uygulama simgesi oluşur');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  GROQ AI
+// ═══════════════════════════════════════════════════════════════
+async function sendToGroq(){
+  const input=document.getElementById('aiInput').value.trim();
+  if(!input)return;
+  if(!CFG.groqApiKey){alert('Ayarlar → Groq API Key giriniz!');return;}
+  addAIMessage(input,'user');
+  document.getElementById('aiInput').value='';
+  try{
+    const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+      method:'POST',
+      headers:{'Authorization':`Bearer ${CFG.groqApiKey}`,'Content-Type':'application/json'},
+      body:JSON.stringify({model:'llama-3.1-70b-versatile',messages:[{role:'system',content:'Sen profesyonel bir BIST hisse senedi trading AI asistanısın. Kısa, net, teknik analiz odaklı Türkçe cevap ver.'},{role:'user',content:input}],temperature:0.7,max_tokens:512})
+    });
+    const d=await r.json();
+    addAIMessage(d.choices[0].message.content,'ai');
+  }catch(e){addAIMessage('Groq API hatası: '+e.message,'ai');}
+}
+function addAIMessage(text,from){
+  const c=document.getElementById('aiMessages'),d=document.createElement('div');
+  d.style.cssText=`padding:12px;border-radius:12px;max-width:85%;background:${from==='user'?'var(--blue)':'var(--bg3)'};color:${from==='user'?'#fff':'var(--text)'};align-self:${from==='user'?'flex-end':'flex-start'};font-size:12px;line-height:1.5;`;
+  d.innerHTML=text;c.appendChild(d);c.scrollTop=c.scrollHeight;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PWA — beforeinstallprompt (Chrome/Android)
+// ═══════════════════════════════════════════════════════════════
+let pwaPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();pwaPrompt=e;
+  document.getElementById('pwaBanner').classList.add('show');
+  document.getElementById('pwaInstallBtn').onclick=()=>{
+    pwaPrompt.prompt();
+    pwaPrompt.userChoice.then(r=>{
+      document.getElementById('pwaBanner').classList.remove('show');
+      if(r.outcome==='accepted')showToast('PWA Kuruldu','Uygulama ana ekrana eklendi!','info');
+    });
+  };
+});
+
+// ═══════════════════════════════════════════════════════════════
+//  SERVICE WORKER KAYDI
+// ═══════════════════════════════════════════════════════════════
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js')
+      .then(reg=>{
+        console.log('✅ SW aktif');
+        reg.addEventListener('updatefound',()=>{
+          const newWorker=reg.installing;
+          newWorker.addEventListener('statechange',()=>{
+            if(newWorker.state==='installed'&&navigator.serviceWorker.controller){
+              showToast('Güncelleme Mevcut','Sayfayı yenileyerek yeni sürümü kullanın.','info');
+            }
+          });
+        });
+      })
+      .catch(err=>console.log('❌ SW hata',err));
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════════
+(function init(){
+  // Local'den yükle
+  const savedCfg=loadLocal('masterai_cfg');
+  if(savedCfg)Object.assign(CFG,savedCfg);
+  const savedSig=loadLocal('masterai_signals');
+  if(savedSig)allSignals=savedSig;
+
+  deviceUID=getDeviceUID();
+  currentTheme=CFG.theme||'dark';
+  applyTheme();
+  renderWatchlist();
+  checkFirstLaunch();
+
+  // KV'den de çek (bulut sync)
+  kvPullAll().then(()=>{
+    renderWatchlist();
+  });
+
+  // Zamanlayıcılar
+  backgroundInterval=setInterval(backgroundScan,30000);
+  summaryIntervalTimer=setInterval(sendPeriodicSummary,CFG.summaryInterval*1000);
+
+  // İlk tarama
+  setTimeout(backgroundScan,2000);
+
+  // Resize
+  window.addEventListener('resize',()=>{
+    if(currentResult)drawChart(document.getElementById('symbolInput').value,document.getElementById('tfSelect').value,currentResult.bars,currentResult);
+  });
+
+  console.log('%c✅ Master AI v2.5 — Cloudflare Worker + KV Edition','color:#ffd700;font-weight:bold;font-size:14px');
+})();
+</script>
+</body>
+</html>
