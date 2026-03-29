@@ -10,7 +10,7 @@ compatibility_date = "2024-01-01"
 # 2. Çıkan id'yi aşağıya yazın
 [[kv_namespaces]]
 binding = "MASTERAI_KV"
-id = "BURAYA_KV_ID_YAZIN"
+id = "b5174e51a84b4a36a90271f5aacb3d6a"
 preview_id = "BURAYA_KV_PREVIEW_ID_YAZIN"
 
 # ── Opsiyonel: Cron (arka plan görevi) ───────────────────────────────────
