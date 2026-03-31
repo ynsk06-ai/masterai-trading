@@ -1367,6 +1367,7 @@ let currentResult=null, currentSym='', currentTF='2h';
 let allSignals={}, notificationLog=[], dailySignals=[], openPositions={};
 let backgroundIntervalId=null, summaryIntervalTimerId=null, lastSummaryTime=0;
 let isLiveScanning=false, activeTab=0, currentTheme='dark', deviceUID='';
+let latestPrices = {};   // ← YENİ EKLENECEK
 const kvSync={signals:null,settings:null,positions:null};
 
 const ML = {
@@ -1452,7 +1453,7 @@ async function fetchOHLCV(sym,tf){
   return bars;
 }
 function resample(bars,n){const out=[];for(let i=0;i<bars.length;i+=n){const ch=bars.slice(i,i+n);if(!ch.length)continue;out.push({t:ch[0].t,o:ch[0].o,h:Math.max(...ch.map(b=>b.h)),l:Math.min(...ch.map(b=>b.l)),c:ch[ch.length-1].c,v:ch.reduce((a,b)=>a+b.v,0)});}return out;}
-
+let latestPrices = {};   // ← YENİ EKLENECEK
 /* ── Indicators ─────────────────────────────────────── */
 function sma(a,l){return a.map((_,i)=>{if(i<l-1)return null;let s=0;for(let j=i-l+1;j<=i;j++)s+=a[j];return s/l;});}
 function ema(a,l){const k=2/(l+1);const o=[];let e=null;for(let i=0;i<a.length;i++){if(a[i]===null||!isFinite(a[i])){o.push(null);continue;}e=(e===null)?a[i]:a[i]*k+e*(1-k);o.push(e);}return o;}
@@ -2070,6 +2071,7 @@ async function backgroundScan(){
     for(const tf of LIVE_TFS){
       try{
         const bars=await fetchOHLCV(sym,tf);if(!bars||bars.length<60)continue;
+        updateLatestPrice(sym,bars);
         const result=runIndicators(bars,{...CFG});if(!result)continue;
         const key=`${sym}-${tf}`,hist=allSignals[key]||[],maxT=hist.length?Math.max(...hist.map(s=>s.t||0)):0;
         const newSigs=result.signals.filter(s=>(s.t||0)>maxT);
