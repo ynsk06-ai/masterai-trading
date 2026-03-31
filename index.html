@@ -2443,7 +2443,7 @@ function updateMLPanels(mlResult) {
     drawAttentionHeatmap('attnHeatmap',mlResult.attn||[]);drawAttentionHeatmap('attnHeatmapML',mlResult.attn||[]);
     drawEquityCurve(ML.equityHistory);
     if(currentResult)drawRadarChart(currentResult,mlResult);
-        if(gnn){safeSetText('gnn-top',gnn.topCorr+' ('+gnn.sector+')');safeSetText('gnn-sector',gnn.sectorScore+'%');safeSetText('gnn-beta',gnn.beta);drawGNNGraph(currentSym||'XU100');}
+    if(gnn){safeSetText('gnn-top',gnn.topCorr+' ('+gnn.sector+')');safeSetText('gnn-sector',gnn.sectorScore+'%');safeSetText('gnn-beta',gnn.beta);drawGNNGraph(currentSym||'XU100');}
     updateModelSelectorUI();
     updateFeedbackUI();
     updateCurrentParamsDisplay();
@@ -2964,4 +2964,3 @@ if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serv
 </script>
 </body>
 </html>
-
