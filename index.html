@@ -1136,6 +1136,10 @@ let allSignals = {}, notificationLog = [], dailySignals = [], openPositions = {}
 let backgroundIntervalId = null, summaryIntervalTimerId = null, lastSummaryTime = 0;
 let isLiveScanning = false, activeTab = 0, currentTheme = 'dark', deviceUID = '';
 let liveSymbolPrices = {}; // sym -> latest price for live PnL
+let closedPositions = [];
+let pendingOptResult = null;
+let optTarget = 'all';
+let latestPrices = {};
 const kvSync = {signals:null, settings:null, positions:null};
 
 // Optimizer state
