@@ -2173,10 +2173,31 @@ function switchTab(n){
 
 function renderAllOpenPositions(){
   const table=document.getElementById('allOpenPosTable'),countEl=document.getElementById('openPosCount');if(!table)return;
-  const keys=Object.keys(openPositions);if(!keys.length){table.innerHTML=`<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--muted);">Açık pozisyon yok</td></tr>`;if(countEl)countEl.textContent='0 pozisyon';return;}
+  const keys=Object.keys(openPositions);if(!keys.length){
+    table.innerHTML=`<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--muted);">Açık pozisyon yok</td></tr>`;
+    if(countEl)countEl.textContent='0 pozisyon';
+    return;
+  }
   let html=`<tr><th style="color:var(--muted);font-size:10px;">Sembol</th><th style="color:var(--muted);font-size:10px;">TF</th><th style="color:var(--muted);font-size:10px;">Sistem</th><th style="color:var(--muted);font-size:10px;">Giriş</th><th style="color:var(--muted);font-size:10px;">PnL %</th></tr>`;
-  for(const key of keys){const pos=openPositions[key];const[sym,...tfParts]=key.split('-');const tf=tfParts.join('-');const lc=(currentSym===sym&&currentResult)?currentResult.closes[currentResult.closes.length-1]:pos.entry;const pnl=(lc-pos.entry)/pos.entry*100;html+=`<tr><td><strong>${sym}</strong></td><td><span class="badge badge-blue">${tf}</span></td><td>${pos.sys}</td><td>${pos.entry.toFixed(2)}</td><td class="${pnlClass(pnl)}">${pnl.toFixed(2)}%</td></tr>`;}
-  table.innerHTML=html;if(countEl)countEl.textContent=keys.length+' pozisyon';
+  
+  for(const key of keys){
+    const pos=openPositions[key];
+    const[sym,...tfParts]=key.split('-');
+    const tf=tfParts.join('-');
+    
+    // ←←← BURASI DÜZELTİLDİ
+    const lc = latestPrices[sym] !== undefined 
+               ? latestPrices[sym] 
+               : (currentSym === sym && currentResult 
+                  ? currentResult.closes[currentResult.closes.length - 1] 
+                  : pos.entry);
+    
+    const pnl = (lc && pos.entry) ? ((lc - pos.entry) / pos.entry * 100) : 0;
+    
+    html+=`<tr><td><strong>${sym}</strong></td><td><span class="badge badge-blue">${tf}</span></td><td>${pos.sys}</td><td>${pos.entry.toFixed(2)}</td><td class="${pnlClass(pnl)}">${pnl.toFixed(2)}%</td></tr>`;
+  }
+  table.innerHTML=html;
+  if(countEl)countEl.textContent=keys.length+' pozisyon';
 }
 function renderNotificationLog(){
   const el=document.getElementById('notificationLog');if(!el)return;
