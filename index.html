@@ -2103,6 +2103,7 @@ async function analyzeSymbol(){
   try{
     document.getElementById('statusDot').className='status-dot';
     const bars=await fetchOHLCV(sym,tf);if(loadingText)loadingText.textContent='İndikatörler + ML hesaplanıyor...';
+    updateLatestPrice(sym,bars);
     const result=runIndicators(bars,{...CFG});if(!result)throw new Error('Hesaplama başarısız');
     currentResult=result;currentSym=sym;currentTF=tf;
     let mlResult=null;if(CFG.enableML){try{mlResult=runMLEngine(bars,result);}catch(e){console.warn('ML:',e);}}
@@ -2143,6 +2144,7 @@ async function toggleLiveScan(){
     try{
       const loading=document.getElementById('chartLoading');if(loading)loading.style.display='flex';
       const bars=await fetchOHLCV(sym,tf);const result=runIndicators(bars,{...CFG});
+      updateLatestPrice(sym,bars);
       if(result){
         currentResult=result;currentSym=sym;currentTF=tf;
         let mlResult=null;if(CFG.enableML)try{mlResult=runMLEngine(bars,result);}catch{}
