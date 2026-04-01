@@ -57,25 +57,28 @@ body{
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
 ::-webkit-scrollbar-thumb:hover{background:var(--cyan);}
 
-/* HEADER */
+/* ═══ HEADER — PWA SAFE AREA FIX ═══ */
 .header{
   display:flex;align-items:center;justify-content:space-between;
   padding:calc(8px + var(--safe-top)) 10px 8px;
   background:rgba(8,13,26,0.95);border-bottom:1px solid var(--border);
   position:sticky;top:0;z-index:100;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  min-height:calc(50px + var(--safe-top));
+  box-sizing:border-box;
+  width:100%;
+  overflow:hidden;
 }
 .header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),var(--purple),transparent);opacity:0.6;}
-.header-left{display:flex;align-items:center;gap:12px;}
-.logo{font-family:var(--font-display);font-size:15px;font-weight:900;letter-spacing:2px;background:var(--grad-gold);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 8px rgba(255,215,0,0.5));white-space:nowrap;}
-.ticker-badge{background:rgba(26,37,64,0.8);border:1px solid var(--border2);border-radius:8px;padding:5px 12px;display:flex;align-items:center;gap:10px;backdrop-filter:blur(10px);}
-.ticker-name{font-family:var(--font-ui);font-weight:700;font-size:14px;color:var(--cyan);letter-spacing:1px;}
-.ticker-price{font-size:16px;font-weight:700;font-family:var(--font-display);}
-.ticker-change{font-size:11px;font-family:var(--font-ui);font-weight:600;}
-.price-up{color:var(--green);}.price-dn{color:var(--red);}
-.header-right{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;}
-.status-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse-glow 2s infinite;}
+.header-left{display:flex;align-items:center;gap:8px;flex:1;min-width:0;overflow:hidden;}
+.logo{font-family:var(--font-display);font-size:13px;font-weight:900;letter-spacing:1.5px;background:var(--grad-gold);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 8px rgba(255,215,0,0.5));white-space:nowrap;flex-shrink:0;}
+.ticker-badge{background:rgba(26,37,64,0.8);border:1px solid var(--border2);border-radius:8px;padding:4px 8px;display:flex;align-items:center;gap:6px;backdrop-filter:blur(10px);min-width:0;overflow:hidden;}
+.ticker-name{font-family:var(--font-ui);font-weight:700;font-size:13px;color:var(--cyan);letter-spacing:1px;white-space:nowrap;}
+.ticker-price{font-size:14px;font-weight:700;font-family:var(--font-display);white-space:nowrap;}
+.ticker-change{font-size:10px;font-family:var(--font-ui);font-weight:600;white-space:nowrap;}
+.header-right{display:flex;align-items:center;gap:4px;flex-shrink:0;flex-wrap:nowrap;}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse-glow 2s infinite;flex-shrink:0;}
 .status-dot.offline{background:var(--red);box-shadow:0 0 8px var(--red);animation:none;}
-.kv-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);}
+.kv-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex-shrink:0;}
 .kv-dot.ok{background:var(--cyan);box-shadow:0 0 8px var(--cyan);}
 @keyframes pulse-glow{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.6;transform:scale(1.4);}}
 
@@ -374,10 +377,12 @@ canvas.radar-canvas{width:100%;height:200px;display:block;}
 
 /* RESPONSIVE */
 @media(max-width:600px){
-  .header{padding-left:10px;padding-right:10px;}
+  .header{padding-left:8px;padding-right:8px;}
   .main{padding:8px;}.panels-grid{grid-template-columns:1fr;}
-  .symbol-bar{gap:5px;}.header-right .btn{padding:4px 8px;font-size:10px;}
+  .symbol-bar{gap:5px;}.header-right .btn{padding:4px 6px;font-size:10px;}
   .ml-metrics-row{grid-template-columns:repeat(3,1fr);}.horizon-cards{grid-template-columns:repeat(3,1fr);}
+  .logo{font-size:11px;letter-spacing:1px;}
+  .ticker-price{font-size:12px;}
 }
 body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:#c4d2e0;--surface:#b8c8da;--raised:#acc0d4;--border:#9db5cc;--border2:#8aa8c0;--text:#0f1a2e;--text2:#2a4060;--muted:#6080a0;--faint:#a0bcd0;}
 </style>
@@ -399,9 +404,9 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
   <div class="header-right">
     <div title="Veri bağlantısı" class="status-dot" id="statusDot"></div>
     <div title="KV Bulut Sync" class="kv-dot" id="kvDot"></div>
-    <button class="btn secondary" onclick="openSettings()" style="padding:5px 10px">⚙</button>
-    <button onclick="toggleTheme()" class="btn secondary" style="padding:5px 10px" id="themeBtn">🌙</button>
-    <button onclick="forceKVSync()" class="btn secondary" style="padding:5px 10px" title="Bulut Sync">☁</button>
+    <button class="btn secondary" onclick="openSettings()" style="padding:5px 8px;font-size:11px;min-width:28px;">⚙</button>
+    <button onclick="toggleTheme()" class="btn secondary" style="padding:5px 8px;font-size:11px;min-width:28px;" id="themeBtn">🌙</button>
+    <button onclick="forceKVSync()" class="btn secondary" style="padding:5px 8px;font-size:11px;min-width:28px;" title="Bulut Sync">☁</button>
   </div>
 </div>
 
@@ -832,7 +837,7 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
       </div>
     </div>
 
-    <!-- AUTO ONLINE LEARNING (replaces manual feedback) -->
+    <!-- AUTO ONLINE LEARNING -->
     <div class="panel">
       <div class="ml-panel-header" style="color:var(--gold);">
         🤖 AUTO ONLINE LEARNING — Pozisyonlardan Otomatik Öğrenme
@@ -840,7 +845,6 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
       </div>
       <div style="padding:10px 12px;">
         <div style="font-size:11px;color:var(--text2);margin-bottom:8px;">Model, kapanan her pozisyondan otomatik olarak öğrenir. Manuel geri bildirime gerek yok.</div>
-        <!-- Auto Learning Progress -->
         <div style="background:rgba(10,14,26,0.6);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:8px;">
           <div style="font-size:10px;color:var(--muted);margin-bottom:6px;font-family:var(--font-ui);letter-spacing:0.5px;">OTOMATİK ÖĞRENME İSTATİSTİKLERİ</div>
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;">
@@ -852,20 +856,15 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
           <div class="train-bar-track"><div class="train-bar-fill" id="adaptBarFill" style="width:50%;background:linear-gradient(90deg,var(--green),var(--cyan));"></div></div>
           <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--muted);margin-top:4px;"><span>Konservatif</span><span id="adaptWeightLabel">Dengeli</span><span>Agresif</span></div>
         </div>
-        <!-- Per-system learning stats -->
         <div style="font-size:10px;color:var(--muted);margin-bottom:6px;font-family:var(--font-ui);">SİSTEM BAZINDA PERFORMANS</div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:6px;" id="sysLearnGrid">
-          <!-- Populated by JS -->
-        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:6px;" id="sysLearnGrid"></div>
       </div>
-      <!-- Auto feedback log -->
       <div style="border-top:1px solid var(--border);">
         <div style="font-size:9px;color:var(--muted);padding:8px 12px 4px;font-family:var(--font-ui);letter-spacing:0.5px;">SON OTOMATİK ÖĞRENME KAYITLARI</div>
         <div class="feedback-log" id="autoFeedbackLog">
           <div style="padding:12px;text-align:center;color:var(--muted);font-size:11px;">Henüz kapanan pozisyon yok</div>
         </div>
       </div>
-      <!-- Manual override -->
       <div style="border-top:1px solid var(--border);padding:8px 12px;">
         <div style="font-size:10px;color:var(--muted);margin-bottom:6px;">Manuel Override (isteğe bağlı)</div>
         <div style="display:flex;gap:8px;">
@@ -881,7 +880,7 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
       </div>
     </div>
 
-    <!-- ═══════════ STRATEGY OPTIMIZER ═══════════ -->
+    <!-- STRATEGY OPTIMIZER -->
     <div class="panel">
       <div class="ml-panel-header" style="color:var(--magenta);">
         ⚙️ STRATEJİ OPTİMİZATÖRÜ — Tüm Sistemler & Agentlar
@@ -889,8 +888,6 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
           <button onclick="runStrategyOptimizer()" class="btn" style="padding:4px 12px;font-size:11px;background:rgba(224,64,251,0.2);color:var(--magenta);border:1px solid rgba(224,64,251,0.4);">🔍 Optimize Et</button>
         </div>
       </div>
-
-      <!-- Target System Selector -->
       <div style="padding:10px 14px;border-bottom:1px solid var(--border);">
         <div style="font-size:10px;color:var(--muted);margin-bottom:6px;font-family:var(--font-ui);letter-spacing:0.5px;">OPTİMİZASYON HEDEFİ SEÇ</div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;" id="optTargetSelector">
@@ -906,8 +903,6 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
           <button class="watch-chip" onclick="setOptTarget('A120')" id="opt-A120">🤖 A120</button>
         </div>
       </div>
-
-      <!-- Optimizer method -->
       <div style="padding:8px 14px;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:center;">
         <div style="font-size:10px;color:var(--muted);font-family:var(--font-ui);">YÖNTEM:</div>
         <select id="optMethod" style="background:rgba(10,14,26,0.8);border:1px solid var(--border2);border-radius:5px;padding:4px 8px;color:var(--text);font-size:11px;">
@@ -922,22 +917,14 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
           <option value="100">Derin (100)</option>
         </select>
       </div>
-
-      <!-- Optimizer Progress -->
       <div class="train-progress" id="optProgressWrap" style="display:none;margin:8px 14px;">
         <div style="font-size:11px;color:var(--text2);font-family:var(--font-ui);" id="optStatusText">Optimizasyon başlatılıyor...</div>
         <div class="train-bar-track"><div class="train-bar-fill" id="optBarFill" style="background:linear-gradient(90deg,var(--magenta),var(--gold));"></div></div>
         <div style="font-size:10px;color:var(--muted);" id="optDetailText">Hazırlanıyor...</div>
       </div>
-
-      <!-- Optimizer Results -->
       <div id="optResultsWrap" style="display:none;padding:10px 14px;">
         <div style="font-size:10px;color:var(--muted);margin-bottom:8px;font-family:var(--font-ui);letter-spacing:0.5px;">OPTİMİZASYON SONUÇLARI</div>
-
-        <!-- Results per system -->
         <div id="optResultsGrid" style="display:grid;gap:8px;"></div>
-
-        <!-- Approval panel -->
         <div class="opt-approval" id="optApprovalPanel">
           <div class="opt-approval-title">✋ ONAY GEREKİYOR — Parametreler değiştirilecek</div>
           <div style="font-size:11px;color:var(--text2);margin-bottom:10px;">Aşağıdaki optimizasyonu uygulamak istiyor musunuz?</div>
@@ -949,8 +936,6 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
           </div>
         </div>
       </div>
-
-      <!-- Current params -->
       <div style="border-top:1px solid var(--border);padding:8px 14px;">
         <div style="font-size:10px;color:var(--muted);margin-bottom:6px;font-family:var(--font-ui);">MEVCUT PARAMETRELER</div>
         <table class="data-table" id="currentParamsTable">
@@ -1109,11 +1094,11 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
 </div>
 
 <div class="toast-container" id="toastContainer"></div>
-
 <script>
 /* ═══════════════════════════════════════════════════════════════
    MASTER AI TRADING v4.1 — AETHER ML EDITION
    Enhanced: Real PnL, Closed Positions, Auto Learning, Optimizer
+   FIX: No duplicate open positions, correct sort order
    ═══════════════════════════════════════════════════════════════ */
 
 const WORKER_URL = 'https://masterai-proxy.ynsk06.workers.dev';
@@ -1135,14 +1120,12 @@ let currentResult = null, currentSym = '', currentTF = '2h';
 let allSignals = {}, notificationLog = [], dailySignals = [], openPositions = {}, closedPositions = [];
 let backgroundIntervalId = null, summaryIntervalTimerId = null, lastSummaryTime = 0;
 let isLiveScanning = false, activeTab = 0, currentTheme = 'dark', deviceUID = '';
-let liveSymbolPrices = {}; // sym -> latest price for live PnL
+let liveSymbolPrices = {};
 const kvSync = {signals:null, settings:null, positions:null};
 
-// Optimizer state
 let optTarget = 'all';
 let pendingOptResult = null;
 
-// Per-system learning stats
 const sysLearnStats = {
   'Sistem 1': {correct:0, wrong:0},
   'PRO': {correct:0, wrong:0},
@@ -1272,8 +1255,10 @@ async function testWorker(){
 }
 function saveWorkerUrl(){const u=document.getElementById('workerUrlInput')?.value?.trim();if(!u)return;CFG.workerUrl=u;saveLocal('masterai_cfg',CFG);showToast('Worker URL','Kaydedildi','info');testWorker();}
 
-/* ── Position Management (Enhanced) ─────────────────── */
+/* ── Position Management ─────────────────────────────── */
 function addOpenPosition(key, sym, tf, sys, entryPrice, entryTime) {
+  // Sadece mevcut değilse ekle — tekrar yazma engeli
+  if (openPositions[key]) return;
   openPositions[key] = {
     sym, tf, sys,
     entry: entryPrice,
@@ -1296,11 +1281,11 @@ function closePosition(key, exitPrice, exitTime) {
     duration,
     key
   };
+  // En yeni en başa — unshift ile ekle
   closedPositions.unshift(closed);
   if (closedPositions.length > 100) closedPositions.pop();
   delete openPositions[key];
   saveLocal('masterai_positions', {open: openPositions, closed: closedPositions});
-  // Auto online learning from this closed position
   autoLearnFromPosition(closed);
   return closed;
 }
@@ -1317,25 +1302,18 @@ function clearClosedPositions() {
 function autoLearnFromPosition(closedPos) {
   try {
     const pnl = closedPos.pnl;
-    const correct = pnl >= 0; // positive pnl = correct prediction
+    const correct = pnl >= 0;
     const sys = closedPos.sys;
-
-    // Update overall
     if (correct) { ML.feedback.correct++; ML.adaptWeight = Math.min(0.95, ML.adaptWeight + 0.03); }
     else { ML.feedback.wrong++; ML.adaptWeight = Math.max(0.05, ML.adaptWeight - 0.03); }
-
-    // Update per-system
     const sysKey = sys in sysLearnStats ? sys : Object.keys(sysLearnStats).find(k => sys.includes(k)) || 'Master AI';
     if (sysLearnStats[sysKey]) {
       if (correct) sysLearnStats[sysKey].correct++;
       else sysLearnStats[sysKey].wrong++;
     }
-
-    // Update model weights based on performance
     const totalFb = ML.feedback.correct + ML.feedback.wrong;
     if (totalFb > 0) {
       const accRate = ML.feedback.correct / totalFb;
-      // Adaptive weight adjustment
       if (accRate > 0.65) {
         ML.models.TFT.weight = Math.min(0.35, ML.models.TFT.weight + 0.01);
         ML.models.LSTM.weight = Math.min(0.30, ML.models.LSTM.weight + 0.005);
@@ -1343,12 +1321,9 @@ function autoLearnFromPosition(closedPos) {
         ML.models.XGB.weight = Math.min(0.35, ML.models.XGB.weight + 0.01);
         ML.models.DQN.weight = Math.min(0.25, ML.models.DQN.weight + 0.005);
       }
-      // Normalize weights
       const totalW = Object.values(ML.models).reduce((a,m) => a + m.weight, 0);
       Object.values(ML.models).forEach(m => m.weight /= totalW);
     }
-
-    // Log entry
     const logEntry = {
       time: new Date().toLocaleTimeString('tr-TR'),
       sym: closedPos.sym,
@@ -1360,7 +1335,6 @@ function autoLearnFromPosition(closedPos) {
     };
     autoFeedbackLog.unshift(logEntry);
     if (autoFeedbackLog.length > 50) autoFeedbackLog.pop();
-
     updateFeedbackUI();
     renderAutoFeedbackLog();
     saveLocal('masterai_ml', {feedback:ML.feedback, adaptWeight:ML.adaptWeight, equityHistory:ML.equityHistory, sysLearnStats});
@@ -1400,7 +1374,6 @@ function updateFeedbackUI() {
     if (fill) fill.style.width = (ML.adaptWeight * 100) + '%';
     const wLabel = ML.adaptWeight > 0.7 ? 'Agresif' : ML.adaptWeight < 0.3 ? 'Konservatif' : 'Dengeli';
     safeSetText('adaptWeightLabel', wLabel);
-    // Per-system grid
     renderSysLearnGrid();
   } catch(e) {}
 }
@@ -1420,17 +1393,14 @@ function renderSysLearnGrid() {
   }).join('');
 }
 
-/* ── POSITIONS TAB RENDERING ─────────────────────────── */
+/* ── POSITIONS TAB — FIXED: sort + no duplicate ──────── */
 function refreshPositionPnL() {
-  // Try to get latest prices from currentResult or liveSymbolPrices
   renderPositionsTab();
   showToast('PnL', 'Anlık fiyatlarla güncellendi', 'info');
 }
 
 function getLatestPrice(sym) {
-  // Check liveSymbolPrices first (updated by live scan)
   if (liveSymbolPrices[sym]) return liveSymbolPrices[sym];
-  // Fall back to currentResult if same symbol
   if (currentSym === sym && currentResult?.closes?.length) {
     return currentResult.closes[currentResult.closes.length - 1];
   }
@@ -1445,10 +1415,14 @@ function renderPositionsTab() {
   } catch(e) { console.warn('renderPositionsTab error:', e); }
 }
 
+/* AÇIK POZİSYONLAR — entryTime'a göre ters sıralı (en yeni en üstte) */
 function renderOpenPositions() {
   const tbody = document.getElementById('openPosBody');
   if (!tbody) return;
-  const keys = Object.keys(openPositions);
+  // entryTime desc sort
+  const keys = Object.keys(openPositions).sort((a, b) => {
+    return (openPositions[b].entryTime || 0) - (openPositions[a].entryTime || 0);
+  });
   if (!keys.length) {
     tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--muted);">Açık pozisyon yok</td></tr>';
     return;
@@ -1461,7 +1435,9 @@ function renderOpenPositions() {
     const latestPrice = getLatestPrice(sym);
     const pnl = latestPrice ? (latestPrice - pos.entry) / pos.entry * 100 : null;
     const duration = pos.entryTime ? Date.now() - pos.entryTime : null;
-    const pnlStr = pnl !== null ? `<span class="${pnlClass(pnl)}" style="font-weight:700;">${fmtPct(pnl)}</span>` : '<span style="color:var(--muted);">—</span>';
+    const pnlStr = pnl !== null
+      ? `<span class="${pnlClass(pnl)}" style="font-weight:700;">${fmtPct(pnl)}</span>`
+      : '<span style="color:var(--muted);">—</span>';
     const latestPriceStr = latestPrice ? latestPrice.toFixed(2) : '—';
     return `<tr>
       <td><strong>${sym}</strong> <span class="badge badge-blue">${tf}</span></td>
@@ -1475,6 +1451,7 @@ function renderOpenPositions() {
   }).join('');
 }
 
+/* KAPALI POZİSYONLAR — zaten unshift ile en yeni başta, sadece render */
 function renderClosedPositions() {
   const tbody = document.getElementById('closedPosBody');
   if (!tbody) return;
@@ -1501,8 +1478,6 @@ function updatePositionSummary() {
   safeSetText('summOpenCount', openKeys.length);
   safeSetText('summClosedCount', closedPositions.length);
   safeSetText('openPosCount', openKeys.length + ' açık, ' + closedPositions.length + ' kapalı');
-
-  // Total open PnL
   let totalPnl = 0, validCount = 0;
   openKeys.forEach(key => {
     const pos = openPositions[key];
@@ -1515,16 +1490,12 @@ function updatePositionSummary() {
     totalPnlEl.className = validCount > 0 ? (totalPnl >= 0 ? 'price-up' : 'price-dn') : '';
     totalPnlEl.style.fontSize = '18px'; totalPnlEl.style.fontWeight = '700'; totalPnlEl.style.fontFamily = 'var(--font-display)';
   }
-
-  // Win rate from closed
   if (closedPositions.length > 0) {
     const wins = closedPositions.filter(p => p.pnl >= 0).length;
     safeSetText('summWinRate', Math.round(wins / closedPositions.length * 100) + '%');
   } else {
     safeSetText('summWinRate', '—');
   }
-
-  // Header summary pnl
   const headerPnl = document.getElementById('totalOpenPnL');
   if (headerPnl) {
     if (validCount > 0) {
@@ -1612,9 +1583,7 @@ function supertrend(bars, mult, l) {
   return{dirs,lines};
 }
 
-/* ═══════════════════════════════════════════════════════
-   ML ENGINE v2.1
-   ═══════════════════════════════════════════════════════ */
+/* ═══════════ ML ENGINE ═══════════ */
 function buildFeatures(bars, idx) {
   if (!bars || idx < 30 || idx >= bars.length) return null;
   const closes = bars.map(b => b.c);
@@ -1861,7 +1830,6 @@ async function trainAllModels() {
     if(status)status.textContent=s.m;
     await new Promise(r=>setTimeout(r,380));
   }
-  // Simulate improved accuracy from training
   const improveFactor = 0.02 + ML.feedback.correct / Math.max(1, ML.feedback.correct + ML.feedback.wrong) * 0.05;
   for(const k in ML.models){ ML.models[k].acc = Math.min(0.88, ML.models[k].acc + improveFactor); ML.models[k].trained = true; }
   const mlResult=runMLEngine(bars,currentResult);
@@ -1906,9 +1874,7 @@ function refreshMLVisuals() {
   showToast('🔄 Görseller','Yenilendi','info');
 }
 
-/* ═══════════════════════════════════════════════════════
-   STRATEGY OPTIMIZER
-   ═══════════════════════════════════════════════════════ */
+/* ═══════════ STRATEGY OPTIMIZER ═══════════ */
 function setOptTarget(target) {
   optTarget = target;
   document.querySelectorAll('#optTargetSelector .watch-chip').forEach(el => el.classList.remove('active'));
@@ -1925,7 +1891,6 @@ function updateCurrentParamsDisplay() {
   safeSetText('cp-stp', CFG.stPeriod||30);
 }
 
-// Parameter search spaces
 const paramSpaces = {
   masterBuyTh:   { min:0.50, max:0.90, step:0.05, label:'Master Buy Th',   target:['sys1','master','all'] },
   masterSellTh:  { min:0.10, max:0.45, step:0.05, label:'Master Sell Th',  target:['sys1','master','all'] },
@@ -1962,41 +1927,28 @@ function evaluateParams(bars, cfg) {
 async function runStrategyOptimizer() {
   const bars = currentResult?.bars;
   if (!bars) { showToast('Optimizer', 'Önce analiz yapın', 'info'); return; }
-
   const method = document.getElementById('optMethod')?.value || 'bayesian';
   const iterations = parseInt(document.getElementById('optIterations')?.value || '50');
-
   const wrap = document.getElementById('optProgressWrap');
   const fill = document.getElementById('optBarFill');
   const statusEl = document.getElementById('optStatusText');
   const detailEl = document.getElementById('optDetailText');
   const resultsWrap = document.getElementById('optResultsWrap');
-
   if (wrap) wrap.style.display = 'block';
   if (resultsWrap) resultsWrap.style.display = 'none';
-
   const baseCfg = { ...CFG };
   let bestCfg = { ...baseCfg };
   let bestScore = evaluateParams(bars, baseCfg).score;
-  const optimizeTargets = [];
-
-  // Determine what to optimize
   const isAgent = ['A60','A61','A62','A81','A120'].includes(optTarget);
   const targets = optTarget === 'all' ? Object.keys(paramSpaces) :
     Object.keys(paramSpaces).filter(k => paramSpaces[k].target.includes(optTarget));
-
-  const results = {};
-
   try {
     for (let iter = 0; iter < iterations; iter++) {
       const pct = Math.round(iter / iterations * 100);
       if (fill) fill.style.width = pct + '%';
       if (statusEl) statusEl.textContent = `${method.toUpperCase()} Optimizasyon — ${pct}%`;
-
       let testCfg = { ...baseCfg };
-
       if (method === 'grid') {
-        // Grid search: systematic parameter sweep
         const keys = targets;
         const keyIdx = iter % keys.length;
         const key = keys[keyIdx];
@@ -2005,7 +1957,6 @@ async function runStrategyOptimizer() {
         for (let v = space.min; v <= space.max; v += space.step) range.push(v);
         testCfg[key] = range[Math.floor(iter / keys.length) % range.length];
       } else if (method === 'bayesian') {
-        // Bayesian-like: exploit best + explore
         for (const key of targets) {
           const space = paramSpaces[key];
           const exploit = bestCfg[key] || baseCfg[key];
@@ -2013,11 +1964,10 @@ async function runStrategyOptimizer() {
           const candidate = exploit + (Math.random()-0.5) * 2 * noise;
           testCfg[key] = Math.round(Math.max(space.min, Math.min(space.max, candidate)) / space.step) * space.step;
         }
-      } else { // genetic
-        // Genetic: random mutation
+      } else {
         for (const key of targets) {
           const space = paramSpaces[key];
-          if (Math.random() < 0.3) { // 30% mutation
+          if (Math.random() < 0.3) {
             const range = [];
             for (let v = space.min; v <= space.max; v += space.step) range.push(v);
             testCfg[key] = range[Math.floor(Math.random()*range.length)];
@@ -2026,19 +1976,11 @@ async function runStrategyOptimizer() {
           }
         }
       }
-
       const eval_ = evaluateParams(bars, testCfg);
       if (detailEl) detailEl.textContent = `İter ${iter+1}: PnL=${eval_.pnl?.toFixed(1)||'—'}% Trades=${eval_.trades}`;
-
-      if ((eval_.score||0) > bestScore) {
-        bestScore = eval_.score;
-        bestCfg = { ...testCfg };
-      }
-
-      if (iter % 10 === 0) await new Promise(r => setTimeout(r, 1)); // yield to browser
+      if ((eval_.score||0) > bestScore) { bestScore = eval_.score; bestCfg = { ...testCfg }; }
+      if (iter % 10 === 0) await new Promise(r => setTimeout(r, 1));
     }
-
-    // Agent optimization
     let bestAgentParams = JSON.parse(JSON.stringify(agentOptParams));
     if (isAgent || optTarget === 'all') {
       const agentTargets = optTarget === 'all' ? Object.keys(agentOptParams) : [optTarget].filter(k => agentOptParams[k]);
@@ -2050,21 +1992,15 @@ async function runStrategyOptimizer() {
             probBoost: agentSpaces[agName].probBoost.min + Math.random() * (agentSpaces[agName].probBoost.max - agentSpaces[agName].probBoost.min),
             stopMult: agentSpaces[agName].stopMult.min + Math.random() * (agentSpaces[agName].stopMult.max - agentSpaces[agName].stopMult.min)
           };
-          // Simple scoring: estimate based on stop mult vs market volatility
           const avgATR = atr(bars, 14).filter(Boolean).slice(-20).reduce((a,b)=>a+b,0) / 20 || 1;
           const score = -(Math.abs(testAgent.stopMult * avgATR / bars[bars.length-1].c - 0.05)) + testAgent.probBoost * 0.1;
           if (score > bestAgScore) { bestAgScore = score; bestAgentParams[agName] = testAgent; }
         }
       }
     }
-
     if (statusEl) statusEl.textContent = '✅ Optimizasyon tamamlandı!';
     if (fill) fill.style.width = '100%';
-
-    // Prepare results
     pendingOptResult = { bestCfg, baseCfg, bestAgentParams, targets, score: bestScore };
-
-    // Show results
     const resultsGrid = document.getElementById('optResultsGrid');
     if (resultsGrid) {
       const systemResults = [];
@@ -2085,8 +2021,6 @@ async function runStrategyOptimizer() {
           <div style="margin-top:8px;font-size:11px;color:var(--cyan);">Tahmini skor: <strong>${bestScore.toFixed(1)}</strong></div>
         </div>`);
       }
-
-      // Agent results
       const agentKeys = Object.keys(bestAgentParams);
       if (agentKeys.length > 0 && (optTarget === 'all' || isAgent)) {
         systemResults.push(`<div style="background:rgba(10,14,26,0.7);border:1px solid var(--border2);border-radius:8px;padding:10px;">
@@ -2100,11 +2034,8 @@ async function runStrategyOptimizer() {
           </div>`).join('')}
         </div>`);
       }
-
       resultsGrid.innerHTML = systemResults.join('');
     }
-
-    // Approval details
     const approvalDetails = document.getElementById('optApprovalDetails');
     if (approvalDetails) {
       const changes = targets.filter(k => Math.abs((baseCfg[k]||0)-(bestCfg[k]||0)) > 0.001);
@@ -2112,7 +2043,6 @@ async function runStrategyOptimizer() {
         ? changes.map(k => `<div>• ${paramSpaces[k].label}: ${typeof baseCfg[k]==='number'?baseCfg[k].toFixed(2):baseCfg[k]} → <strong style="color:var(--green);">${typeof bestCfg[k]==='number'?bestCfg[k].toFixed(2):bestCfg[k]}</strong></div>`).join('')
         : '<div style="color:var(--muted);">Mevcut parametreler zaten optimal görünüyor.</div>';
     }
-
     if (resultsWrap) resultsWrap.style.display = 'block';
     setTimeout(() => { if (wrap) wrap.style.display = 'none'; }, 1500);
     showToast('⚙️ Optimizer', 'Tamamlandı — onay bekleniyor', 'ml');
@@ -2126,9 +2056,7 @@ async function runStrategyOptimizer() {
 function applyOptimization() {
   if (!pendingOptResult) return;
   const { bestCfg, bestAgentParams, targets } = pendingOptResult;
-  for (const key of targets) {
-    if (bestCfg[key] !== undefined) CFG[key] = bestCfg[key];
-  }
+  for (const key of targets) { if (bestCfg[key] !== undefined) CFG[key] = bestCfg[key]; }
   Object.assign(agentOptParams, bestAgentParams);
   saveLocal('masterai_cfg', CFG);
   saveLocal('masterai_agentParams', agentOptParams);
@@ -2137,7 +2065,6 @@ function applyOptimization() {
   document.getElementById('optResultsWrap').style.display = 'none';
   pendingOptResult = null;
   showToast('✅ Optimize Edildi', 'Tüm parametreler güncellendi', 'ml');
-  // Re-analyze with new params
   if (currentSym) analyzeSymbol();
 }
 
@@ -2148,9 +2075,7 @@ function applyOptimizationPartial() {
     const space = paramSpaces[k];
     return space.target.includes(optTarget) || optTarget === 'all';
   });
-  for (const key of selected) {
-    if (bestCfg[key] !== undefined) CFG[key] = bestCfg[key];
-  }
+  for (const key of selected) { if (bestCfg[key] !== undefined) CFG[key] = bestCfg[key]; }
   saveLocal('masterai_cfg', CFG);
   updateCurrentParamsDisplay();
   showToast('✅ Kısmi Uygulama', `${selected.length} parametre güncellendi`, 'ml');
@@ -2164,9 +2089,7 @@ function cancelOptimization() {
   showToast('İptal', 'Optimizasyon iptal edildi', 'info');
 }
 
-/* ═══════════════════════════════════════════════════════
-   SIGNAL ENGINE
-   ═══════════════════════════════════════════════════════ */
+/* ═══════════ SIGNAL ENGINE ═══════════ */
 function runIndicators(bars, cfg) {
   if (!bars || bars.length < 60) return null;
   try {
@@ -2268,9 +2191,7 @@ function calcPriceState(qs) {
   return{text:'—',color:'#64748b',cls:'badge-gray'};
 }
 
-/* ═══════════════════════════════════════════════════════
-   CHART ENGINE
-   ═══════════════════════════════════════════════════════ */
+/* ═══════════ CHART ENGINE ═══════════ */
 function drawChart(sym, tf, bars, result, mlResult) {
   try {
     const canvas=document.getElementById('mainChart');if(!canvas)return;
@@ -2282,24 +2203,20 @@ function drawChart(sym, tf, bars, result, mlResult) {
     if(!validBars.length)return;
     const minP=Math.min(...validBars.map(b=>b.l)),maxP=Math.max(...validBars.map(b=>b.h));
     const pRange=maxP-minP||1,barStep=cW/bars.length,bW=Math.max(1.5,barStep*0.7);
-    // Grid
     ctx.setLineDash([2,4]);
     for(let i=0;i<=6;i++){const y=30+i*(cH/6);ctx.strokeStyle=`rgba(0,229,255,${i===3?0.12:0.05})`;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pL,y);ctx.lineTo(w-pR,y);ctx.stroke();const price=maxP-(maxP-minP)*(i/6);ctx.fillStyle='rgba(100,130,180,0.6)';ctx.font='9px JetBrains Mono';ctx.textAlign='right';ctx.fillText(price.toFixed(1),pL-4,y+3);}
     const vStep=Math.max(1,Math.floor(bars.length/8));
     for(let i=0;i<bars.length;i+=vStep){const x=pL+i*barStep;ctx.strokeStyle='rgba(30,48,80,0.3)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,30);ctx.lineTo(x,30+cH);ctx.stroke();try{const d=new Date(bars[i].t);ctx.fillStyle='rgba(74,96,128,0.5)';ctx.font='8px JetBrains Mono';ctx.textAlign='center';ctx.fillText(d.toLocaleDateString('tr-TR',{month:'numeric',day:'numeric'}),x,30+cH+14);}catch(e){}}
     ctx.setLineDash([]);
-    // TMA Band
     if(result?.tmaUpper&&result?.tmaLower){
       ctx.beginPath();let first=true;
       for(let i=0;i<bars.length;i++){if(!result.tmaUpper[i]||!isFinite(result.tmaUpper[i]))continue;const x=pL+i*barStep+barStep/2;const uY=30+cH-(result.tmaUpper[i]-minP)/pRange*cH;if(first){ctx.moveTo(x,uY);first=false;}else ctx.lineTo(x,uY);}
       for(let i=bars.length-1;i>=0;i--){if(!result.tmaLower[i]||!isFinite(result.tmaLower[i]))continue;const x=pL+i*barStep+barStep/2;const lY=30+cH-(result.tmaLower[i]-minP)/pRange*cH;ctx.lineTo(x,lY);}
       ctx.closePath();const bg=ctx.createLinearGradient(0,30,0,30+cH);bg.addColorStop(0,'rgba(255,109,0,0.07)');bg.addColorStop(1,'rgba(255,109,0,0.01)');ctx.fillStyle=bg;ctx.fill();
     }
-    // ML prediction line
     if(mlResult?.moe){
       try{const predPrice=parseFloat(mlResult.moe.pred1d||0);const lastBar=bars[bars.length-1];const xEnd=pL+bars.length*barStep;const yLast=30+cH-(lastBar.c-minP)/pRange*cH;const yPred=30+cH-(predPrice-minP)/pRange*cH;if(predPrice>=minP&&predPrice<=maxP*1.15){ctx.setLineDash([4,3]);ctx.strokeStyle=mlResult.moe.dir>=0?'rgba(0,230,118,0.5)':'rgba(255,23,68,0.5)';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(xEnd-barStep,yLast);ctx.lineTo(Math.min(xEnd+40,w-pR),yPred);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle=mlResult.moe.dir>=0?'rgba(0,230,118,0.8)':'rgba(255,23,68,0.8)';ctx.font='9px JetBrains Mono';ctx.textAlign='left';ctx.fillText('ML→'+predPrice.toFixed(1),Math.min(xEnd+4,w-pR-50),yPred);}}catch(e){}
     }
-    // Candles
     for(let i=0;i<bars.length;i++){
       const bar=bars[i];if(!bar||!isFinite(bar.c))continue;
       const x=pL+i*barStep+barStep/2;
@@ -2312,21 +2229,15 @@ function drawChart(sym, tf, bars, result, mlResult) {
       if(result?.stLine&&result.stLine[i]!==null&&i>0&&result.stLine[i-1]!==null&&isFinite(result.stLine[i])){const sY=30+cH-(result.stLine[i]-minP)/pRange*cH,psY=30+cH-(result.stLine[i-1]-minP)/pRange*cH,px=pL+(i-1)*barStep+barStep/2;ctx.strokeStyle=result.stDir[i]===-1?'#00e5ff':'rgba(255,109,0,0.6)';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(px,psY);ctx.lineTo(x,sY);ctx.stroke();}
       if(mlResult?.attn){const ai=i-(bars.length-mlResult.attn.length);if(ai>=0&&mlResult.attn[ai]>0.7){ctx.fillStyle=`rgba(176,64,255,${mlResult.attn[ai]*0.12})`;ctx.fillRect(x-bW/2-1,hY-4,bW+2,lY-hY+8);}}
     }
-    // Stop line
     if(result?.stopLines?.master){const lastStop=result.stopLines.master[bars.length-1];if(lastStop!==null&&isFinite(lastStop)&&lastStop>minP&&lastStop<maxP){const stY=30+cH-(lastStop-minP)/pRange*cH;ctx.strokeStyle='rgba(255,215,0,0.8)';ctx.lineWidth=1.5;ctx.setLineDash([5,3]);ctx.shadowBlur=6;ctx.shadowColor='rgba(255,215,0,0.4)';ctx.beginPath();ctx.moveTo(pL,stY);ctx.lineTo(w-pR,stY);ctx.stroke();ctx.shadowBlur=0;ctx.setLineDash([]);ctx.fillStyle='rgba(255,215,0,0.9)';ctx.font='9px JetBrains Mono';ctx.textAlign='left';ctx.fillText('STOP '+lastStop.toFixed(1),pL+4,stY-3);}}
-    // Signal triangles
     if(result?.signals){const recentSigs=result.signals.filter(s=>s.bar>=bars.length-60);for(const sig of recentSigs){if(sig.bar>=bars.length||!bars[sig.bar])continue;const x=pL+sig.bar*barStep+barStep/2;const bar=bars[sig.bar];if(sig.type==='AL'){const y=30+cH-(bar.l-minP)/pRange*cH+10;ctx.fillStyle='#00e676';ctx.shadowBlur=8;ctx.shadowColor='#00e676';ctx.beginPath();ctx.moveTo(x,y-8);ctx.lineTo(x-5,y);ctx.lineTo(x+5,y);ctx.fill();ctx.shadowBlur=0;}else{const y=30+cH-(bar.h-minP)/pRange*cH-10;const col=sig.sys==='Master AI'?'#ffd700':'#ff1744';ctx.fillStyle=col;ctx.shadowBlur=8;ctx.shadowColor=col;ctx.beginPath();ctx.moveTo(x,y+8);ctx.lineTo(x-5,y);ctx.lineTo(x+5,y);ctx.fill();ctx.shadowBlur=0;}}}
-    // Current price
     if(bars.length>0&&isFinite(bars[bars.length-1].c)){const lastC=bars[bars.length-1].c;const pY=30+cH-(lastC-minP)/pRange*cH;ctx.strokeStyle='rgba(0,229,255,0.35)';ctx.lineWidth=1;ctx.setLineDash([2,3]);ctx.beginPath();ctx.moveTo(pL,pY);ctx.lineTo(w-pR,pY);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='rgba(0,229,255,0.9)';ctx.font='bold 9px JetBrains Mono';ctx.textAlign='right';ctx.fillText(lastC.toFixed(1),w-pR-2,pY-2);}
-    // Volume
     const vC=document.getElementById('volumeChart');if(vC){const vCtx=vC.getContext('2d');vC.width=w;vC.height=60;vCtx.clearRect(0,0,w,60);const mV=Math.max(...bars.map(b=>b.v||0),1);for(let i=0;i<bars.length;i++){const bar=bars[i];if(!bar||!isFinite(bar.v))continue;const x=pL+i*barStep,vH=Math.min(52,(bar.v/mV)*52)||0;const vG=vCtx.createLinearGradient(0,60-vH,0,60);if(bar.c>=bar.o){vG.addColorStop(0,'rgba(0,230,118,0.5)');vG.addColorStop(1,'rgba(0,230,118,0.1)');}else{vG.addColorStop(0,'rgba(255,23,68,0.5)');vG.addColorStop(1,'rgba(255,23,68,0.1)');}vCtx.fillStyle=vG;vCtx.fillRect(x,60-vH,Math.max(1,barStep-0.5),vH);}}
     drawAttentionHeatmap('attnHeatmap', mlResult?.attn||[]);
   } catch(e) { console.error('drawChart error:', e); }
 }
 
-/* ═══════════════════════════════════════════════════════
-   AETHER VISUAL COMPONENTS
-   ═══════════════════════════════════════════════════════ */
+/* ═══════════ AETHER VISUAL COMPONENTS ═══════════ */
 function drawAttentionHeatmap(id, attn) {
   try {
     const el=document.getElementById(id);if(!el||!attn.length)return;
@@ -2458,9 +2369,7 @@ function updateModelSelectorUI() {
   } catch(e) {}
 }
 
-/* ═══════════════════════════════════════════════════════
-   PANEL UPDATES
-   ═══════════════════════════════════════════════════════ */
+/* ═══════════ PANEL UPDATES ═══════════ */
 function updateAllPanels(sym, r) {
   if (!r) return;
   try {
@@ -2502,7 +2411,6 @@ function updateAllPanels(sym, r) {
     const bIT=ag.agStates[bI],bOP=bIT?(lc-ag.agEntries[bI])/ag.agEntries[bI]*100:null;
     safeSetHTML('ba-pos',bIT?`<span class="badge ${badgeClass(bOP)}">AÇIK %${fmt(bOP)}</span>`:'<span class="badge badge-gray">YOK</span>');
     safeSetText('ba-rep',fmt(ag.agRep[bI]));
-    // Sync open positions from result
     syncOpenPositionsFromResult(sym, r, lc);
     renderSignalLog(r.signals, sym);
     updateOpenPositionsPanel(r, lc);
@@ -2510,9 +2418,8 @@ function updateAllPanels(sym, r) {
   } catch(e) { console.warn('updateAllPanels error:', e); }
 }
 
+/* ═══════════ SYNC OPEN POSITIONS — NO DUPLICATE FIX ═══════════ */
 function syncOpenPositionsFromResult(sym, r, lc) {
-  // Sync result-based positions into openPositions store
-  // and detect newly closed positions for auto-learning
   const tf = currentTF;
   const systems = [
     { key: `${sym}-${tf}-master`, inTrade: r.master.inMaster, entry: r.master.masterEntry, sys: 'Master AI' },
@@ -2521,20 +2428,35 @@ function syncOpenPositionsFromResult(sym, r, lc) {
     { key: `${sym}-${tf}-fusion`, inTrade: r.fusion.inFusion, entry: r.fusion.fusionEntry,  sys: 'Fusion' },
   ];
   const aN = ['A60','A61','A62','A81','A120'];
-  for (let i=0;i<5;i++) {
+  for (let i = 0; i < 5; i++) {
     systems.push({ key:`${sym}-${tf}-${aN[i]}`, inTrade:r.agents.agStates[i], entry:r.agents.agEntries[i], sys:aN[i] });
   }
   for (const s of systems) {
     if (s.inTrade && s.entry > 0) {
+      // SADECE mevcut değilse ekle — tekrar yazma yok
       if (!openPositions[s.key]) {
-        openPositions[s.key] = { sym, tf, sys:s.sys, entry:s.entry, entryTime:Date.now() - 3600000, highest:s.entry };
+        // Sinyal geçmişinden gerçek giriş zamanını bul
+        const sigKey = `${sym}-${tf}`;
+        const hist = allSignals[sigKey] || [];
+        const lastBuy = [...hist].reverse().find(sig => sig.type === 'AL' && sig.sys === s.sys);
+        const entryTime = lastBuy ? lastBuy.t : Date.now();
+        openPositions[s.key] = {
+          sym, tf, sys: s.sys,
+          entry: s.entry,
+          entryTime: entryTime,
+          highest: s.entry,
+        };
       }
     } else {
+      // Sistem dışarıda ama kayıtta varsa kapat
       if (openPositions[s.key]) {
         closePosition(s.key, lc, Date.now());
       }
     }
   }
+  // Positions tab açıksa güncelle
+  if (activeTab === 1) renderPositionsTab();
+  saveLocal('masterai_positions', {open: openPositions, closed: closedPositions});
 }
 
 function updateOpenPositionsPanel(r, lc) {
@@ -2604,6 +2526,7 @@ async function backgroundScan() {
             if(sig.type==='AL'){
               showToast(`${sig.sys} AL`,`${sym}(${tf}) @ ${sig.price.toFixed(2)}`,sig.sys==='Master AI'?'master':'buy');
               sendTelegram(`🚨 ${msgBody}\n📊 ${tvLink}`);
+              // addOpenPosition: duplicate kontrolü içinde
               addOpenPosition(key, sym, tf, sig.sys, sig.price, sig.t);
             } else if(sig.type==='SAT'&&sig.pnl!==undefined){
               showToast(`${sig.sys} SAT`,`${sym}(${tf}) PnL: ${fmt(sig.pnl)}%`,sig.pnl>=0?'buy':'sell');
@@ -2936,32 +2859,4 @@ if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serv
     if(!CFG.stPeriod)CFG.stPeriod=30;
     const savedSig=loadLocal('masterai_signals');if(savedSig)allSignals=savedSig;
     const savedPos=loadLocal('masterai_positions');
-    if(savedPos){if(savedPos.open)openPositions=savedPos.open;if(savedPos.closed)closedPositions=savedPos.closed;}
-    const savedML=loadLocal('masterai_ml');
-    if(savedML){if(savedML.feedback)ML.feedback=savedML.feedback;if(savedML.adaptWeight)ML.adaptWeight=savedML.adaptWeight;if(savedML.equityHistory)ML.equityHistory=savedML.equityHistory;if(savedML.sysLearnStats)Object.assign(sysLearnStats,savedML.sysLearnStats);}
-    const savedAgentParams=loadLocal('masterai_agentParams');
-    if(savedAgentParams)Object.assign(agentOptParams,savedAgentParams);
-    deviceUID=getDeviceUID();currentTheme=CFG.theme||'dark';
-    applyTheme();renderWatchlist();updateModelSelectorUI();updateCurrentParamsDisplay();
-    if(!localStorage.getItem('masterai_firstlaunch')){
-      document.getElementById('watchlistModal')?.classList.add('open');
-    } else {
-      kvPullAll().then(()=>{renderWatchlist();updateKVStats();});
-      setTimeout(()=>{
-        const sym=CFG.watchlist[0]||'XU100';
-        const symInp=document.getElementById('symbolInput');if(symInp)symInp.value=sym;
-        analyzeSymbol();
-      },600);
-    }
-    setTimeout(()=>{fetch(workerBase()+'/').then(r=>r.json()).then(()=>setKVDot('ok')).catch(()=>setKVDot('error'));},1500);
-    backgroundIntervalId=setInterval(backgroundScan,30000);
-    summaryIntervalTimerId=setInterval(sendPeriodicSummary,CFG.summaryInterval*1000);
-    window.addEventListener('resize',()=>{if(currentResult&&currentSym)drawChart(currentSym,currentTF,currentResult.bars,currentResult,null);});
-    console.log('%c✅ Master AI Trading v4.1 — AETHER ML EDITION','color:#ffd700;font-weight:bold;font-size:14px');
-    console.log('%cML Engine: LSTM + TFT + XGBoost + DQN + MoE + Auto Learning + Strategy Optimizer','color:#00e5ff;font-size:11px');
-    console.log('%cWorker: https://masterai-proxy.ynsk06.workers.dev','color:#b040ff;font-size:11px');
-  }catch(e){console.error('Init error:',e);}
-})();
-</script>
-</body>
-</html>
+    if(savedPos){if(savedPos.open
