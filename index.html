@@ -2631,17 +2631,18 @@ async function toggleLiveScan() {
         const newSigs=result.signals.filter(s=>(s.t||0)>maxT);
         if(newSigs.length){
           allSignals[key]=[...hist,...newSigs];saveAllSignals();
-          newSigs.forEach(sig=>{
+                    newSigs.forEach(sig=>{
             const ts=new Date(sig.t).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
-            const ni={time:ts,sym,tf,sys:sig.sys,type:sig.type,price:sig.price,pnl:sig.pnl,t:sig.t};
-            notificationLog.unshift(ni);if(new Date(sig.t).toDateString()===new Date().toDateString())dailySignals.unshift(ni);
+            const notifItem={time:ts,sym,tf,sys:sig.sys,type:sig.type,price:sig.price,pnl:sig.pnl,t:sig.t};
+            notificationLog.unshift(notifItem);if(new Date(sig.t).toDateString()===new Date().toDateString()){dailySignals.unshift(notifItem);if(dailySignals.length>100)dailySignals.pop();}
             if(sig.type==='AL'){
-              showToast(`🔔 ${sig.sys} AL`,`${sym}(${tf}) @ ${sig.price.toFixed(2)}`,sig.sys==='Master AI'?'master':'buy');
+              showToast(`${sig.sys} AL`,`${sym}(${tf}) @ ${sig.price.toFixed(2)}`,sig.sys==='Master AI'?'master':'buy');
               sendTelegram(`🚨 ${sig.sys} AL\n${sym}(${tf}) @ ${sig.price.toFixed(2)}`);
-              addOpenPosition(key,sym,tf,sig.sys,sig.price,sig.t);
+              // addOpenPosition KALDIRILDI
             } else if(sig.type==='SAT'&&sig.pnl!==undefined){
               showToast(`${sig.sys} SAT`,`${sym}(${tf}) PnL: ${fmt(sig.pnl)}%`,sig.pnl>=0?'buy':'sell');
-              if(openPositions[key])closePosition(key,sig.price,sig.t);
+              sendTelegram(`✅ ${sym}(${tf}) KAPANDI\nSistem: ${sig.sys}\nPnL: %${fmt(sig.pnl)}\n📊 ${tvLink}`);
+              // closePosition KALDIRILDI → syncOpenPositionsFromResult kapatacak
             }
             if(activeTab===2)renderNotificationLog();
             if(activeTab===3)renderDailySignals();
