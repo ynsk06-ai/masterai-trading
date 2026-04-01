@@ -1256,16 +1256,35 @@ async function testWorker(){
 function saveWorkerUrl(){const u=document.getElementById('workerUrlInput')?.value?.trim();if(!u)return;CFG.workerUrl=u;saveLocal('masterai_cfg',CFG);showToast('Worker URL','Kaydedildi','info');testWorker();}
 
 /* ── Position Management ─────────────────────────────── */
-function addOpenPosition(key, sym, tf, sys, entryPrice, entryTime) {
-  // Sadece mevcut değilse ekle — tekrar yazma engeli
-  if (openPositions[key]) return;
-  openPositions[key] = {
-    sym, tf, sys,
-    entry: entryPrice,
-    entryTime: entryTime || Date.now(),
-    highest: entryPrice,
+function addOpenPosition(key, sym, tf, sys, price, t) {
+  if (!sys) sys = 'UNKNOWN';
+  
+  // Canlı tarama için en önemli: Benzersiz anahtar (Sembol + TF + Sistem)
+  const positionKey = `${sym}-${tf}-${sys}`;
+
+  // Zaten açık pozisyon varsa EKLEME ve erken çık
+  if (openPositions[positionKey]) {
+    // Mevcut pozisyonun entry fiyatını güncellemek istersen buraya ekleyebilirsin (şu an gerek yok)
+    console.log(`[SKIP] Zaten açık: ${positionKey} @ ${openPositions[positionKey].entry}`);
+    return;
+  }
+
+  // Yeni pozisyon oluştur
+  openPositions[positionKey] = {
+    sym: sym,
+    tf: tf,
+    sys: sys,
+    entry: parseFloat(price),
+    entryTime: t || Date.now()
   };
-  saveLocal('masterai_positions', {open: openPositions, closed: closedPositions});
+
+  // Kaydet
+  saveLocal('masterai_positions', { 
+    open: openPositions, 
+    closed: closedPositions || [] 
+  });
+
+  console.log(`[OPEN] Yeni pozisyon eklendi: ${positionKey} @ ${price}`);
 }
 
 function closePosition(key, exitPrice, exitTime) {
@@ -2626,8 +2645,13 @@ async function toggleLiveScan() {
         let mlResult=null;if(CFG.enableML)try{mlResult=runMLEngine(bars,result);}catch{}
         updateAllPanels(sym,result);if(mlResult)updateMLPanels(mlResult);
         drawChart(sym,tf,bars,result,mlResult);
-        const key=`${sym}-${tf}`,hist=allSignals[key]||[],maxT=hist.length?Math.max(...hist.map(s=>s.t||0)):0;
-        const newSigs=result.signals.filter(s=>(s.t||0)>maxT);
+        const baseKey = `${sym}-${tf}`;
+        const newSigs = result.signals.filter(s => {
+         if (!s || !(s.t || 0) > maxT) return false;
+         const sys = s.sys || 'UNKNOWN';
+         const posKey = `${sym}-${tf}-${sys}`;
+         return !openPositions[posKey];   // Açık değilse ekle
+        });
         if(newSigs.length){
           allSignals[key]=[...hist,...newSigs];saveAllSignals();
           newSigs.forEach(sig=>{
