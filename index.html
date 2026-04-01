@@ -2569,16 +2569,21 @@ async function backgroundScan() {
             const notifItem={time:ts,sym,tf,sys:sig.sys,type:sig.type,price:sig.price,pnl:sig.pnl,t:sig.t,tvLink};
             notificationLog.unshift(notifItem);if(notificationLog.length>300)notificationLog.pop();
             if(new Date(sig.t).toDateString()===new Date().toDateString()){dailySignals.unshift(notifItem);if(dailySignals.length>100)dailySignals.pop();}
+            
+            // KRİTİK DÜZELTME: Pozisyon anahtarı sisteme özel olmalı (Örn: XU100-2h-Master AI)
+            const posKey = `${sym}-${tf}-${sig.sys}`;
+            
             if(sig.type==='AL'){
               showToast(`${sig.sys} AL`,`${sym}(${tf}) @ ${sig.price.toFixed(2)}`,sig.sys==='Master AI'?'master':'buy');
               sendTelegram(`🚨 ${msgBody}\n📊 ${tvLink}`);
-              // addOpenPosition: duplicate kontrolü içinde
-              addOpenPosition(key, sym, tf, sig.sys, sig.price, sig.t);
+              // Düzeltildi: 'key' yerine 'posKey' gönderiliyor
+              addOpenPosition(posKey, sym, tf, sig.sys, sig.price, sig.t);
             } else if(sig.type==='SAT'&&sig.pnl!==undefined){
               showToast(`${sig.sys} SAT`,`${sym}(${tf}) PnL: ${fmt(sig.pnl)}%`,sig.pnl>=0?'buy':'sell');
-              if(openPositions[key]){
+              // Düzeltildi: 'key' yerine 'posKey' ile kontrol ediliyor
+              if(openPositions[posKey]){
                 sendTelegram(`✅ ${sym}(${tf}) KAPANDI\nSistem: ${sig.sys}\nPnL: %${fmt(sig.pnl)}\n📊 ${tvLink}`);
-                closePosition(key, sig.price, sig.t);
+                closePosition(posKey, sig.price, sig.t);
               }
             }
             if(CFG.notifications&&'Notification'in window&&Notification.permission==='granted')
@@ -2680,13 +2685,19 @@ async function toggleLiveScan() {
             const ts=new Date(sig.t).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
             const ni={time:ts,sym,tf,sys:sig.sys,type:sig.type,price:sig.price,pnl:sig.pnl,t:sig.t};
             notificationLog.unshift(ni);if(new Date(sig.t).toDateString()===new Date().toDateString())dailySignals.unshift(ni);
+            
+            // KRİTİK DÜZELTME: Doğru pozisyon referansı
+            const posKey = `${sym}-${tf}-${sig.sys}`;
+
             if(sig.type==='AL'){
               showToast(`🔔 ${sig.sys} AL`,`${sym}(${tf}) @ ${sig.price.toFixed(2)}`,sig.sys==='Master AI'?'master':'buy');
               sendTelegram(`🚨 ${sig.sys} AL\n${sym}(${tf}) @ ${sig.price.toFixed(2)}`);
-              addOpenPosition(key,sym,tf,sig.sys,sig.price,sig.t);
+              // Düzeltildi
+              addOpenPosition(posKey,sym,tf,sig.sys,sig.price,sig.t);
             } else if(sig.type==='SAT'&&sig.pnl!==undefined){
               showToast(`${sig.sys} SAT`,`${sym}(${tf}) PnL: ${fmt(sig.pnl)}%`,sig.pnl>=0?'buy':'sell');
-              if(openPositions[key])closePosition(key,sig.price,sig.t);
+              // Düzeltildi
+              if(openPositions[posKey])closePosition(posKey,sig.price,sig.t);
             }
             if(activeTab===2)renderNotificationLog();
             if(activeTab===3)renderDailySignals();
@@ -2701,6 +2712,7 @@ async function toggleLiveScan() {
   };
   scanNext();
 }
+
 
 /* ── Tab Control ─────────────────────────────────────── */
 function switchTab(n) {
