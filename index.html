@@ -1267,7 +1267,53 @@ function addOpenPosition(key, sym, tf, sys, entryPrice, entryTime) {
   };
   saveLocal('masterai_positions', {open: openPositions, closed: closedPositions});
 }
+// === POZİSYON MERKEZİNE "HEPSİNİ SİL" BUTONU EKLE ===
+function addClearPositionsButton() {
+  // Buton zaten varsa ekleme
+  if (document.getElementById('clearAllPositionsBtn')) return;
 
+  const container = document.querySelector('#content1 .panel-header') || 
+                    document.querySelector('.panel-header');
+  
+  if (!container) {
+    console.log('Pozisyon panel header bulunamadı, 500ms sonra tekrar deniyorum...');
+    setTimeout(addClearPositionsButton, 500);
+    return;
+  }
+
+  const btn = document.createElement('button');
+  btn.id = 'clearAllPositionsBtn';
+  btn.className = 'btn danger';
+  btn.innerHTML = '🗑️ Tüm Açık Pozisyonları Sil';
+  btn.style.marginLeft = 'auto';
+  btn.style.fontSize = '11px';
+  btn.onclick = clearAllOpenPositions;
+
+  container.appendChild(btn);
+  console.log('✅ "Tüm Açık Pozisyonları Sil" butonu eklendi');
+}
+function clearAllOpenPositions() {
+  if (!confirm('⚠️ TÜM AÇIK POZİSYONLAR silinecek!\n\nBu işlem geri alınamaz. Devam etmek istiyor musun?')) {
+    return;
+  }
+
+  openPositions = {};
+  closedPositions = closedPositions || [];
+
+  saveLocal('masterai_positions', { open: {}, closed: closedPositions });
+
+  try {
+    kvPush('positions', { open: {}, closed: closedPositions }).catch(() => {});
+  } catch(e) {}
+
+  showToast('✅ Temizlendi', 'Tüm açık pozisyonlar silindi.', 'info');
+
+  if (typeof renderPositionsTab === 'function') {
+    renderPositionsTab();
+  }
+
+  console.log('🗑️ Tüm açık pozisyonlar temizlendi (0 açık pozisyon)');
+}
 function closePosition(key, exitPrice, exitTime) {
   const pos = openPositions[key];
   if (!pos) return;
