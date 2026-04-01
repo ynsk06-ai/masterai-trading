@@ -2539,6 +2539,7 @@ function saveAllSignals() {
 }
 
 /* ── Background Scan ─────────────────────────────────── */
+/* ── Background Scan ─────────────────────────────────── */
 async function backgroundScan() {
   for(const sym of CFG.watchlist){
     for(const tf of LIVE_TFS){
@@ -2557,17 +2558,15 @@ async function backgroundScan() {
             const notifItem={time:ts,sym,tf,sys:sig.sys,type:sig.type,price:sig.price,pnl:sig.pnl,t:sig.t,tvLink};
             notificationLog.unshift(notifItem);if(notificationLog.length>300)notificationLog.pop();
             if(new Date(sig.t).toDateString()===new Date().toDateString()){dailySignals.unshift(notifItem);if(dailySignals.length>100)dailySignals.pop();}
+            
             if(sig.type==='AL'){
               showToast(`${sig.sys} AL`,`${sym}(${tf}) @ ${sig.price.toFixed(2)}`,sig.sys==='Master AI'?'master':'buy');
               sendTelegram(`🚨 ${msgBody}\n📊 ${tvLink}`);
-              // addOpenPosition: duplicate kontrolü içinde
-              addOpenPosition(key, sym, tf, sig.sys, sig.price, sig.t);
+              // addOpenPosition KALDIRILDI
             } else if(sig.type==='SAT'&&sig.pnl!==undefined){
               showToast(`${sig.sys} SAT`,`${sym}(${tf}) PnL: ${fmt(sig.pnl)}%`,sig.pnl>=0?'buy':'sell');
-              if(openPositions[key]){
-                sendTelegram(`✅ ${sym}(${tf}) KAPANDI\nSistem: ${sig.sys}\nPnL: %${fmt(sig.pnl)}\n📊 ${tvLink}`);
-                closePosition(key, sig.price, sig.t);
-              }
+              sendTelegram(`✅ ${sym}(${tf}) KAPANDI\nSistem: ${sig.sys}\nPnL: %${fmt(sig.pnl)}\n📊 ${tvLink}`);
+              // closePosition KALDIRILDI
             }
             if(CFG.notifications&&'Notification'in window&&Notification.permission==='granted')
               new Notification(`⚡ ${sig.sys} ${sig.type}`,{body:msgBody,icon:'/favicon.ico'});
@@ -2599,20 +2598,21 @@ async function analyzeSymbol() {
     let mlResult=null;
     if(CFG.enableML){try{mlResult=runMLEngine(bars,result);}catch(e){console.warn('ML:',e);}}
     const key=`${sym}-${tf}`,hist=allSignals[key]||[],maxT=hist.length?Math.max(...hist.map(s=>s.t||0)):0;
-    const newSigs=result.signals.filter(s=>(s.t||0)>maxT);
-    if(newSigs.length){
-      allSignals[key]=[...hist,...newSigs];saveAllSignals();
-      for(const sig of newSigs){
-        const ts=new Date(sig.t).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
-        const notifItem={time:ts,sym,tf,sys:sig.sys,type:sig.type,price:sig.price,pnl:sig.pnl,t:sig.t};
-        notificationLog.unshift(notifItem);if(new Date(sig.t).toDateString()===new Date().toDateString())dailySignals.unshift(notifItem);
-        if(sig.type==='AL'){
-          showToast(`${sig.sys} AL`,`${sym} @ ${sig.price.toFixed(2)}`,sig.sys==='Master AI'?'master':'buy');
-          if(sig.sys==='Master AI')sendTelegram(`🚨 Master AI AL\n${sym}(${tf}) @ ${sig.price.toFixed(2)}\nConsensus: ${(sig.consensus*100).toFixed(0)}%\nML Conf: ${Math.round(ML.confidence*100)}%`);
-        } else if(sig.type==='SAT'&&sig.pnl!==undefined)
-          showToast(`${sig.sys} SAT`,`${sym} PnL: ${fmt(sig.pnl)}%`,sig.pnl>=0?'buy':'sell');
+    const newSigs=result.signals.filter(s=>(s.t||0)>maxT);      
+     if(newSigs.length){
+        allSignals[key]=[...hist,...newSigs];saveAllSignals();
+        for(const sig of newSigs){
+          const ts=...
+          const notifItem=...
+          notificationLog.unshift(notifItem);...
+          if(sig.type==='AL'){
+            showToast(`${sig.sys} AL`,`${sym} @ ${sig.price.toFixed(2)}`,sig.sys==='Master AI'?'master':'buy');
+            if(sig.sys==='Master AI')sendTelegram(...);
+            // addOpenPosition KALDIRILDI
+          } else if(sig.type==='SAT'&&sig.pnl!==undefined)
+            showToast(`${sig.sys} SAT`,`${sym} PnL: ${fmt(sig.pnl)}%`,sig.pnl>=0?'buy':'sell');
+        }
       }
-    }
     updateAllPanels(sym,result);
     if(mlResult)updateMLPanels(mlResult);
     drawChart(sym,tf,bars,result,mlResult);
@@ -2639,57 +2639,56 @@ async function toggleLiveScan() {
   isLiveScanning=true;btn.textContent='⏹ DURDUR';btn.style.background='rgba(255,23,68,0.2)';
   if(CFG.notifications&&'Notification'in window&&Notification.permission==='default')await Notification.requestPermission();
   let sI=0,tI=0;
-  const scanNext=async()=>{
-    if(!isLiveScanning)return;
-    if(sI>=CFG.watchlist.length){
-      safeSetText('lastUpdate','✅ Tur tamamlandı. Bekleniyor...');
-      setTimeout(()=>{if(isLiveScanning){sI=0;tI=0;scanNext();}},CFG.refreshSec*1000);return;
-    }
-    const sym=CFG.watchlist[sI],tf=LIVE_TFS[tI];
-    const symInp=document.getElementById('symbolInput');if(symInp)symInp.value=sym;
-    const tfSel=document.getElementById('tfSelect');if(tfSel)tfSel.value=tf;
-    renderWatchlist();
-    const lu=document.getElementById('lastUpdate');if(lu)lu.innerHTML=`🔴 <strong>CANLI</strong> → ${sym}(${tf}) (${sI+1}/${CFG.watchlist.length})`;
-    try{
-      const loading=document.getElementById('chartLoading');if(loading)loading.style.display='flex';
-      const bars=await fetchOHLCV(sym,tf);
-      const result=runIndicators(bars,{...CFG});
-      if(result){
-        currentResult=result;currentSym=sym;currentTF=tf;
-        liveSymbolPrices[sym]=bars[bars.length-1].c;
-        let mlResult=null;if(CFG.enableML)try{mlResult=runMLEngine(bars,result);}catch{}
-        updateAllPanels(sym,result);if(mlResult)updateMLPanels(mlResult);
-        drawChart(sym,tf,bars,result,mlResult);
-        const key=`${sym}-${tf}`,hist=allSignals[key]||[],maxT=hist.length?Math.max(...hist.map(s=>s.t||0)):0;
-        const newSigs=result.signals.filter(s=>(s.t||0)>maxT);
-        if(newSigs.length){
-          allSignals[key]=[...hist,...newSigs];saveAllSignals();
-          newSigs.forEach(sig=>{
-            const ts=new Date(sig.t).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
-            const ni={time:ts,sym,tf,sys:sig.sys,type:sig.type,price:sig.price,pnl:sig.pnl,t:sig.t};
-            notificationLog.unshift(ni);if(new Date(sig.t).toDateString()===new Date().toDateString())dailySignals.unshift(ni);
-            if(sig.type==='AL'){
-              showToast(`🔔 ${sig.sys} AL`,`${sym}(${tf}) @ ${sig.price.toFixed(2)}`,sig.sys==='Master AI'?'master':'buy');
-              sendTelegram(`🚨 ${sig.sys} AL\n${sym}(${tf}) @ ${sig.price.toFixed(2)}`);
-              addOpenPosition(key,sym,tf,sig.sys,sig.price,sig.t);
-            } else if(sig.type==='SAT'&&sig.pnl!==undefined){
-              showToast(`${sig.sys} SAT`,`${sym}(${tf}) PnL: ${fmt(sig.pnl)}%`,sig.pnl>=0?'buy':'sell');
-              if(openPositions[key])closePosition(key,sig.price,sig.t);
-            }
-            if(activeTab===2)renderNotificationLog();
-            if(activeTab===3)renderDailySignals();
-            if(activeTab===1)renderPositionsTab();
-          });
-        }
+      const scanNext=async()=>{
+      if(!isLiveScanning)return;
+      if(sI>=CFG.watchlist.length){
+        safeSetText('lastUpdate','✅ Tur tamamlandı. Bekleniyor...');
+        setTimeout(()=>{if(isLiveScanning){sI=0;tI=0;scanNext();}},CFG.refreshSec*1000);return;
       }
-    }catch(e){console.log('Tarama atlandı:',sym,tf,e.message);}
-    finally{const loading=document.getElementById('chartLoading');if(loading)loading.style.display='none';}
-    tI++;if(tI>=LIVE_TFS.length){tI=0;sI++;}
-    setTimeout(scanNext,900);
-  };
-  scanNext();
+      const sym=CFG.watchlist[sI],tf=LIVE_TFS[tI];
+      const symInp=document.getElementById('symbolInput');if(symInp)symInp.value=sym;
+      const tfSel=document.getElementById('tfSelect');if(tfSel)tfSel.value=tf;
+      renderWatchlist();
+      const lu=document.getElementById('lastUpdate');if(lu)lu.innerHTML=`🔴 <strong>CANLI</strong> → ${sym}(${tf}) (${sI+1}/${CFG.watchlist.length})`;
+      try{
+        const loading=document.getElementById('chartLoading');if(loading)loading.style.display='flex';
+        const bars=await fetchOHLCV(sym,tf);
+        const result=runIndicators(bars,{...CFG});
+        if(result){
+          currentResult=result;currentSym=sym;currentTF=tf;
+          liveSymbolPrices[sym]=bars[bars.length-1].c;
+          let mlResult=null;if(CFG.enableML)try{mlResult=runMLEngine(bars,result);}catch{}
+          updateAllPanels(sym,result);if(mlResult)updateMLPanels(mlResult);
+          drawChart(sym,tf,bars,result,mlResult);
+          const key=`${sym}-${tf}`,hist=allSignals[key]||[],maxT=hist.length?Math.max(...hist.map(s=>s.t||0)):0;
+          const newSigs=result.signals.filter(s=>(s.t||0)>maxT);
+          if(newSigs.length){
+            allSignals[key]=[...hist,...newSigs];saveAllSignals();
+            newSigs.forEach(sig=>{
+              const ts=new Date(sig.t).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+              const notifItem={time:ts,sym,tf,sys:sig.sys,type:sig.type,price:sig.price,pnl:sig.pnl,t:sig.t};
+              notificationLog.unshift(notifItem);if(new Date(sig.t).toDateString()===new Date().toDateString()){dailySignals.unshift(notifItem);if(dailySignals.length>100)dailySignals.pop();}
+              if(sig.type==='AL'){
+                showToast(`🔔 ${sig.sys} AL`,`${sym}(${tf}) @ ${sig.price.toFixed(2)}`,sig.sys==='Master AI'?'master':'buy');
+                sendTelegram(`🚨 ${sig.sys} AL\n${sym}(${tf}) @ ${sig.price.toFixed(2)}`);
+                // addOpenPosition KALDIRILDI → syncOpenPositionsFromResult tek sorumlu
+              } else if(sig.type==='SAT'&&sig.pnl!==undefined){
+                showToast(`${sig.sys} SAT`,`${sym}(${tf}) PnL: ${fmt(sig.pnl)}%`,sig.pnl>=0?'buy':'sell');
+                sendTelegram(`✅ ${sym}(${tf}) KAPANDI\nSistem: ${sig.sys}\nPnL: %${fmt(sig.pnl)}\n📊 ${tvLink}`);
+                // closePosition KALDIRILDI → syncOpenPositionsFromResult kapatacak
+              }
+              if(activeTab===2)renderNotificationLog();
+              if(activeTab===3)renderDailySignals();
+              if(activeTab===1)renderPositionsTab();
+            });
+          }
+        }
+      }catch(e){console.log('Tarama atlandı:',sym,tf,e.message);}
+      finally{const loading=document.getElementById('chartLoading');if(loading)loading.style.display='none';}
+      tI++;if(tI>=LIVE_TFS.length){tI=0;sI++;}
+      setTimeout(scanNext,900);
+    };
 }
-
 /* ── Tab Control ─────────────────────────────────────── */
 function switchTab(n) {
   activeTab=n;
