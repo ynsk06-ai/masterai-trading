@@ -1253,6 +1253,14 @@ async function kvPullAll() {
     return false;
   }
 }
+async function kvPushPositions() {
+  try {
+    await kvPush('positions', { open: openPositions, closed: closedPositions });
+    console.log('%c☁ KV Positions → Worker’a Yüklendi', 'color:#00ff00');
+  } catch(e) {
+    console.warn('KV positions push error:', e);
+  }
+}
 async function forceKVSync(){await kvPushAll();}
 function setKVDot(state){
   try{
