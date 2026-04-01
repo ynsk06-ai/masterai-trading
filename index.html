@@ -2568,13 +2568,14 @@ async function analyzeSymbol() {
     const newSigs=result.signals.filter(s=>(s.t||0)>maxT);
     if(newSigs.length){
       allSignals[key]=[...hist,...newSigs];saveAllSignals();
-      for(const sig of newSigs){
+            for(const sig of newSigs){
         const ts=new Date(sig.t).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
         const notifItem={time:ts,sym,tf,sys:sig.sys,type:sig.type,price:sig.price,pnl:sig.pnl,t:sig.t};
-        notificationLog.unshift(notifItem);if(new Date(sig.t).toDateString()===new Date().toDateString())dailySignals.unshift(notifItem);
+        notificationLog.unshift(notifItem);if(new Date(sig.t).toDateString()===new Date().toDateString()){dailySignals.unshift(notifItem);if(dailySignals.length>100)dailySignals.pop();}
         if(sig.type==='AL'){
           showToast(`${sig.sys} AL`,`${sym} @ ${sig.price.toFixed(2)}`,sig.sys==='Master AI'?'master':'buy');
           if(sig.sys==='Master AI')sendTelegram(`🚨 Master AI AL\n${sym}(${tf}) @ ${sig.price.toFixed(2)}\nConsensus: ${(sig.consensus*100).toFixed(0)}%\nML Conf: ${Math.round(ML.confidence*100)}%`);
+          // addOpenPosition KALDIRILDI → syncOpenPositionsFromResult tek sorumlu
         } else if(sig.type==='SAT'&&sig.pnl!==undefined)
           showToast(`${sig.sys} SAT`,`${sym} PnL: ${fmt(sig.pnl)}%`,sig.pnl>=0?'buy':'sell');
       }
