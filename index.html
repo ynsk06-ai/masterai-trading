@@ -2850,13 +2850,34 @@ window.addEventListener('beforeinstallprompt',e=>{
 });
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 
-/* ── INIT ────────────────────────────────────────────── */
+/* ── INIT ── */
 (function init(){
   try{
     const savedCfg=loadLocal('masterai_cfg');if(savedCfg)Object.assign(CFG,savedCfg);
     if(!CFG.workerUrl||CFG.workerUrl.includes('render.com'))CFG.workerUrl=WORKER_URL;
-    if(!CFG.stMultiplier)CFG.stMultiplier=3.0;
-    if(!CFG.stPeriod)CFG.stPeriod=30;
+    if(!CFG.stMultiplier)CFG.stMultiplier=3.0;if(!CFG.stPeriod)CFG.stPeriod=30;
     const savedSig=loadLocal('masterai_signals');if(savedSig)allSignals=savedSig;
     const savedPos=loadLocal('masterai_positions');
-    if(savedPos){if(savedPos.open
+    if(savedPos){if(savedPos.open)openPositions=savedPos.open;if(savedPos.closed)closedPositions=savedPos.closed;}
+    const savedML=loadLocal('masterai_ml');
+    if(savedML){if(savedML.feedback)ML.feedback=savedML.feedback;if(savedML.adaptWeight)ML.adaptWeight=savedML.adaptWeight;if(savedML.equityHistory)ML.equityHistory=savedML.equityHistory;if(savedML.sysLearnStats)Object.assign(sysLearnStats,savedML.sysLearnStats);}
+    const savedAgentParams=loadLocal('masterai_agentParams');if(savedAgentParams)Object.assign(agentOptParams,savedAgentParams);
+    deviceUID=getDeviceUID();currentTheme=CFG.theme||'dark';
+    applyTheme();renderWatchlist();updateModelSelectorUI();updateCurrentParamsDisplay();
+    if(!localStorage.getItem('masterai_firstlaunch')){
+      document.getElementById('watchlistModal')?.classList.add('open');
+    }else{
+      kvPullAll().then(()=>{renderWatchlist();updateKVStats();});
+      setTimeout(()=>{const sym=CFG.watchlist[0]||'XU100';const symInp=document.getElementById('symbolInput');if(symInp)symInp.value=sym;analyzeSymbol();},600);
+    }
+    setTimeout(()=>{fetch(workerBase()+'/').then(r=>r.json()).then(()=>setKVDot('ok')).catch(()=>setKVDot('error'));},1500);
+    backgroundIntervalId=setInterval(backgroundScan,30000);
+    summaryIntervalTimerId=setInterval(sendPeriodicSummary,CFG.summaryInterval*1000);
+    window.addEventListener('resize',()=>{if(currentResult&&currentSym)drawChart(currentSym,currentTF,currentResult.bars,currentResult,null);});
+    console.log('%c✅ Master AI Trading v4.1 — AETHER ML EDITION','color:#ffd700;font-weight:bold;font-size:14px');
+    console.log('%cML: LSTM+TFT+XGB+DQN+MoE | Auto Learning | Strategy Optimizer | PWA Fix','color:#00e5ff;font-size:11px');
+  }catch(e){console.error('Init error:',e);}
+})();
+</script>
+</body>
+</html>
