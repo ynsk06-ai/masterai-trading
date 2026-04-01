@@ -2709,6 +2709,10 @@ function switchTab(n) {
   document.getElementById('tab'+n)?.classList.add('active');
   document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
   document.getElementById('content'+n)?.classList.add('active');
+  // Tab 1 (Pozisyonlar) açıldığında butonu ekle
+  if (n === 1) {
+    setTimeout(addClearPositionsButton, 300);
+  }
   if(n===1)renderPositionsTab();
   if(n===2)renderNotificationLog();
   if(n===3)renderDailySignals();
