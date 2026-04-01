@@ -2494,18 +2494,57 @@ function syncOpenPositionsFromResult(sym, r, lc) {
 }
 
 function updateOpenPositionsPanel(r, lc) {
-  const table=document.getElementById('openPosTable');if(!table)return;
-  const aN=['A60','A61','A62','A81','A120'];
-  let rows=`<tr><td style="color:var(--muted);font-size:10px;">Sistem</td><td style="color:var(--muted);font-size:10px;">Giriş</td><td style="color:var(--muted);font-size:10px;">PnL %</td></tr>`;
-  let has=false;
-  const addRow=(name,entry)=>{has=true;const p=(lc-entry)/entry*100;rows+=`<tr><td>${name}</td><td>${entry.toFixed(2)}</td><td class="${pnlClass(p)}">${p.toFixed(2)}%</td></tr>`;};
-  if(r.master.inMaster)addRow('👑 Master',r.master.masterEntry);
-  if(r.sys1.inTrade1)addRow('🔷 Sys1',r.sys1.buyPrice1);
-  if(r.sys2.inTrade2)addRow('🔵 Sys2',r.sys2.entry2);
-  if(r.fusion.inFusion)addRow('⚡ Fusion',r.fusion.fusionEntry);
-  for(let i=0;i<5;i++)if(r.agents.agStates[i])addRow('🤖 '+aN[i],r.agents.agEntries[i]);
-  if(!has)rows+=`<tr><td colspan="3" style="text-align:center;color:var(--muted);padding:16px;">Açık pozisyon yok</td></tr>`;
-  table.innerHTML=rows;
+  const table = document.getElementById('openPosTable');
+  if (!table) return;
+
+  const aN = ['A60', 'A61', 'A62', 'A81', 'A120'];
+  let rows = `<tr>
+    <td style="color:var(--muted);font-size:10px;">Sistem</td>
+    <td style="color:var(--muted);font-size:10px;">Giriş</td>
+    <td style="color:var(--muted);font-size:10px;">PnL %</td>
+  </tr>`;
+  let has = false;
+
+  const addRow = (name, entry, sysKey = null) => {
+    if (!entry || !isFinite(entry)) return;
+    has = true;
+    const p = (lc - entry) / entry * 100;
+    rows += `<tr>
+      <td>${name}</td>
+      <td>${entry.toFixed(2)}</td>
+      <td class="${pnlClass(p)}">${p.toFixed(2)}%</td>
+    </tr>`;
+  };
+
+  // Mevcut analiz sonucundan gelenleri ekle (güvenli)
+  if (r?.master?.inMaster) addRow('👑 Master', r.master.masterEntry);
+  if (r?.sys1?.inTrade1) addRow('🔷 Sys1', r.sys1.buyPrice1);
+  if (r?.sys2?.inTrade2) addRow('🔵 Sys2', r.sys2.entry2);
+  if (r?.fusion?.inFusion) addRow('⚡ Fusion', r.fusion.fusionEntry);
+  for (let i = 0; i < 5; i++) {
+    if (r?.agents?.agStates[i]) addRow('🤖 ' + aN[i], r.agents.agEntries[i]);
+  }
+
+  // Global openPositions'tan da göster (tüm semboller için)
+  // Bu, canlı tarama sırasında diğer sembollerin pozisyonlarını da görebilmeni sağlar
+  Object.keys(openPositions).forEach(key => {
+    const pos = openPositions[key];
+    if (pos && pos.sym && pos.entry) {
+      const pnl = (lc - pos.entry) / pos.entry * 100;   // lc = son fiyat (global değilse sorun olabilir)
+      has = true;
+      rows += `<tr>
+        <td>${pos.sys || '—'}</td>
+        <td>${pos.entry.toFixed(2)}</td>
+        <td class="${pnlClass(pnl)}">${pnl.toFixed(2)}%</td>
+      </tr>`;
+    }
+  });
+
+  if (!has) {
+    rows += `<tr><td colspan="3" style="text-align:center;color:var(--muted);padding:16px;">Açık pozisyon yok</td></tr>`;
+  }
+
+  table.innerHTML = rows;
 }
 
 /* ── Signal Log ─────────────────────────────────────── */
@@ -2599,7 +2638,7 @@ async function analyzeSymbol() {
     if(CFG.enableML){try{mlResult=runMLEngine(bars,result);}catch(e){console.warn('ML:',e);}}
     const key=`${sym}-${tf}`,hist=allSignals[key]||[],maxT=hist.length?Math.max(...hist.map(s=>s.t||0)):0;
     const newSigs=result.signals.filter(s=>(s.t||0)>maxT);      
-     if(newSigs.length){
+      if(newSigs.length){
         allSignals[key]=[...hist,...newSigs];saveAllSignals();
         for(const sig of newSigs){
           const ts=...
