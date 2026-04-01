@@ -1202,30 +1202,56 @@ async function kvPushAll(){
     updateKVStats();
     showToast('KV Sync',ok1?'✅ Buluta yüklendi':'❌ Başarısız',ok1?'info':'sell');
   }catch(e){setKVDot('error');showToast('KV Sync','❌ Hata: '+e.message,'sell');}
-}
-async function kvPullAll(){
-  setKVDot('syncing');
-  try{
-    const[sig,set,pos,mld]=await Promise.all([kvPull('signals'),kvPull('settings'),kvPull('positions'),kvPull('mldata')]);
-    const now=new Date().toLocaleTimeString('tr-TR');
-    if(sig&&Object.keys(sig).length){allSignals=sig;saveLocal('masterai_signals',allSignals);kvSync.signals=now;}
-    if(set&&Object.keys(set).length){Object.assign(CFG,set);saveLocal('masterai_cfg',CFG);kvSync.settings=now;}
-    if(pos){
-      if(pos.open&&Object.keys(pos.open).length)openPositions=pos.open;
-      if(pos.closed&&pos.closed.length)closedPositions=pos.closed;
-      kvSync.positions=now;
+}/* ── KV Pull All + Duplicate Temizleme ───────────────────────────── */
+async function kvPullAll() {
+  if (!deviceUID) return;
+  try {
+    const base = workerBase();
+
+    // Signals
+    const sigRes = await fetch(`${base}/kv/signals?uid=${deviceUID}`);
+    if (sigRes.ok) {
+      const data = await sigRes.json();
+      if (data) allSignals = data;
     }
-    if(mld){
-      if(mld.feedback)ML.feedback=mld.feedback;
-      if(mld.adaptWeight)ML.adaptWeight=mld.adaptWeight;
-      if(mld.sysLearnStats)Object.assign(sysLearnStats,mld.sysLearnStats);
+
+    // Settings
+    const setRes = await fetch(`${base}/kv/settings?uid=${deviceUID}`);
+    if (setRes.ok) {
+      const data = await setRes.json();
+      if (data) Object.assign(CFG, data);
     }
-    safeSetText('kv-lastSignalSync',kvSync.signals||'—');
-    safeSetText('kv-lastSettingSync',kvSync.settings||'—');
-    safeSetText('kv-lastPosSync',kvSync.positions||'—');
-    setKVDot(sig||set||pos?'ok':'error');
+
+    // Positions — EN ÖNEMLİ KISIM (duplicate temizle)
+    const posRes = await fetch(`${base}/kv/positions?uid=${deviceUID}`);
+    if (posRes.ok) {
+      const data = await posRes.json();
+      if (data) {
+        openPositions = data.open || {};
+        closedPositions = data.closed || [];
+
+        // DUPLICATE TEMİZLEME — aynı key’den sadece 1 tane kalır
+        const cleaned = {};
+        Object.keys(openPositions).forEach(k => {
+          if (!cleaned[k]) cleaned[k] = openPositions[k];
+        });
+        openPositions = cleaned;
+
+        console.log(`%c☁ KV’den çekildi — ${Object.keys(openPositions).length} açık pozisyon`, 'color:#00e5ff');
+      }
+    }
+
+    saveLocal('masterai_positions', {open: openPositions, closed: closedPositions});
+    saveLocal('masterai_signals', allSignals);
+    saveLocal('masterai_cfg', CFG);
+
     updateKVStats();
-  }catch(e){setKVDot('error');console.warn('kvPullAll error:',e);}
+    renderPositionsTab(); // Pozisyonlar sekmesi varsa yenile
+    return true;
+  } catch(e) {
+    console.warn('kvPullAll error:', e);
+    return false;
+  }
 }
 async function forceKVSync(){await kvPushAll();}
 function setKVDot(state){
