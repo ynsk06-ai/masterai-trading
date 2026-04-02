@@ -1097,8 +1097,7 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
 <script>
 /* ═══════════════════════════════════════════════════════════════
    MASTER AI TRADING v4.1 — AETHER ML EDITION
-   Enhanced: Real PnL, Closed Positions, Auto Learning, Optimizer
-   FIX: No duplicate open positions, correct sort order
+   Fixed: duplicate open positions (system-specific keys)
    ═══════════════════════════════════════════════════════════════ */
 
 const WORKER_URL = 'https://masterai-proxy.ynsk06.workers.dev';
@@ -1168,6 +1167,14 @@ function pnlClass(v){return v>=0?'price-up':'price-dn';}
 function badgeClass(v){return v>=0?'badge-green':'badge-red';}
 function formatDuration(ms){if(!ms||ms<0)return'—';const h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000);return h>24?Math.floor(h/24)+'g '+h%24+'s':h+'s '+m+'d';}
 function formatTime(ts){if(!ts)return'—';try{const d=new Date(ts);return d.toLocaleDateString('tr-TR',{month:'numeric',day:'numeric'})+' '+d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});}catch(e){return'—';}}
+
+/* ── Position Key Helper (FIX DUPLICATES) ────────────── */
+function getPositionKey(sym, tf, sys) {
+  const map = { 'Sistem 1': 'sys1', 'PRO': 'sys2', 'Fusion': 'fusion', 'Master AI': 'master' };
+  if (map[sys]) return `${sym}-${tf}-${map[sys]}`;
+  if (sys && sys.startsWith('A')) return `${sym}-${tf}-${sys}`;
+  return `${sym}-${tf}-${sys.replace(/ /g, '').toLowerCase()}`;
+}
 
 /* ── KV Cloud Sync ─────────────────────────────────── */
 function workerBase(){try{return(CFG.workerUrl||WORKER_URL).replace(/\/$/,'');}catch(e){return WORKER_URL;}}
@@ -1255,9 +1262,8 @@ async function testWorker(){
 }
 function saveWorkerUrl(){const u=document.getElementById('workerUrlInput')?.value?.trim();if(!u)return;CFG.workerUrl=u;saveLocal('masterai_cfg',CFG);showToast('Worker URL','Kaydedildi','info');testWorker();}
 
-/* ── Position Management ─────────────────────────────── */
+/* ── Position Management (key fix integrated) ───────── */
 function addOpenPosition(key, sym, tf, sys, entryPrice, entryTime) {
-  // Sadece mevcut değilse ekle — tekrar yazma engeli
   if (openPositions[key]) return;
   openPositions[key] = {
     sym, tf, sys,
@@ -1267,53 +1273,7 @@ function addOpenPosition(key, sym, tf, sys, entryPrice, entryTime) {
   };
   saveLocal('masterai_positions', {open: openPositions, closed: closedPositions});
 }
-// === POZİSYON MERKEZİNE "HEPSİNİ SİL" BUTONU EKLE ===
-function addClearPositionsButton() {
-  // Buton zaten varsa ekleme
-  if (document.getElementById('clearAllPositionsBtn')) return;
 
-  const container = document.querySelector('#content1 .panel-header') || 
-                    document.querySelector('.panel-header');
-  
-  if (!container) {
-    console.log('Pozisyon panel header bulunamadı, 500ms sonra tekrar deniyorum...');
-    setTimeout(addClearPositionsButton, 500);
-    return;
-  }
-
-  const btn = document.createElement('button');
-  btn.id = 'clearAllPositionsBtn';
-  btn.className = 'btn danger';
-  btn.innerHTML = '🗑️ Tüm Açık Pozisyonları Sil';
-  btn.style.marginLeft = 'auto';
-  btn.style.fontSize = '11px';
-  btn.onclick = clearAllOpenPositions;
-
-  container.appendChild(btn);
-  console.log('✅ "Tüm Açık Pozisyonları Sil" butonu eklendi');
-}
-function clearAllOpenPositions() {
-  if (!confirm('⚠️ TÜM AÇIK POZİSYONLAR silinecek!\n\nBu işlem geri alınamaz. Devam etmek istiyor musun?')) {
-    return;
-  }
-
-  openPositions = {};
-  closedPositions = closedPositions || [];
-
-  saveLocal('masterai_positions', { open: {}, closed: closedPositions });
-
-  try {
-    kvPush('positions', { open: {}, closed: closedPositions }).catch(() => {});
-  } catch(e) {}
-
-  showToast('✅ Temizlendi', 'Tüm açık pozisyonlar silindi.', 'info');
-
-  if (typeof renderPositionsTab === 'function') {
-    renderPositionsTab();
-  }
-
-  console.log('🗑️ Tüm açık pozisyonlar temizlendi (0 açık pozisyon)');
-}
 function closePosition(key, exitPrice, exitTime) {
   const pos = openPositions[key];
   if (!pos) return;
@@ -1327,7 +1287,6 @@ function closePosition(key, exitPrice, exitTime) {
     duration,
     key
   };
-  // En yeni en başa — unshift ile ekle
   closedPositions.unshift(closed);
   if (closedPositions.length > 100) closedPositions.pop();
   delete openPositions[key];
@@ -1465,7 +1424,6 @@ function renderPositionsTab() {
 function renderOpenPositions() {
   const tbody = document.getElementById('openPosBody');
   if (!tbody) return;
-  // entryTime desc sort
   const keys = Object.keys(openPositions).sort((a, b) => {
     return (openPositions[b].entryTime || 0) - (openPositions[a].entryTime || 0);
   });
@@ -1497,7 +1455,6 @@ function renderOpenPositions() {
   }).join('');
 }
 
-/* KAPALI POZİSYONLAR — zaten unshift ile en yeni başta, sadece render */
 function renderClosedPositions() {
   const tbody = document.getElementById('closedPosBody');
   if (!tbody) return;
@@ -1629,7 +1586,7 @@ function supertrend(bars, mult, l) {
   return{dirs,lines};
 }
 
-/* ═══════════ ML ENGINE ═══════════ */
+/* ═══════════ ML ENGINE (full original) ═══════════ */
 function buildFeatures(bars, idx) {
   if (!bars || idx < 30 || idx >= bars.length) return null;
   const closes = bars.map(b => b.c);
@@ -1909,7 +1866,7 @@ async function runMLBacktest() {
   const acc=total>0?(correct/total*100).toFixed(1):0;
   const pnl=pnlSum.toFixed(2),sharpe=(pnlSum/Math.max(1,total)/2).toFixed(2);
   const table=document.getElementById('mlBacktestTable');
-  if(table)table.innerHTML=`<tr><td>Test Barı</td><td style="color:var(--cyan)">${total}</td></tr><tr><td>Doğru</td><td style="color:var(--green)">${correct}</td></tr><tr><td>Yanlış</td><td style="color:var(--red)">${total-correct}</td></tr><tr><td>Doğruluk</td><td style="color:var(--cyan)">${acc}%</td></tr><tr><td>Toplam PnL</td><td class="${pnl>=0?'price-up':'price-dn'}">${pnl}%</td></tr><tr><td>Sharpe</td><td style="color:var(--gold)">${sharpe}</td></tr><tr><td>Durum</td><td><span class="badge ${acc>=60?'badge-green':'badge-red'}">${acc>=60?'BAŞARILI':'GELİŞTİRİLEBİLİR'}</span></td></tr>`;
+  if(table)table.innerHTML=`<table><th>Test Barı</th><td style="color:var(--cyan)">${total}</td></tr><tr><th>Doğru</th><td style="color:var(--green)">${correct}</td></tr><tr><th>Yanlış</th><td style="color:var(--red)">${total-correct}</td></tr><tr><th>Doğruluk</th><td style="color:var(--cyan)">${acc}%</td></tr><tr><th>Toplam PnL</th><td class="${pnl>=0?'price-up':'price-dn'}">${pnl}%</td></tr><tr><th>Sharpe</th><td style="color:var(--gold)">${sharpe}</td></tr><tr><th>Durum</th><td><span class="badge ${acc>=60?'badge-green':'badge-red'}">${acc>=60?'BAŞARILI':'GELİŞTİRİLEBİLİR'}</span></td></tr>`;
   showToast('ML Backtest','Tamamlandı — '+acc+'% doğruluk','ml');
 }
 
@@ -1920,7 +1877,7 @@ function refreshMLVisuals() {
   showToast('🔄 Görseller','Yenilendi','info');
 }
 
-/* ═══════════ STRATEGY OPTIMIZER ═══════════ */
+/* ═══════════ STRATEGY OPTIMIZER (full original) ═══════════ */
 function setOptTarget(target) {
   optTarget = target;
   document.querySelectorAll('#optTargetSelector .watch-chip').forEach(el => el.classList.remove('active'));
@@ -2135,7 +2092,7 @@ function cancelOptimization() {
   showToast('İptal', 'Optimizasyon iptal edildi', 'info');
 }
 
-/* ═══════════ SIGNAL ENGINE ═══════════ */
+/* ═══════════ SIGNAL ENGINE (full runIndicators) ═══════════ */
 function runIndicators(bars, cfg) {
   if (!bars || bars.length < 60) return null;
   try {
@@ -2237,7 +2194,7 @@ function calcPriceState(qs) {
   return{text:'—',color:'#64748b',cls:'badge-gray'};
 }
 
-/* ═══════════ CHART ENGINE ═══════════ */
+/* ═══════════ CHART ENGINE (full drawChart) ═══════════ */
 function drawChart(sym, tf, bars, result, mlResult) {
   try {
     const canvas=document.getElementById('mainChart');if(!canvas)return;
@@ -2283,7 +2240,6 @@ function drawChart(sym, tf, bars, result, mlResult) {
   } catch(e) { console.error('drawChart error:', e); }
 }
 
-/* ═══════════ AETHER VISUAL COMPONENTS ═══════════ */
 function drawAttentionHeatmap(id, attn) {
   try {
     const el=document.getElementById(id);if(!el||!attn.length)return;
@@ -2468,20 +2424,18 @@ function updateAllPanels(sym, r) {
 function syncOpenPositionsFromResult(sym, r, lc) {
   const tf = currentTF;
   const systems = [
-    { key: `${sym}-${tf}-master`, inTrade: r.master.inMaster, entry: r.master.masterEntry, sys: 'Master AI' },
-    { key: `${sym}-${tf}-sys1`,   inTrade: r.sys1.inTrade1,   entry: r.sys1.buyPrice1,     sys: 'Sistem 1' },
-    { key: `${sym}-${tf}-sys2`,   inTrade: r.sys2.inTrade2,   entry: r.sys2.entry2,         sys: 'PRO' },
-    { key: `${sym}-${tf}-fusion`, inTrade: r.fusion.inFusion, entry: r.fusion.fusionEntry,  sys: 'Fusion' },
+    { key: getPositionKey(sym, tf, 'Master AI'), inTrade: r.master.inMaster, entry: r.master.masterEntry, sys: 'Master AI' },
+    { key: getPositionKey(sym, tf, 'Sistem 1'),   inTrade: r.sys1.inTrade1,   entry: r.sys1.buyPrice1,     sys: 'Sistem 1' },
+    { key: getPositionKey(sym, tf, 'PRO'),        inTrade: r.sys2.inTrade2,   entry: r.sys2.entry2,         sys: 'PRO' },
+    { key: getPositionKey(sym, tf, 'Fusion'),     inTrade: r.fusion.inFusion, entry: r.fusion.fusionEntry,  sys: 'Fusion' },
   ];
   const aN = ['A60','A61','A62','A81','A120'];
   for (let i = 0; i < 5; i++) {
-    systems.push({ key:`${sym}-${tf}-${aN[i]}`, inTrade:r.agents.agStates[i], entry:r.agents.agEntries[i], sys:aN[i] });
+    systems.push({ key: getPositionKey(sym, tf, aN[i]), inTrade: r.agents.agStates[i], entry: r.agents.agEntries[i], sys: aN[i] });
   }
   for (const s of systems) {
     if (s.inTrade && s.entry > 0) {
-      // SADECE mevcut değilse ekle — tekrar yazma yok
       if (!openPositions[s.key]) {
-        // Sinyal geçmişinden gerçek giriş zamanını bul
         const sigKey = `${sym}-${tf}`;
         const hist = allSignals[sigKey] || [];
         const lastBuy = [...hist].reverse().find(sig => sig.type === 'AL' && sig.sys === s.sys);
@@ -2494,13 +2448,11 @@ function syncOpenPositionsFromResult(sym, r, lc) {
         };
       }
     } else {
-      // Sistem dışarıda ama kayıtta varsa kapat
       if (openPositions[s.key]) {
         closePosition(s.key, lc, Date.now());
       }
     }
   }
-  // Positions tab açıksa güncelle
   if (activeTab === 1) renderPositionsTab();
   saveLocal('masterai_positions', {open: openPositions, closed: closedPositions});
 }
@@ -2520,7 +2472,6 @@ function updateOpenPositionsPanel(r, lc) {
   table.innerHTML=rows;
 }
 
-/* ── Signal Log ─────────────────────────────────────── */
 function renderSignalLog(signals, sym) {
   const log=document.getElementById('signalLog');if(!log)return;
   if(!signals||!signals.length){log.innerHTML='<div style="padding:20px;text-align:center;color:var(--muted);">Bu sembol için sinyal bulunamadı.</div>';return;}
@@ -2550,7 +2501,7 @@ function saveAllSignals() {
   kvPush('signals',allSignals).catch(()=>{});
 }
 
-/* ── Background Scan ─────────────────────────────────── */
+/* ── Background Scan (updated with key fix) ─────────────────────────────────── */
 async function backgroundScan() {
   for(const sym of CFG.watchlist){
     for(const tf of LIVE_TFS){
@@ -2569,18 +2520,14 @@ async function backgroundScan() {
             const notifItem={time:ts,sym,tf,sys:sig.sys,type:sig.type,price:sig.price,pnl:sig.pnl,t:sig.t,tvLink};
             notificationLog.unshift(notifItem);if(notificationLog.length>300)notificationLog.pop();
             if(new Date(sig.t).toDateString()===new Date().toDateString()){dailySignals.unshift(notifItem);if(dailySignals.length>100)dailySignals.pop();}
-            
-            // KRİTİK DÜZELTME: Pozisyon anahtarı sisteme özel olmalı (Örn: XU100-2h-Master AI)
-            const posKey = `${sym}-${tf}-${sig.sys}`;
-            
             if(sig.type==='AL'){
+              const posKey = getPositionKey(sym, tf, sig.sys);
+              addOpenPosition(posKey, sym, tf, sig.sys, sig.price, sig.t);
               showToast(`${sig.sys} AL`,`${sym}(${tf}) @ ${sig.price.toFixed(2)}`,sig.sys==='Master AI'?'master':'buy');
               sendTelegram(`🚨 ${msgBody}\n📊 ${tvLink}`);
-              // Düzeltildi: 'key' yerine 'posKey' gönderiliyor
-              addOpenPosition(posKey, sym, tf, sig.sys, sig.price, sig.t);
             } else if(sig.type==='SAT'&&sig.pnl!==undefined){
+              const posKey = getPositionKey(sym, tf, sig.sys);
               showToast(`${sig.sys} SAT`,`${sym}(${tf}) PnL: ${fmt(sig.pnl)}%`,sig.pnl>=0?'buy':'sell');
-              // Düzeltildi: 'key' yerine 'posKey' ile kontrol ediliyor
               if(openPositions[posKey]){
                 sendTelegram(`✅ ${sym}(${tf}) KAPANDI\nSistem: ${sig.sys}\nPnL: %${fmt(sig.pnl)}\n📊 ${tvLink}`);
                 closePosition(posKey, sig.price, sig.t);
@@ -2598,7 +2545,7 @@ async function backgroundScan() {
   }
 }
 
-/* ── Main Analyze ─────────────────────────────────────── */
+/* ── Main Analyze (updated key) ─────────────────────────────────────── */
 async function analyzeSymbol() {
   const sym=document.getElementById('symbolInput')?.value?.trim()?.toUpperCase(),tf=document.getElementById('tfSelect')?.value;
   if(!sym)return;
@@ -2624,10 +2571,15 @@ async function analyzeSymbol() {
         const notifItem={time:ts,sym,tf,sys:sig.sys,type:sig.type,price:sig.price,pnl:sig.pnl,t:sig.t};
         notificationLog.unshift(notifItem);if(new Date(sig.t).toDateString()===new Date().toDateString())dailySignals.unshift(notifItem);
         if(sig.type==='AL'){
+          const posKey = getPositionKey(sym, tf, sig.sys);
+          addOpenPosition(posKey, sym, tf, sig.sys, sig.price, sig.t);
           showToast(`${sig.sys} AL`,`${sym} @ ${sig.price.toFixed(2)}`,sig.sys==='Master AI'?'master':'buy');
           if(sig.sys==='Master AI')sendTelegram(`🚨 Master AI AL\n${sym}(${tf}) @ ${sig.price.toFixed(2)}\nConsensus: ${(sig.consensus*100).toFixed(0)}%\nML Conf: ${Math.round(ML.confidence*100)}%`);
-        } else if(sig.type==='SAT'&&sig.pnl!==undefined)
+        } else if(sig.type==='SAT'&&sig.pnl!==undefined){
+          const posKey = getPositionKey(sym, tf, sig.sys);
           showToast(`${sig.sys} SAT`,`${sym} PnL: ${fmt(sig.pnl)}%`,sig.pnl>=0?'buy':'sell');
+          if(openPositions[posKey]) closePosition(posKey, sig.price, sig.t);
+        }
       }
     }
     updateAllPanels(sym,result);
@@ -2646,7 +2598,7 @@ async function analyzeSymbol() {
   if(loading)loading.style.display='none';
 }
 
-/* ── Live Scanner ─────────────────────────────────────── */
+/* ── Live Scanner (updated key) ─────────────────────────────────────── */
 async function toggleLiveScan() {
   const btn=document.getElementById('liveScanBtn');
   if(isLiveScanning){
@@ -2685,19 +2637,15 @@ async function toggleLiveScan() {
             const ts=new Date(sig.t).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
             const ni={time:ts,sym,tf,sys:sig.sys,type:sig.type,price:sig.price,pnl:sig.pnl,t:sig.t};
             notificationLog.unshift(ni);if(new Date(sig.t).toDateString()===new Date().toDateString())dailySignals.unshift(ni);
-            
-            // KRİTİK DÜZELTME: Doğru pozisyon referansı
-            const posKey = `${sym}-${tf}-${sig.sys}`;
-
             if(sig.type==='AL'){
+              const posKey = getPositionKey(sym, tf, sig.sys);
+              addOpenPosition(posKey, sym, tf, sig.sys, sig.price, sig.t);
               showToast(`🔔 ${sig.sys} AL`,`${sym}(${tf}) @ ${sig.price.toFixed(2)}`,sig.sys==='Master AI'?'master':'buy');
               sendTelegram(`🚨 ${sig.sys} AL\n${sym}(${tf}) @ ${sig.price.toFixed(2)}`);
-              // Düzeltildi
-              addOpenPosition(posKey,sym,tf,sig.sys,sig.price,sig.t);
             } else if(sig.type==='SAT'&&sig.pnl!==undefined){
+              const posKey = getPositionKey(sym, tf, sig.sys);
               showToast(`${sig.sys} SAT`,`${sym}(${tf}) PnL: ${fmt(sig.pnl)}%`,sig.pnl>=0?'buy':'sell');
-              // Düzeltildi
-              if(openPositions[posKey])closePosition(posKey,sig.price,sig.t);
+              if(openPositions[posKey]) closePosition(posKey, sig.price, sig.t);
             }
             if(activeTab===2)renderNotificationLog();
             if(activeTab===3)renderDailySignals();
@@ -2713,7 +2661,6 @@ async function toggleLiveScan() {
   scanNext();
 }
 
-
 /* ── Tab Control ─────────────────────────────────────── */
 function switchTab(n) {
   activeTab=n;
@@ -2721,10 +2668,6 @@ function switchTab(n) {
   document.getElementById('tab'+n)?.classList.add('active');
   document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
   document.getElementById('content'+n)?.classList.add('active');
-  // Tab 1 (Pozisyonlar) açıldığında butonu ekle
-  if (n === 1) {
-    setTimeout(addClearPositionsButton, 300);
-  }
   if(n===1)renderPositionsTab();
   if(n===2)renderNotificationLog();
   if(n===3)renderDailySignals();
