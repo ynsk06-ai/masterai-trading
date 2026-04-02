@@ -2857,6 +2857,32 @@ if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serv
 
 /* ── INIT ── */
 (function init(){
+/* ── DUPLICATE MIGRATION FIX (eski verileri temizle) ── */
+(function migrateOldPositions() {
+  const saved = loadLocal('masterai_positions');
+  if (!saved || !saved.open) return;
+
+  const oldOpen = saved.open;
+  const newOpen = {};
+
+  Object.keys(oldOpen).forEach(oldKey => {
+    const pos = oldOpen[oldKey];
+    if (!pos || !pos.sym || !pos.tf || !pos.sys) {
+      newOpen[oldKey] = pos; // eski ve geçersizse olduğu gibi bırak
+      return;
+    }
+
+    // Yeni standart key ile yeniden oluştur
+    const cleanKey = getPositionKey(pos.sym, pos.tf, pos.sys);
+    if (!newOpen[cleanKey]) {
+      newOpen[cleanKey] = { ...pos };
+    }
+  });
+
+  openPositions = newOpen;
+  saveLocal('masterai_positions', { open: newOpen, closed: saved.closed || [] });
+  console.log('%c✅ Eski duplicate pozisyonlar temizlendi', 'color:#00e676;font-weight:bold');
+})();
   try{
     const savedCfg=loadLocal('masterai_cfg');if(savedCfg)Object.assign(CFG,savedCfg);
     if(!CFG.workerUrl||CFG.workerUrl.includes('render.com'))CFG.workerUrl=WORKER_URL;
