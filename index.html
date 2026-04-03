@@ -339,13 +339,13 @@ canvas.radar-canvas{width:100%;height:200px;display:block;}
 .cpi-pnl{font-weight:700;font-family:var(--font-mono);font-size:13px;}
 .cpi-meta{font-size:10px;color:var(--muted);margin-top:2px;}
 
-/* ═══════════ FEEDBACK AUTO LOG ═══════════ */
+/* FEEDBACK AUTO LOG */
 .feedback-log{max-height:200px;overflow-y:auto;}
 .fb-log-item{padding:6px 12px;border-bottom:1px solid rgba(30,48,80,0.3);display:flex;gap:8px;align-items:center;font-size:11px;}
 .fb-log-correct{border-left:2px solid var(--green);}
 .fb-log-wrong{border-left:2px solid var(--red);}
 
-/* ═══════════ STRATEGY OPTIMIZER ═══════════ */
+/* STRATEGY OPTIMIZER */
 .optimizer-container{padding:12px;}
 .opt-section{margin-bottom:16px;}
 .opt-section-title{font-family:var(--font-ui);font-weight:700;font-size:12px;color:var(--purple2);letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid var(--border);padding-bottom:6px;}
@@ -1078,10 +1078,11 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
 </div>
 
 <div class="toast-container" id="toastContainer"></div>
+
 <script>
 /* ═══════════════════════════════════════════════════════════════
-   MASTER AI TRADING v4.1 — AETHER ML EDITION
-   KV Connection Fixed — Signals, Settings, Positions sync properly
+   MASTER AI TRADING v4.1 — AETHER ML EDITION (FULLY FIXED)
+   KV Sync, Open/Close Positions, Auto Learning, Strategy Optimizer
    ═══════════════════════════════════════════════════════════════ */
 
 const WORKER_URL = 'https://masterai-proxy.ynsk06.workers.dev';
@@ -1104,7 +1105,6 @@ let allSignals = {}, notificationLog = [], dailySignals = [], openPositions = {}
 let backgroundIntervalId = null, summaryIntervalTimerId = null, lastSummaryTime = 0;
 let isLiveScanning = false, activeTab = 0, currentTheme = 'dark', deviceUID = '';
 let liveSymbolPrices = {};
-const kvSync = {signals:null, settings:null, positions:null};
 let kvReady = false;
 
 let optTarget = 'all';
@@ -1178,10 +1178,7 @@ async function kvFetch(url, options={}, retries=2){
 }
 
 async function kvPushPositions(){
-  const data = {
-    open: openPositions,
-    closed: closedPositions
-  };
+  const data = { open: openPositions, closed: closedPositions };
   saveLocal('masterai_positions', data);
   try{
     await kvFetch(`${workerBase()}/kv/positions?uid=${deviceUID}`, {
@@ -1200,16 +1197,22 @@ async function kvPushPositions(){
 async function kvPullAll(){
   setKVDot('syncing');
   try{
-    const pos = await kvFetch(`${workerBase()}/kv/positions?uid=${deviceUID}`);
-    if(pos && pos.open){
+    const [sig, set, pos] = await Promise.all([
+      kvFetch(`${workerBase()}/kv/signals?uid=${deviceUID}`),
+      kvFetch(`${workerBase()}/kv/settings?uid=${deviceUID}`),
+      kvFetch(`${workerBase()}/kv/positions?uid=${deviceUID}`)
+    ]);
+    if (sig) allSignals = sig;
+    if (set) Object.assign(CFG, set);
+    if (pos && pos.open) {
       openPositions = pos.open;
       closedPositions = pos.closed || [];
-      kvReady = true;
-      saveLocal('masterai_positions', {open: openPositions, closed: closedPositions});
-      setKVDot('ok');
-    } else {
-      throw new Error("KV empty or invalid");
     }
+    saveLocal('masterai_positions', {open: openPositions, closed: closedPositions});
+    saveLocal('masterai_signals', allSignals);
+    saveLocal('masterai_cfg', CFG);
+    renderWatchlist();
+    setKVDot('ok');
   } catch(e){
     console.warn("KV PULL FAIL → local fallback", e.message);
     const local = loadLocal('masterai_positions');
@@ -1233,9 +1236,9 @@ async function kvPushAll(){
       kvFetch(`${workerBase()}/kv/mldata?uid=${deviceUID}`,{method:'POST',body:JSON.stringify(mlData)})
     ]);
     const now=new Date().toLocaleTimeString('tr-TR');
-    if(ok1){kvSync.signals=now;safeSetText('kv-lastSignalSync',now);}
-    if(ok2){kvSync.settings=now;safeSetText('kv-lastSettingSync',now);}
-    if(ok3){kvSync.positions=now;safeSetText('kv-lastPosSync',now);}
+    if(ok1){safeSetText('kv-lastSignalSync',now);}
+    if(ok2){safeSetText('kv-lastSettingSync',now);}
+    if(ok3){safeSetText('kv-lastPosSync',now);}
     setKVDot(ok1&&ok2&&ok3&&ok4?'ok':'error');
     updateKVStats();
     showToast('KV Sync',ok1?'✅ Buluta yüklendi':'❌ Başarısız',ok1?'info':'sell');
@@ -1272,8 +1275,14 @@ async function testWorker(){
 function saveWorkerUrl(){const u=document.getElementById('workerUrlInput')?.value?.trim();if(!u)return;CFG.workerUrl=u;saveLocal('masterai_cfg',CFG);showToast('Worker URL','Kaydedildi','info');testWorker();}
 
 /* ── Position Management (with KV sync) ─────────────── */
+function getPositionKey(sym, tf, sys) {
+  // Remove spaces and special chars from system name for consistent keys
+  const cleanSys = sys.replace(/[^A-Za-z0-9]/g, '');
+  return `${sym}-${tf}-${cleanSys}`;
+}
+
 function addOpenPosition(sym, tf, sys, entryPrice, entryTime) {
-  const key = `${sym}-${tf}-${sys}`;
+  const key = getPositionKey(sym, tf, sys);
   if (openPositions[key]) return;
   openPositions[key] = {
     sym, tf, sys,
@@ -1449,8 +1458,8 @@ function renderOpenPositions() {
   tbody.innerHTML = keys.map(key => {
     const pos = openPositions[key];
     if (!pos) return '';
-    const sym = pos.sym || key.split('-')[0];
-    const tf = pos.tf || key.split('-').slice(1).join('-');
+    const sym = pos.sym;
+    const tf = pos.tf;
     const latestPrice = getLatestPrice(sym);
     const pnl = latestPrice ? (latestPrice - pos.entry) / pos.entry * 100 : null;
     const duration = pos.entryTime ? Date.now() - pos.entryTime : null;
@@ -1499,7 +1508,7 @@ function updatePositionSummary() {
   let totalPnl = 0, validCount = 0;
   openKeys.forEach(key => {
     const pos = openPositions[key];
-    const lp = getLatestPrice(pos.sym || key.split('-')[0]);
+    const lp = getLatestPrice(pos.sym);
     if (lp && pos.entry) { totalPnl += (lp - pos.entry) / pos.entry * 100; validCount++; }
   });
   const totalPnlEl = document.getElementById('summTotalPnl');
@@ -1881,7 +1890,14 @@ async function runMLBacktest() {
   const acc=total>0?(correct/total*100).toFixed(1):0;
   const pnl=pnlSum.toFixed(2),sharpe=(pnlSum/Math.max(1,total)/2).toFixed(2);
   const table=document.getElementById('mlBacktestTable');
-  if(table)table.innerHTML=`<tr><td>Test Barı</td><td style="color:var(--cyan)">${total}</td></tr><tr><td>Doğru</td><td style="color:var(--green)">${correct}</td></tr><tr><td>Yanlış</td><td style="color:var(--red)">${total-correct}</td></tr><tr><td>Doğruluk</td><td style="color:var(--cyan)">${acc}%</td></tr><tr><td>Toplam PnL</td><td class="${pnl>=0?'price-up':'price-dn'}">${pnl}%</td></tr><tr><td>Sharpe</td><td style="color:var(--gold)">${sharpe}</td></tr><tr><td>Durum</td><td><span class="badge ${acc>=60?'badge-green':'badge-red'}">${acc>=60?'BAŞARILI':'GELİŞTİRİLEBİLİR'}</span></td></tr>`;
+  if(table)table.innerHTML=`<tr><td colspan="2" style="color:var(--cyan);font-weight:700;">ML Backtest Sonuçları</td></tr>
+    <tr><td>Test Barı</td><td style="color:var(--cyan)">${total}</td></tr>
+    <tr><td>Doğru</td><td style="color:var(--green)">${correct}</td></tr>
+    <tr><td>Yanlış</td><td style="color:var(--red)">${total-correct}</td></tr>
+    <tr><td>Doğruluk</td><td style="color:var(--cyan)">${acc}%</td></tr>
+    <tr><td>Toplam PnL</td><td class="${pnl>=0?'price-up':'price-dn'}">${pnl}%</td></tr>
+    <tr><td>Sharpe</td><td style="color:var(--gold)">${sharpe}</td></tr>
+    <tr><td>Durum</td><td><span class="badge ${acc>=60?'badge-green':'badge-red'}">${acc>=60?'BAŞARILI':'GELİŞTİRİLEBİLİR'}</span></td></tr>`;
   showToast('ML Backtest','Tamamlandı — '+acc+'% doğruluk','ml');
 }
 
@@ -2440,18 +2456,19 @@ function updateAllPanels(sym, r) {
 function syncOpenPositionsFromResult(sym, r, lc) {
   const tf = currentTF;
   const systems = [
-    { key: `${sym}-${tf}-master`, inTrade: r.master.inMaster, entry: r.master.masterEntry, sys: 'Master AI' },
-    { key: `${sym}-${tf}-sys1`,   inTrade: r.sys1.inTrade1,   entry: r.sys1.buyPrice1,     sys: 'Sistem 1' },
-    { key: `${sym}-${tf}-sys2`,   inTrade: r.sys2.inTrade2,   entry: r.sys2.entry2,         sys: 'PRO' },
-    { key: `${sym}-${tf}-fusion`, inTrade: r.fusion.inFusion, entry: r.fusion.fusionEntry,  sys: 'Fusion' },
+    { inTrade: r.master.inMaster, entry: r.master.masterEntry, sys: 'Master AI' },
+    { inTrade: r.sys1.inTrade1,   entry: r.sys1.buyPrice1,     sys: 'Sistem 1' },
+    { inTrade: r.sys2.inTrade2,   entry: r.sys2.entry2,         sys: 'PRO' },
+    { inTrade: r.fusion.inFusion, entry: r.fusion.fusionEntry,  sys: 'Fusion' },
   ];
   const aN = ['A60','A61','A62','A81','A120'];
   for (let i = 0; i < 5; i++) {
-    systems.push({ key:`${sym}-${tf}-${aN[i]}`, inTrade:r.agents.agStates[i], entry:r.agents.agEntries[i], sys:aN[i] });
+    systems.push({ inTrade:r.agents.agStates[i], entry:r.agents.agEntries[i], sys:aN[i] });
   }
   for (const s of systems) {
+    const key = getPositionKey(sym, tf, s.sys);
     if (s.inTrade && s.entry > 0) {
-      if (!openPositions[s.key]) {
+      if (!openPositions[key]) {
         const sigKey = `${sym}-${tf}`;
         const hist = allSignals[sigKey] || [];
         const lastBuy = [...hist].reverse().find(sig => sig.type === 'AL' && sig.sys === s.sys);
@@ -2459,8 +2476,8 @@ function syncOpenPositionsFromResult(sym, r, lc) {
         addOpenPosition(sym, tf, s.sys, s.entry, entryTime);
       }
     } else {
-      if (openPositions[s.key]) {
-        closePosition(s.key, lc, Date.now());
+      if (openPositions[key]) {
+        closePosition(key, lc, Date.now());
       }
     }
   }
@@ -2520,7 +2537,10 @@ async function backgroundScan() {
       try{
         const bars=await fetchOHLCV(sym,tf);if(!bars||bars.length<60)continue;
         const result=runIndicators(bars,{...CFG});if(!result)continue;
-        liveSymbolPrices[sym] = bars[bars.length-1].c;
+        const lastPrice = bars[bars.length-1].c;
+        liveSymbolPrices[sym] = lastPrice;
+        // Sync open positions based on result
+        syncOpenPositionsFromResult(sym, result, lastPrice);
         const key=`${sym}-${tf}`,hist=allSignals[key]||[],maxT=hist.length?Math.max(...hist.map(s=>s.t||0)):0;
         const newSigs=result.signals.filter(s=>(s.t||0)>maxT);
         if(newSigs.length){
@@ -2535,10 +2555,11 @@ async function backgroundScan() {
             if(sig.type==='AL'){
               showToast(`${sig.sys} AL`,`${sym}(${tf}) @ ${sig.price.toFixed(2)}`,sig.sys==='Master AI'?'master':'buy');
               sendTelegram(`🚨 ${msgBody}\n📊 ${tvLink}`);
-              addOpenPosition(sym, tf, sig.sys, sig.price, sig.t);
+              // Position will be added via syncOpenPositionsFromResult, but addOpenPosition also called there
+              // To avoid duplicate, we rely on sync. So skip direct addOpenPosition here.
             } else if(sig.type==='SAT'&&sig.pnl!==undefined){
               showToast(`${sig.sys} SAT`,`${sym}(${tf}) PnL: ${fmt(sig.pnl)}%`,sig.pnl>=0?'buy':'sell');
-              const posKey = `${sym}-${tf}-${sig.sys}`;
+              const posKey = getPositionKey(sym, tf, sig.sys);
               if(openPositions[posKey]){
                 sendTelegram(`✅ ${sym}(${tf}) KAPANDI\nSistem: ${sig.sys}\nPnL: %${fmt(sig.pnl)}\n📊 ${tvLink}`);
                 closePosition(posKey, sig.price, sig.t);
@@ -2584,10 +2605,10 @@ async function analyzeSymbol() {
         if(sig.type==='AL'){
           showToast(`${sig.sys} AL`,`${sym} @ ${sig.price.toFixed(2)}`,sig.sys==='Master AI'?'master':'buy');
           if(sig.sys==='Master AI')sendTelegram(`🚨 Master AI AL\n${sym}(${tf}) @ ${sig.price.toFixed(2)}\nConsensus: ${(sig.consensus*100).toFixed(0)}%\nML Conf: ${Math.round(ML.confidence*100)}%`);
-          addOpenPosition(sym, tf, sig.sys, sig.price, sig.t);
+          // Position will be added via syncOpenPositionsFromResult
         } else if(sig.type==='SAT'&&sig.pnl!==undefined){
           showToast(`${sig.sys} SAT`,`${sym} PnL: ${fmt(sig.pnl)}%`,sig.pnl>=0?'buy':'sell');
-          const posKey = `${sym}-${tf}-${sig.sys}`;
+          const posKey = getPositionKey(sym, tf, sig.sys);
           if(openPositions[posKey]) closePosition(posKey, sig.price, sig.t);
         }
       }
@@ -2650,10 +2671,10 @@ async function toggleLiveScan() {
             if(sig.type==='AL'){
               showToast(`🔔 ${sig.sys} AL`,`${sym}(${tf}) @ ${sig.price.toFixed(2)}`,sig.sys==='Master AI'?'master':'buy');
               sendTelegram(`🚨 ${sig.sys} AL\n${sym}(${tf}) @ ${sig.price.toFixed(2)}`);
-              addOpenPosition(sym, tf, sig.sys, sig.price, sig.t);
+              // Position sync via updateAllPanels
             } else if(sig.type==='SAT'&&sig.pnl!==undefined){
               showToast(`${sig.sys} SAT`,`${sym}(${tf}) PnL: ${fmt(sig.pnl)}%`,sig.pnl>=0?'buy':'sell');
-              const posKey = `${sym}-${tf}-${sig.sys}`;
+              const posKey = getPositionKey(sym, tf, sig.sys);
               if(openPositions[posKey]) closePosition(posKey, sig.price, sig.t);
             }
             if(activeTab===2)renderNotificationLog();
@@ -2744,7 +2765,7 @@ async function sendPeriodicSummary() {
   const keys=Object.keys(openPositions);
   let msg=`📊 <b>Master AI v4.1 Özet</b> — ${new Date().toLocaleTimeString('tr-TR')}\nML Conf: ${Math.round(ML.confidence*100)}%\n`;
   if(!keys.length)msg+='Açık pozisyon yok.\n';
-  else keys.forEach(k=>{const pos=openPositions[k];const lp=getLatestPrice(pos.sym||k.split('-')[0]);const pnl=lp&&pos.entry?(lp-pos.entry)/pos.entry*100:null;msg+=`• ${k} | ${pos.sys} | PnL: ${pnl!==null?fmtPct(pnl):'—'}\n`;});
+  else keys.forEach(k=>{const pos=openPositions[k];const lp=getLatestPrice(pos.sym);const pnl=lp&&pos.entry?(lp-pos.entry)/pos.entry*100:null;msg+=`• ${k} | ${pos.sys} | PnL: ${pnl!==null?fmtPct(pnl):'—'}\n`;});
   msg+=`Toplam: ${keys.length} açık, ${closedPositions.length} kapalı`;
   sendTelegram(msg);
 }
