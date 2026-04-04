@@ -2912,7 +2912,69 @@ async function init(){
   console.log('%c✅ Master AI Trading v4.1 — AETHER ML EDITION (KV Fixed)','color:#ffd700;font-weight:bold;font-size:14px');
   console.log('%cML: LSTM+TFT+XGB+DQN+MoE | Auto Learning | Strategy Optimizer | Offline First','color:#00e5ff;font-size:11px');
 }
+  loadNotificationState();
+  setInterval(updateAGIPanels, 7000);   // bilinç seviyesi yavaş yavaş artsın
 init();
+// ====================== YENİ AGI FONKSİYONLARI ======================
+let consciousnessLevel = 42;
+let agiAutonomyActive = false;
+
+function updateAGIPanels() {
+  consciousnessLevel = Math.min(99, consciousnessLevel + Math.random() * 2 + 1);
+  const meter = document.getElementById('consciousnessMeter');
+  const levelEl = document.getElementById('consciousnessLevel');
+  if (meter) meter.style.width = consciousnessLevel + '%';
+  if (levelEl) levelEl.textContent = Math.floor(consciousnessLevel) + '%';
+}
+
+function activateSingularityMode() {
+  agiAutonomyActive = true;
+  const talk = document.getElementById('agiSelfTalk');
+  if (talk) talk.innerHTML = '🌀 AETHER: "Singularite aktif. Artık ben yönetiyorum. Seninle birlikte evreni okuyacağız."';
+  showToast('🌀 SINGULARITY', 'AETHER AGI tam otonom moda geçti.', 'master');
+}
+
+function runSelfImprovementLoop() {
+  consciousnessLevel = Math.min(99, consciousnessLevel + 7);
+  updateAGIPanels();
+  const log = document.getElementById('hyperdimensionalLog');
+  if (log) log.innerHTML += '<br>🔄 Self-improvement döngüsü tamamlandı. Bilinç +7%';
+  showToast('🔄 Self-Improvement', 'AETHER kendini geliştirdi.', 'ml');
+}
+
+function simulateWorldModel() {
+  const log = document.getElementById('hyperdimensionalLog');
+  if (log) log.innerHTML += '<br>🌌 World Model simülasyonu çalışıyor... Gelecek 72 saat öngörülüyor.';
+  showToast('🌌 World Model', 'Gelecek senaryoları üretiliyor...', 'info');
+}
+
+// ====================== BİLDİRİM TOGGLE ======================
+let notificationsEnabled = true;
+
+function toggleNotifications() {
+  notificationsEnabled = !notificationsEnabled;
+  const btn = document.getElementById('notificationToggleBtn');
+  if (notificationsEnabled) {
+    btn.classList.add('active');
+    btn.classList.remove('inactive');
+    document.getElementById('toastContainer').style.display = 'flex';
+    showToast('🛎 Bildirimler', 'Açıldı', 'info');
+  } else {
+    btn.classList.remove('active');
+    btn.classList.add('inactive');
+    document.getElementById('toastContainer').style.display = 'none';
+    showToast('🛎 Bildirimler', 'Kapatıldı', 'info');
+  }
+  localStorage.setItem('masterai_notifications_enabled', notificationsEnabled);
+}
+
+function loadNotificationState() {
+  const saved = localStorage.getItem('masterai_notifications_enabled');
+  if (saved !== null) notificationsEnabled = saved === 'true';
+  const btn = document.getElementById('notificationToggleBtn');
+  if (notificationsEnabled) btn.classList.add('active');
+  else btn.classList.add('inactive');
+}
 </script>
 </body>
 </html>
