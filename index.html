@@ -575,7 +575,7 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
           <tr><td>Sembol</td><td id="fs-ticker">—</td></tr>
           <tr><td>Toplam AL</td><td id="fs-al">—</td></tr>
           <tr><td>Toplam SAT</td><td id="fs-sat">—</td></tr>
-          <tr><td>Kârlı/Zararlı</td><td id="fs-kz">—</td></tr>
+           hilabihan<td>Kârlı/Zararlı</td><td id="fs-kz">—</td></tr>
           <tr><td>Toplam %</td><td id="fs-pnl">—</td></tr>
           <tr><td>Durum</td><td id="fs-fd">—</td></tr>
         </table>
@@ -1079,10 +1079,9 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
 
 <div class="toast-container" id="toastContainer"></div>
 <script>
-/* ═══════════════════════════════════════════════════════════════
-   MASTER AI TRADING v4.1 — AETHER ML EDITION (PINE‑STYLE POSITIONS)
-   FULL IMPLEMENTATION — ALL FUNCTIONS INCLUDED
-   ═══════════════════════════════════════════════════════════════ */
+// ============================================================
+// MASTER AI TRADING v4.1 — FULL WORKING IMPLEMENTATION
+// ============================================================
 
 const WORKER_URL = 'https://masterai-proxy.ynsk06.workers.dev';
 const LIVE_TFS = ['2h','4h'];
@@ -1142,19 +1141,6 @@ const ML = {
 
 let lastSignalKeyTime = {};
 
-// ── Helper functions ───────────────────────────────────────────
-function saveLocal(key,d){try{localStorage.setItem(key,JSON.stringify(d));}catch(e){console.warn('localStorage error:',e);}}
-function loadLocal(key){try{const v=localStorage.getItem(key);return v?JSON.parse(v):null;}catch(e){return null;}}
-function safeSetText(id,val){try{const el=document.getElementById(id);if(el)el.textContent=val!=null?val:'—';}catch(e){}}
-function safeSetHTML(id,val){try{const el=document.getElementById(id);if(el)el.innerHTML=val||'';}catch(e){}}
-function fmt(v,d=2){if(v==null||!isFinite(v))return'—';return Number(v).toFixed(d);}
-function fmtPct(v){if(v==null||!isFinite(v))return'—';return(v>=0?'+':'')+Number(v).toFixed(2)+'%';}
-function pnlClass(v){return v>=0?'price-up':'price-dn';}
-function badgeClass(v){return v>=0?'badge-green':'badge-red';}
-function formatDuration(ms){if(!ms||ms<0)return'—';const h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000);return h>24?Math.floor(h/24)+'g '+h%24+'s':h+'s '+m+'d';}
-function formatTime(ts){if(!ts)return'—';try{const d=new Date(ts);return d.toLocaleDateString('tr-TR',{month:'numeric',day:'numeric'})+' '+d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});}catch(e){return'—';}}
-
-// ── Position Management ────────────────────────────────────────
 function getPosKey(sym, tf, sys) { return `${sym}-${tf}-${sys}`; }
 
 function addOpenPosition(sym, tf, sys, entryPrice, entryTime) {
@@ -1328,7 +1314,7 @@ function renderPositionsTab() {
     const closedSorted = [...closedPositions].sort((a,b) => (b.exitTime||0) - (a.exitTime||0));
     const closedTbody = document.getElementById('closedPosBody');
     if (closedTbody) {
-      if (!closedSorted.length) closedTbody.innerHTML = '<td><td colspan="7" style="text-align:center;padding:30px;color:var(--muted);">Kapalı pozisyon yok</td></tr>';
+      if (!closedSorted.length) closedTbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--muted);">Kapalı pozisyon yok</td></tr>';
       else closedTbody.innerHTML = closedSorted.slice(0,100).map(p => {
         const pnl = p.pnl;
         return `<tr>
@@ -1395,6 +1381,18 @@ function syncOpenPositionsFromResult(sym, result, latestPrice) {
     }
   }
 }
+
+// ── Helper functions ───────────────────────────────────────────
+function saveLocal(key,d){try{localStorage.setItem(key,JSON.stringify(d));}catch(e){console.warn('localStorage error:',e);}}
+function loadLocal(key){try{const v=localStorage.getItem(key);return v?JSON.parse(v):null;}catch(e){return null;}}
+function safeSetText(id,val){try{const el=document.getElementById(id);if(el)el.textContent=val!=null?val:'—';}catch(e){}}
+function safeSetHTML(id,val){try{const el=document.getElementById(id);if(el)el.innerHTML=val||'';}catch(e){}}
+function fmt(v,d=2){if(v==null||!isFinite(v))return'—';return Number(v).toFixed(d);}
+function fmtPct(v){if(v==null||!isFinite(v))return'—';return(v>=0?'+':'')+Number(v).toFixed(2)+'%';}
+function pnlClass(v){return v>=0?'price-up':'price-dn';}
+function badgeClass(v){return v>=0?'badge-green':'badge-red';}
+function formatDuration(ms){if(!ms||ms<0)return'—';const h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000);return h>24?Math.floor(h/24)+'g '+h%24+'s':h+'s '+m+'d';}
+function formatTime(ts){if(!ts)return'—';try{const d=new Date(ts);return d.toLocaleDateString('tr-TR',{month:'numeric',day:'numeric'})+' '+d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});}catch(e){return'—';}}
 
 // ── Data Fetch ─────────────────────────────────────────────────
 async function fetchOHLCV(sym, tf) {
@@ -1868,7 +1866,7 @@ async function runStrategyOptimizer() {
         }
       }
       const eval_ = evaluateParams(bars, testCfg);
-      if (detailEl) detailEl.textContent = `İter ${iter+1}: PnL=${eval_.pnl?.toFixed(1)||'—}% Trades=${eval_.trades}`;
+      if (detailEl) detailEl.textContent = `İter ${iter+1}: PnL=${eval_.pnl?.toFixed(1)||'—'}% Trades=${eval_.trades}`;
       if ((eval_.score||0) > bestScore) { bestScore = eval_.score; bestCfg = { ...testCfg }; }
       if (iter % 10 === 0) await new Promise(r => setTimeout(r, 1));
     }
