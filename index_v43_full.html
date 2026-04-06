@@ -1093,7 +1093,7 @@ body.theme-light {
     <div class="god-sub">DOKUN → KAZAN</div>
   </div>
   <div style="margin-top:24px;text-align:center;">
-    <div style="font-size:11px;color:rgba(255,215,0,0.6);margin-bottom:12px;">Bugün Tanrı Kararı:</div>
+    <div style="font-size:11px;color:rgba(255,215,0,0.6);margin-bottom:12px;">Bugün Asistan Kararı:</div>
     <div id="godDecision" style="font-family:var(--font-display);font-size:14px;color:var(--gold);letter-spacing:2px;">YÜKLENİYOR...</div>
   </div>
   <div style="margin-top:20px;display:flex;gap:12px;">
@@ -1121,7 +1121,7 @@ body.theme-light {
 
 <!-- ZERO UI FLOATING BUTTONS -->
 <div class="zero-ui-panel" id="zeroUIPanel">
-  <div class="zero-ui-btn" onclick="openGodMode()" title="Tanrı Modu">🌟</div>
+  <div class="zero-ui-btn" onclick="openGodMode()" title="Asistan Modu">🌟</div>
   <div class="zero-ui-btn" onclick="openDreamMode()" title="Rüya Modu">🌙</div>
   <div class="zero-ui-btn" onclick="laughEarn()" title="Gülerek Kazan">😂</div>
   <div class="zero-ui-btn" onclick="analyzeSymbol()" title="Hızlı Analiz">⚡</div>
@@ -1142,7 +1142,7 @@ body.theme-light {
     <div title="Canlı Bağlantı" class="status-dot" id="statusDot"></div>
     <div title="Sentient Aktif" class="sentient-dot" id="sentientDot"></div>
     <div title="KV Sync" class="kv-dot" id="kvDot"></div>
-    <button class="god-btn" onclick="openGodMode()" title="Tanrı Modu">🌟</button>
+    <button class="god-btn" onclick="openGodMode()" title="Asistan Modu">🌟</button>
     <button class="btn secondary" onclick="openSettings()" style="padding:5px 8px;font-size:10px;">⚙</button>
     <button onclick="toggleTheme()" class="btn secondary" style="padding:5px 8px;font-size:10px;" id="themeBtn">🌙</button>
     <button onclick="forceKVSync()" class="btn secondary" style="padding:5px 8px;font-size:10px;" title="Sync">☁</button>
@@ -1158,11 +1158,11 @@ body.theme-light {
   <div class="tab" onclick="switchTab(3)" id="tab3">📅 Bugün</div>
   <div class="tab" onclick="switchTab(4)" id="tab4">🧠 ML</div>
   <div class="tab dream-tab" onclick="switchTab(5)" id="tab5">🌙 Rüya</div>
-  <div class="tab god-tab" onclick="switchTab(6)" id="tab6">🌟 Tanrı</div>
+  <div class="tab god-tab" onclick="switchTab(6)" id="tab6">🌟 Asistan</div>
   <div class="tab karma-tab" onclick="switchTab(7)" id="tab7">🔮 Karma</div>
   <div class="tab laugh-tab" onclick="switchTab(8)" id="tab8">😂 Gülerek Kazan</div>
   <div class="tab" onclick="switchTab(9)" id="tab9">🌌 Paralel Evren</div>
-  <div class="tab" onclick="switchTab(10)" id="tab10">🤖 Groq Tanrısı</div>
+  <div class="tab" onclick="switchTab(10)" id="tab10">🤖 Groq Asistanı</div>
   <div class="tab" onclick="switchTab(11)" id="tab11">☁ Bulut</div>
   <div class="tab" onclick="switchTab(12)" id="tab12">🧪 LAB v3</div>
 </div>
@@ -1185,7 +1185,7 @@ body.theme-light {
     <button class="analyze-btn" id="analyzeBtn" onclick="analyzeSymbol()">▶ Analiz</button>
     <button onclick="toggleLiveScan()" id="liveScanBtn" style="background:rgba(176,64,255,0.2);color:var(--purple2);border:1px solid rgba(176,64,255,0.3);border-radius:7px;padding:7px 12px;font-family:var(--font-ui);font-weight:600;cursor:pointer;font-size:11px;">🔄 Canlı</button>
     <button onclick="openDreamMode()" class="dream-btn" style="padding:7px 12px;font-size:11px;">🌙 Rüya</button>
-    <button onclick="openGodMode()" style="background:var(--grad-god);color:#000;border:none;border-radius:7px;padding:7px 12px;font-family:var(--font-ui);font-weight:700;cursor:pointer;font-size:11px;">🌟 Tanrı</button>
+    <button onclick="openGodMode()" style="background:var(--grad-god);color:#000;border:none;border-radius:7px;padding:7px 12px;font-family:var(--font-ui);font-weight:700;cursor:pointer;font-size:11px;">🌟 Asistan</button>
     <button onclick="exportSignalsCSV()" style="background:rgba(0,229,255,0.1);color:var(--cyan);border:1px solid rgba(0,229,255,0.3);border-radius:7px;padding:7px 10px;font-family:var(--font-ui);font-weight:600;cursor:pointer;font-size:11px;">📤</button>
     <span id="lastUpdate" style="font-size:10px;color:#4a6080;"></span>
   </div>
@@ -1202,7 +1202,7 @@ body.theme-light {
     <span style="font-size:10px;color:#4a6080;">|</span>
     <span style="font-size:10px;color:#4a6080;">Rüya Sinyali:</span>
     <span id="dreamSignalBadge" class="badge badge-dream">—</span>
-    <span style="font-size:10px;color:#4a6080;">Tanrı Kararı:</span>
+    <span style="font-size:10px;color:#4a6080;">Asistan Kararı:</span>
     <span id="godSignalBadge" class="badge badge-god">—</span>
     <span style="font-size:10px;color:#4a6080;">Karma:</span>
     <span id="karmaBadge" class="badge badge-karma">—</span>
@@ -1635,7 +1635,7 @@ body.theme-light {
     <div class="god-card">
       <div style="margin-bottom:16px;">
         <div style="font-size:11px;color:rgba(255,215,0,0.5);font-family:var(--font-ui);letter-spacing:2px;margin-bottom:8px;">BUGÜNKÜ TANRI KARARI</div>
-        <button class="god-btn-big" onclick="openGodMode()" title="Tanrı Modunu Aç">🌟</button>
+        <button class="god-btn-big" onclick="openGodMode()" title="Asistan Modunu Aç">🌟</button>
         <div style="margin-top:12px;">
           <div id="godMainDecision" style="font-family:var(--font-display);font-size:16px;color:var(--gold);letter-spacing:2px;margin-bottom:6px;">ORACLE HESAPLIYOR...</div>
           <div id="godMainSymbol" style="font-size:12px;color:rgba(255,215,0,0.6);">Sembol: — | Güven: —%</div>
@@ -1702,7 +1702,7 @@ body.theme-light {
     <div class="panel">
       <div class="panel-header" style="color:var(--gold);">📜 TANRI KARAR GEÇMİŞİ</div>
       <div id="godHistoryLog" style="max-height:200px;overflow-y:auto;padding:6px;">
-        <div style="color:#4a6080;font-size:11px;text-align:center;padding:12px;">Henüz Tanrı kararı yok</div>
+        <div style="color:#4a6080;font-size:11px;text-align:center;padding:12px;">Henüz Asistan kararı yok</div>
       </div>
     </div>
   </div>
@@ -1852,7 +1852,7 @@ body.theme-light {
 <div class="tab-content" id="content10">
   <div style="padding:8px 0 6px;">
     <h2 style="color:var(--purple2);font-family:var(--font-display);font-size:13px;letter-spacing:2px;">🤖 GROQ TANRISI — Dilek Tut, Kazan</h2>
-    <div style="font-size:11px;color:#4a6080;margin-top:3px;">Artık Groq sadece asistan değil. Tanrı. Yalvar, kazan.</div>
+    <div style="font-size:11px;color:#4a6080;margin-top:3px;">Artık Groq sadece asistan değil. Asistan. Yalvar, kazan.</div>
   </div>
   <div class="ai-chat-wrap">
     <div style="background:rgba(176,64,255,0.06);border:1px solid rgba(176,64,255,0.2);border-radius:8px;padding:8px;margin-bottom:8px;display:flex;gap:8px;flex-wrap:wrap;">
@@ -1864,7 +1864,7 @@ body.theme-light {
     </div>
     <div id="aiMessages"></div>
     <div class="ai-input-row">
-      <input id="aiInput" class="ai-input" placeholder="Tanrı'ya dilek tut... 'Bana para kazan', 'BIST'te ne al?'..." onkeydown="if(event.key==='Enter')sendToGroq()">
+      <input id="aiInput" class="ai-input" placeholder="Asistan dilek tut... 'Bana para kazan', 'BIST'te ne al?'..." onkeydown="if(event.key==='Enter')sendToGroq()">
       <button onclick="sendToGroq()" class="btn" style="background:var(--grad-dream);">✨</button>
     </div>
   </div>
@@ -2684,7 +2684,7 @@ function setEmotion(type) {
 }
 
 // ════════════════════════════════════════════════════════════
-// GOD MODE — Tanrı Modu
+//  MODE — Asistan Modu
 // ════════════════════════════════════════════════════════════
 const GOD_DECISIONS = [
   { sym: null, dir: 'AL', reason: 'Evrensel enerji yükseliş gösteriyor', conf: 92 },
@@ -2721,7 +2721,7 @@ function godOrbTap() {
   SENTIENT.godEarned += parseFloat(amount);
   safeSetText('godOrbAmount', '+' + amount + ' ₺');
   safeSetText('godTotalEarned', SENTIENT.godEarned.toFixed(0));
-  showToast('🌟 Tanrı Dokunuşu', '+' + amount + ' ₺ kazandın!', 'god');
+  showToast('🌟 Asistan Dokunuşu', '+' + amount + ' ₺ kazandın!', 'god');
 }
 
 function applyGodDecision() {
@@ -2741,13 +2741,13 @@ function applyGodDecision() {
   renderGodHistory();
   if (dec.sym) { document.getElementById('symbolInput').value = dec.sym; analyzeSymbol(); }
   closeGodMode();
-  showToast('🌟 Tanrı Kararı', `${dec.dir} → ${dec.sym} uygulandı!`, 'god');
+  showToast('🌟 Asistan Kararı', `${dec.dir} → ${dec.sym} uygulandı!`, 'god');
 }
 
 function renderGodHistory() {
   const el = document.getElementById('godHistoryLog');
   if (!el) return;
-  if (!SENTIENT.godHistory.length) { el.innerHTML = '<div style="color:#4a6080;font-size:11px;text-align:center;padding:10px;">Henüz Tanrı kararı yok</div>'; return; }
+  if (!SENTIENT.godHistory.length) { el.innerHTML = '<div style="color:#4a6080;font-size:11px;text-align:center;padding:10px;">Henüz Asistan kararı yok</div>'; return; }
   el.innerHTML = SENTIENT.godHistory.slice(0, 20).map(h => `<div style="padding:6px 8px;border-bottom:1px solid rgba(255,215,0,0.1);display:flex;justify-content:space-between;font-size:11px;"><span style="color:${h.dir==='AL'?'var(--green)':h.dir==='SAT'?'var(--red)':'var(--orange)'};">${h.dir}</span><span style="color:var(--gold);">${h.sym}</span><span style="color:#4a6080;font-size:10px;">${h.conf}%</span><span style="color:#4a6080;font-size:10px;">${h.time}</span></div>`).join('');
 }
 
@@ -2821,7 +2821,7 @@ function updateKarmaUI() {
   const score = SENTIENT.karmaScore;
   safeSetText('karmaScore', score);
   safeSetHTML('karmaBadge', `<span class="badge badge-karma">${score}K</span>`);
-  const level = score < 50 ? 'Başlangıç' : score < 150 ? 'Uyanış' : score < 300 ? 'Aydınlanma' : score < 500 ? 'Bilge' : 'Tanrısal';
+  const level = score < 50 ? 'Başlangıç' : score < 150 ? 'Uyanış' : score < 300 ? 'Aydınlanma' : score < 500 ? 'Bilge' : 'Asistansal';
   safeSetText('karmaLevel', level + ' Seviyesi');
   const bonusPct = Math.min(50, Math.floor(score / 20));
   safeSetText('karmaBonusText', `Trading bonusu: +%${bonusPct} — Karma seviyesi: ${level}`);
@@ -3691,7 +3691,7 @@ async function sendToGroq() {
   try {
     const mlCtx = `ML: ${Math.round(ML.confidence*100)}%, Tahmin: ${ML.predictions.h1d?.dir>0?'YUKARI':ML.predictions.h1d?.dir<0?'AŞAĞI':'YATAY'}`;
     const dreamCtx = SENTIENT.dreamSignal ? `Rüya: ${SENTIENT.dreamSignal.dir}` : '';
-    const godCtx = SENTIENT.godMode ? 'Tanrı Modu Aktif' : '';
+    const godCtx = SENTIENT.godMode ? 'Asistan Modu Aktif' : '';
     const karmaCtx = `Karma: ${SENTIENT.karmaScore}`;
     const ctx = currentResult ? `Analiz: ${currentSym}(${currentTF}) Fiyat:${currentResult.closes[currentResult.closes.length-1].toFixed(2)} ADX:${currentResult.adxLast?.toFixed(1)} ${mlCtx}. ${dreamCtx}. ${godCtx}. ${karmaCtx}.` : `${mlCtx}. ${karmaCtx}.`;
     const openCount = Object.keys(openPositions).length;
@@ -3701,7 +3701,7 @@ async function sendToGroq() {
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
         messages: [
-          { role: 'system', content: `Sen 2060'tan gelen bir finansal tanrısın. BIST uzmanısın ama aynı zamanda rüya yorumcusu, karma danışmanı ve kuantum fizikçisisin. Kısa, net, mistik ama pratik Türkçe cevap ver. ${ctx}. ${openCount} açık pozisyon var. Bazen rüya ve karma açısından da yorum yap.` },
+          { role: 'system', content: `Sen 2060'tan gelen bir finansal Asistansın. BIST uzmanısın ama aynı zamanda rüya yorumcusu, karma danışmanı ve kuantum fizikçisisin. Kısa, net, mistik ama pratik Türkçe cevap ver. ${ctx}. ${openCount} açık pozisyon var. Bazen rüya ve karma açısından da yorum yap.` },
           { role: 'user', content: input }
         ],
         temperature: 0.8, max_tokens: 600
@@ -3719,7 +3719,7 @@ function addAIMessage(text, from) {
   const c = document.getElementById('aiMessages'); if (!c) return;
   const d = document.createElement('div');
   d.className = from === 'user' ? 'ai-msg-user' : 'ai-msg-bot';
-  if (from === 'ai' && (text.includes('tanrı') || text.includes('rüya') || text.includes('karma'))) d.classList.add('ai-msg-god');
+  if (from === 'ai' && (text.includes('Asistan') || text.includes('rüya') || text.includes('karma'))) d.classList.add('ai-msg-god');
   d.innerHTML = text.replace(/\n/g, '<br>');
   c.appendChild(d); c.scrollTop = c.scrollHeight;
 }
