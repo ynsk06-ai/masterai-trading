@@ -4359,29 +4359,40 @@ function initAgents(count) {
 
 // ── AGENT DECISION ────────────────────────────────────────
 function agentDecide(agent, marketData) {
-  const { price, trend, rsi, adx, momentum, volatility } = marketData;
+  if (!currentResult) return { signal: 'HOLD', score: 0.5 };
+
+  // Ana sistemlerinden skorları al
+  const masterCons = currentResult.master?.buyConsensus || 0.5;     // Master AI
+  const sys1Score  = currentResult.sys1?.score || 0.5;              // Sistem 1
+  const sys2Score  = currentResult.sys2?.score || 0.5;              // Sistem 2 PRO
+  const fusionScore = currentResult.fusion?.score || 0.5;           // Fusion
+  const bestAgentScore = currentResult.bestAgent?.score || 0.5;     // A60 vb. en iyi agent
+
+  // ML tahmini (ekstra ağırlık)
+  const mlScore = currentResult.ml?.ensembleScore || 0.5;
+
+  // Ağırlıklı ortalama (istediğin gibi ayarlayabilirsin)
+  let baseScore = 
+    (masterCons * 0.35) + 
+    (fusionScore * 0.25) + 
+    (sys2Score * 0.15) + 
+    (sys1Score * 0.10) + 
+    (bestAgentScore * 0.10) + 
+    (mlScore * 0.05);
+
+  // Ajanın kendi "kişiliği" ile hafifçe modifiye et (çeşitlilik için)
   const g = agent.genes;
-  // Weighted signal computation
-  let score = 0;
-  score += trend * g.aggression * 2;
-  score += (rsi - 50) / 100 * g.intuition;
-  score += momentum * g.patience * 3;
-  score += adx / 100 * g.aggression;
-  // Consciousness boost
-  score += (agent.consciousness - 0.5) * 0.2;
-  // Social influence from allies
-  if (agent.alliances.length > 0) {
-    const allyAvg = agent.alliances.slice(0, 3).reduce((sum, allyId) => {
-      const ally = realmState.agents[allyId];
-      return sum + (ally ? (ally.lastSignal === 'BUY' ? 1 : ally.lastSignal === 'SELL' ? -1 : 0) : 0);
-    }, 0) / Math.max(1, agent.alliances.length);
-    score += allyAvg * g.socialInfluence;
-  }
-  const normalizedScore = 1 / (1 + Math.exp(-score * 3));
-  const threshold = agent.archetype.buyThresh;
-  const signal = normalizedScore > threshold ? 'BUY' : normalizedScore < (1 - threshold) ? 'SELL' : 'HOLD';
-  agent.lastSignal = signal;
-  return { signal, score: normalizedScore };
+  baseScore += (g.aggression - 0.5) * 0.12;      // Agresif ajanlar daha kolay AL der
+  baseScore -= (g.patience - 0.5) * 0.08;        // Sabırlı ajanlar daha temkinli
+  baseScore += (g.intuition - 0.5) * 0.10;
+
+  const finalScore = Math.max(0.05, Math.min(0.95, baseScore));
+
+  let signal = 'HOLD';
+  if (finalScore > 0.58) signal = 'BUY';
+  else if (finalScore < 0.42) signal = 'SELL';
+
+  return { signal, score: finalScore };
 }
 
 // ── EVOLUTION ENGINE ──────────────────────────────────────
