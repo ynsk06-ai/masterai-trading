@@ -738,6 +738,8 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
       <button onclick="refreshPositionPnL()" class="btn cyber" style="padding:4px 10px;font-size:11px;">🔄 PnL Güncelle</button>
     </div>
   </div>
+
+  <!-- AÇIK POZİSYON ÖZETİ (mevcut) -->
   <div class="panel" style="margin-bottom:10px;">
     <div class="pos-section-title" style="color:var(--cyan);">
       💰 AÇIK POZİSYON ÖZET
@@ -750,6 +752,33 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
       <div style="background:var(--bg2);padding:10px;text-align:center;"><div style="font-size:9px;color:var(--muted);font-family:var(--font-ui);">WIN RATE</div><div id="summWinRate" style="font-size:18px;font-weight:700;font-family:var(--font-display);color:var(--gold);">—</div></div>
     </div>
   </div>
+
+  <!-- YENİ KAPALI POZİSYON ÖZETİ -->
+  <div class="panel" style="margin-top:16px;">
+    <div class="pos-section-title" style="color:var(--text2);">
+      🔒 KAPALI POZİSYON ÖZETİ
+    </div>
+    <div id="closedPosSummaryGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1px;background:var(--border);">
+      <div style="background:var(--bg2);padding:12px;text-align:center;">
+        <div style="font-size:9px;color:var(--muted);">TOPLAM KAPALI</div>
+        <div id="closedTotalCount" style="font-size:22px;font-weight:700;color:var(--gold);">0</div>
+      </div>
+      <div style="background:var(--bg2);padding:12px;text-align:center;">
+        <div style="font-size:9px;color:var(--muted);">TOPLAM PNL</div>
+        <div id="closedTotalPnl" style="font-size:22px;font-weight:700;">—</div>
+      </div>
+      <div style="background:var(--bg2);padding:12px;text-align:center;">
+        <div style="font-size:9px;color:var(--muted);">ORTALAMA PNL</div>
+        <div id="closedAvgPnl" style="font-size:22px;font-weight:700;">—</div>
+      </div>
+      <div style="background:var(--bg2);padding:12px;text-align:center;">
+        <div style="font-size:9px;color:var(--muted);">WIN RATE</div>
+        <div id="closedWinRate" style="font-size:22px;font-weight:700;color:var(--gold);">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AÇIK POZİSYONLAR TABLOSU -->
   <div class="panel" style="margin-bottom:10px;">
     <div class="pos-section-title" style="color:var(--green);">🟢 AÇIK POZİSYONLAR — Anlık Fiyata Göre PnL</div>
     <div style="overflow-x:auto;">
@@ -759,9 +788,11 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
       </table>
     </div>
   </div>
+
+  <!-- KAPALI POZİSYONLAR TABLOSU (Son 500) -->
   <div class="panel">
     <div class="pos-section-title" style="color:var(--text2);">
-      🔒 KAPALI POZİSYONLAR — Son 100
+      🔒 KAPALI POZİSYONLAR — Son 500
       <button onclick="clearClosedPositions()" class="btn secondary" style="padding:2px 8px;font-size:10px;">Temizle</button>
     </div>
     <div style="overflow-x:auto;">
@@ -2049,17 +2080,84 @@ function renderSysLearnGrid(){
 function refreshPositionPnL(){renderPositionsTab();showToast('PnL','Anlık fiyatlarla güncellendi','info');}
 function getLatestPrice(sym){return liveSymbolPrices[sym]||(currentSym===sym&&currentResult?.closes?.length?currentResult.closes[currentResult.closes.length-1]:null);}
 
-function renderPositionsTab(){
-  try{
-    const openKeys=Object.keys(openPositions);
-    openKeys.sort((a,b)=>(openPositions[b].entryTime||0)-(openPositions[a].entryTime||0));
-    const openTbody=document.getElementById('openPosBody');
-    if(openTbody){if(!openKeys.length)openTbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--muted);">Açık pozisyon yok</td></tr>';else openTbody.innerHTML=openKeys.map(key=>{const p=openPositions[key];const price=getLatestPrice(p.sym)||p.entry;const pnl=price?(price-p.entry)/p.entry*100:null;const duration=p.entryTime?Date.now()-p.entryTime:null;return`<tr><td><strong>${p.sym}</strong> <span class="badge badge-blue">${p.tf}</span></td><td>${p.sys}</td><td style="font-family:monospace;">${p.entry.toFixed(2)}</td><td style="font-family:monospace;">${price?price.toFixed(2):'—'}</td><td class="${pnl===null?'':(pnl>=0?'pos-pnl-positive':'pos-pnl-negative')}">${pnl!==null?fmtPct(pnl):'—'}</td><td class="pos-time">${duration?formatDuration(duration):'—'}</td><td class="pos-time">${formatTime(p.entryTime)}</td></tr>`;}).join('');}
-    const closedSorted=[...closedPositions].sort((a,b)=>(b.exitTime||0)-(a.exitTime||0));
-    const closedTbody=document.getElementById('closedPosBody');
-    if(closedTbody){if(!closedSorted.length)closedTbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--muted);">Kapalı pozisyon yok</td></tr>';else closedTbody.innerHTML=closedSorted.slice(0,100).map(p=>`<tr><td><strong>${p.sym}</strong> <span class="badge badge-blue">${p.tf}</span></td><td>${p.sys}</td><td style="font-family:monospace;">${p.entry.toFixed(2)}</td><td style="font-family:monospace;">${p.exitPrice.toFixed(2)}</td><td class="${p.pnl>=0?'pos-pnl-positive':'pos-pnl-negative'}">${fmtPct(p.pnl)}</td><td class="pos-time">${formatDuration(p.duration)}</td><td class="pos-time" style="font-size:9px;">${formatTime(p.entryTime)} → ${formatTime(p.exitTime)}</td></tr>`).join('');}
-    updatePositionSummary();
-  }catch(e){console.warn('renderPositionsTab error:',e);}
+function renderPositionsTab() {
+  // === AÇIK POZİSYON ÖZETİ (mevcut hali korunuyor) ===
+  const openCount = Object.keys(openPositions).length;
+  document.getElementById('summOpenCount').textContent = openCount;
+
+  let totalOpenPnl = 0;
+  Object.values(openPositions).forEach(pos => {
+    const currentPrice = liveSymbolPrices[pos.sym] || pos.entry;
+    if (currentPrice && pos.entry) {
+      const pnl = (currentPrice - pos.entry) / pos.entry * 100;
+      totalOpenPnl += pnl;
+    }
+  });
+  const openPnlEl = document.getElementById('summTotalPnl');
+  openPnlEl.innerHTML = totalOpenPnl >= 0 
+    ? `<span class="price-up">+${totalOpenPnl.toFixed(2)}%</span>` 
+    : `<span class="price-dn">${totalOpenPnl.toFixed(2)}%</span>`;
+
+  document.getElementById('summClosedCount').textContent = closedPositions.length;
+
+  // === KAPALI POZİSYONLAR İÇİN YENİ ÖZET ===
+  const closedCount = closedPositions.length;
+  document.getElementById('closedTotalCount').textContent = closedCount;
+
+  if (closedCount > 0) {
+    let totalClosedPnl = 0;
+    let wins = 0;
+
+    closedPositions.forEach(pos => {
+      totalClosedPnl += pos.pnl || 0;
+      if (pos.pnl > 0) wins++;
+    });
+
+    const avgPnl = totalClosedPnl / closedCount;
+    const winRate = Math.round((wins / closedCount) * 100);
+
+    document.getElementById('closedTotalPnl').innerHTML = 
+      totalClosedPnl >= 0 ? `<span class="price-up">+${totalClosedPnl.toFixed(2)}%</span>` 
+                          : `<span class="price-dn">${totalClosedPnl.toFixed(2)}%</span>`;
+
+    document.getElementById('closedAvgPnl').innerHTML = 
+      avgPnl >= 0 ? `<span class="price-up">+${avgPnl.toFixed(2)}%</span>` 
+                  : `<span class="price-dn">${avgPnl.toFixed(2)}%</span>`;
+
+    document.getElementById('closedWinRate').innerHTML = 
+      `<span style="color:var(--gold)">${winRate}%</span>`;
+  } else {
+    document.getElementById('closedTotalPnl').textContent = '—';
+    document.getElementById('closedAvgPnl').textContent = '—';
+    document.getElementById('closedWinRate').textContent = '—';
+  }
+
+  // === KAPALI POZİSYON TABLOSU - Son 500 ===
+  const tbody = document.getElementById('closedPosBody');
+  tbody.innerHTML = '';
+
+  // Son 500 kapalı pozisyonu göster (en yeni başta)
+  const displayClosed = closedPositions.slice(-500).reverse();
+
+  if (displayClosed.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--muted);">Henüz kapalı pozisyon yok</td></tr>`;
+    return;
+  }
+
+  displayClosed.forEach(pos => {
+    const row = document.createElement('tr');
+    const pnlClass = pos.pnl >= 0 ? 'pos-pnl-positive' : 'pos-pnl-negative';
+    row.innerHTML = `
+      <td>${pos.sym || '-'} (${pos.tf || '-'})</td>
+      <td>${pos.sys || '-'}</td>
+      <td>${pos.entry ? pos.entry.toFixed(2) : '-'}</td>
+      <td>${pos.exit ? pos.exit.toFixed(2) : '-'}</td>
+      <td class="${pnlClass}">${pos.pnl ? pos.pnl.toFixed(2) + '%' : '-'}</td>
+      <td>${pos.duration || '-'}</td>
+      <td>${pos.openTime ? new Date(pos.openTime).toLocaleString('tr-TR') : '-'}</td>
+    `;
+    tbody.appendChild(row);
+  });
 }
 
 function updatePositionSummary(){
