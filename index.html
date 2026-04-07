@@ -4361,36 +4361,55 @@ function initAgents(count) {
 function agentDecide(agent, marketData) {
   if (!currentResult) return { signal: 'HOLD', score: 0.5 };
 
-  // Ana sistemlerinden skorları al
-  const masterCons = currentResult.master?.buyConsensus || 0.5;     // Master AI
-  const sys1Score  = currentResult.sys1?.score || 0.5;              // Sistem 1
-  const sys2Score  = currentResult.sys2?.score || 0.5;              // Sistem 2 PRO
-  const fusionScore = currentResult.fusion?.score || 0.5;           // Fusion
-  const bestAgentScore = currentResult.bestAgent?.score || 0.5;     // A60 vb. en iyi agent
+  let totalScore = 0;
+  let count = 0;
 
-  // ML tahmini (ekstra ağırlık)
-  const mlScore = currentResult.ml?.ensembleScore || 0.5;
+  // 9 sisteminden gelen sinyalleri topla
+  if (currentResult.master?.buyConsensus !== undefined) {
+    totalScore += currentResult.master.buyConsensus * 0.28;
+    count++;
+  }
+  if (currentResult.sys1?.score !== undefined) {
+    totalScore += currentResult.sys1.score * 0.11;
+    count++;
+  }
+  if (currentResult.sys2?.score !== undefined) {
+    totalScore += currentResult.sys2.score * 0.11;
+    count++;
+  }
+  if (currentResult.fusion?.score !== undefined) {
+    totalScore += currentResult.fusion.score * 0.20;
+    count++;
+  }
+  if (currentResult.bestAgent?.score !== undefined) {
+    totalScore += currentResult.bestAgent.score * 0.12;
+    count++;
+  }
+  // Diğer A60 grubu agentlar (ortalama)
+  if (currentResult.agentScores) {
+    const avg = Object.values(currentResult.agentScores).reduce((a,b)=>a+b,0) / 
+                Math.max(1, Object.keys(currentResult.agentScores).length);
+    totalScore += avg * 0.08;
+    count++;
+  }
+  if (currentResult.ml?.ensembleScore !== undefined) {
+    totalScore += currentResult.ml.ensembleScore * 0.10;
+    count++;
+  }
 
-  // Ağırlıklı ortalama (istediğin gibi ayarlayabilirsin)
-  let baseScore = 
-    (masterCons * 0.35) + 
-    (fusionScore * 0.25) + 
-    (sys2Score * 0.15) + 
-    (sys1Score * 0.10) + 
-    (bestAgentScore * 0.10) + 
-    (mlScore * 0.05);
+  let baseScore = count > 0 ? totalScore / count : 0.5;
 
-  // Ajanın kendi "kişiliği" ile hafifçe modifiye et (çeşitlilik için)
-  const g = agent.genes;
-  baseScore += (g.aggression - 0.5) * 0.12;      // Agresif ajanlar daha kolay AL der
-  baseScore -= (g.patience - 0.5) * 0.08;        // Sabırlı ajanlar daha temkinli
-  baseScore += (g.intuition - 0.5) * 0.10;
+  // Ajanın kendi kişiliği ile hafifçe ayar (çeşitlilik korunsun)
+  const g = agent.genes || { aggression: 0.5, patience: 0.5, intuition: 0.5 };
+  baseScore += (g.aggression - 0.5) * 0.09;
+  baseScore -= (g.patience - 0.5) * 0.06;
+  baseScore += (g.intuition - 0.5) * 0.07;
 
   const finalScore = Math.max(0.05, Math.min(0.95, baseScore));
 
   let signal = 'HOLD';
-  if (finalScore > 0.58) signal = 'BUY';
-  else if (finalScore < 0.42) signal = 'SELL';
+  if (finalScore > 0.56) signal = 'BUY';
+  else if (finalScore < 0.44) signal = 'SELL';
 
   return { signal, score: finalScore };
 }
@@ -4467,7 +4486,38 @@ function runEvolution() {
   realmState.cycles++;
   updateRealmUI();
 }
+function calculateSystemFitness(agent) {
+  let pnlSum = 0;
+  let tradeCount = 0;
 
+  // Kapanan pozisyonlar (en güvenilir veri)
+  if (window.closedPositions) {
+    closedPositions.forEach(pos => {
+      if (pos.system && pos.system.includes(agent.systemType || agent.name)) {
+        pnlSum += pos.pnl || 0;
+        tradeCount++;
+      }
+    });
+  }
+
+  // Açık pozisyonlar (anlık PnL)
+  if (window.openPositions) {
+    openPositions.forEach(pos => {
+      if (pos.system && pos.system.includes(agent.systemType || agent.name)) {
+        const currentPnL = pos.currentPnL || ((liveSymbolPrices[pos.sym] || pos.entry) - pos.entry) / pos.entry * 100;
+        pnlSum += currentPnL;
+        tradeCount++;
+      }
+    });
+  }
+
+  if (tradeCount === 0) return 0.5;
+
+  const avgPnL = pnlSum / tradeCount;
+  // Fitness normalize (örnek: +%10 PnL = 0.80 fitness)
+  let fitness = 0.5 + (avgPnL / 25);
+  return Math.max(0.1, Math.min(0.95, fitness));
+}
 // ── COLLECTIVE INTELLIGENCE ───────────────────────────────
 function computeCollectiveSignal(marketData) {
   if (realmState.agents.length === 0) return 'HOLD';
