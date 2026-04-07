@@ -4531,12 +4531,12 @@ function computeCollectiveSignal(marketData) {
     else holdVotes++;
     // Update fitness based on market trend
     // Eski satır yerine:
-    agent.fitness = calculateSystemFitness(agent);
-    //const correct = (signal === 'BUY' && marketData.trend > 0) || (signal === 'SELL' && marketData.trend < 0);
-    //if (correct) { agent.fitness = Math.min(1, agent.fitness + 0.01); agent.wins++; }
-    //else { agent.fitness = Math.max(0, agent.fitness - 0.005); }
-    //agent.age++;
-  
+    //agent.fitness = calculateSystemFitness(agent);
+    const correct = (signal === 'BUY' && marketData.trend > 0) || (signal === 'SELL' && marketData.trend < 0);
+    if (correct) { agent.fitness = calculateSystemFitness(agent);; agent.wins++; }
+    else { agent.fitness = calculateSystemFitness(agent); }
+    agent.age++;
+});  
   const total = alive.length;
   const signal = buyVotes / total > 0.55 ? 'BUY' : sellVotes / total > 0.55 ? 'SELL' : 'HOLD';
   realmState.collectiveSignal = signal;
