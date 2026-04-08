@@ -631,6 +631,22 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
   <div class="tab" onclick="switchTab(7)" id="tab7">🧪 AETHER LAB</div>
   <div class="tab tab-special" onclick="switchTab(8)" id="tab8">📜 INFINITE REALM</div>
 </div>
+<!-- PLAYBACK CONTROLS (yeni) -->
+<div class="playback-bar" style="background:rgba(8,13,26,0.9); border-bottom:1px solid var(--border); padding:6px 12px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+  <button id="playbackPlayPause" class="btn cyber" style="padding:4px 12px;">▶ Play</button>
+  <button id="playbackStepBack" class="btn secondary" style="padding:4px 12px;">◀ Step -1</button>
+  <button id="playbackStepFwd" class="btn secondary" style="padding:4px 12px;">Step +1 ▶</button>
+  <span style="color:var(--muted); font-size:11px;">Hız:</span>
+  <select id="playbackSpeed" style="background:var(--bg2); border:1px solid var(--border2); border-radius:5px; padding:4px 8px; font-size:11px;">
+    <option value="1000">Yavaş (1s)</option>
+    <option value="500" selected>Normal (0.5s)</option>
+    <option value="200">Hızlı (0.2s)</option>
+    <option value="50">Işık (0.05s)</option>
+  </select>
+  <span id="playbackInfo" style="color:var(--cyan); font-size:11px;">Bar: 0 / 0</span>
+  <button id="playbackReset" class="btn danger" style="padding:4px 12px;">Sıfırla</button>
+  <span style="color:var(--muted);font-size:10px;">| Mod: <span id="playbackMode">REAL-TIME</span></span>
+</div>
 
 <div class="main">
 
@@ -853,17 +869,15 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
 <!-- END TAB 0 -->
 
 <!-- ══════════ TAB 1: POZİSYONLAR ══════════ -->
+
+<!-- END TAB 1 -->
 <div class="tab-content" id="content1">
-  <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0 8px;flex-wrap:wrap;gap:8px;">
-    <h2 style="color:var(--gold);font-family:var(--font-display);font-size:14px;letter-spacing:2px;">📌 POZİSYON MERKEZİ</h2>
-    <div style="display:flex;gap:8px;">
-      <span id="openPosCount" style="font-size:11px;color:var(--muted);align-self:center;"></span>
-      <button onclick="refreshPositionPnL()" class="btn cyber" style="padding:4px 10px;font-size:11px;">🔄 PnL Güncelle</button>
-    </div>
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; padding:8px 0;">
+    <h2 style="color:var(--gold);font-family:var(--font-display);font-size:14px;">📌 POZİSYON MERKEZİ + PERFORMANS ANALİZİ</h2>
+    <div><button onclick="refreshAllPerformanceStats()" class="btn cyber">🔄 Tüm İstatistikleri Güncelle</button></div>
   </div>
-  <div class="panel" style="margin-bottom:10px;">
-    <div class="pos-section-title" style="color:var(--cyan);">
-      💰 AÇIK POZİSYON ÖZET
+  <!-- AÇIK POZİSYON ÖZET (mevcut panel) - aynen kalsın -->
+  💰 AÇIK POZİSYON ÖZET
       <span id="totalOpenPnL" style="font-family:var(--font-display);font-size:13px;">—</span>
     </div>
     <div id="openPosSummaryGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--border);">
@@ -884,19 +898,37 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
   </div>
   <div class="panel">
     <div class="pos-section-title" style="color:var(--text2);">
-      🔒 KAPALI POZİSYONLAR — Son 100
-      <button onclick="clearClosedPositions()" class="btn secondary" style="padding:2px 8px;font-size:10px;">Temizle</button>
+  <!-- KAPALI POZİSYONLAR ÖZET (yeni) -->
+  <div class="panel" style="margin-bottom:12px;">
+    <div class="pos-section-title" style="color:var(--gold);">🔒 KAPALI POZİSYONLAR ÖZETİ (Tüm Sistemler)</div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:1px; background:var(--border);" id="closedSummaryGrid"></div>
+  </div>
+  <!-- SİSTEM BAZINDA DETAYLI PERFORMANS -->
+  <div class="panel" style="margin-bottom:12px;">
+    <div class="pos-section-title" style="color:var(--cyan);">📊 9 SİSTEMİN PERFORMANS METRİKLERİ</div>
+    <div id="systemsPerformanceGrid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:10px; padding:10px;"></div>
+  </div>
+  <!-- HER SİSTEM / HER HİSSE BAZINDA ANALİZ TABLOSU -->
+  <div class="panel">
+    <div class="pos-section-title" style="color:var(--purple2);">🎯 SİSTEM x HİSSE PERFORMANS MATRİSİ (En iyi eşleşmeler vurgulanır)</div>
+    <div style="overflow-x:auto; max-height:500px;">
+      <table class="pos-table" id="systemStockMatrix">
+        <thead><tr><th>Sistem</th><th>Sembol</th><th>Kârlı İşlem</th><th>Zararlı İşlem</th><th>K/Z Oranı</th><th>Win Rate</th><th>Toplam PnL %</th></tr></thead>
+        <tbody id="matrixBody"></tbody>
+       </table>
     </div>
+  </div>
+  <!-- TÜM KAPALI POZİSYONLAR LİSTESİ -->
+  <div class="panel">
+    <div class="pos-section-title" style="color:var(--text2);">📋 TÜM KAPALI POZİSYONLAR (Son 500)</div>
     <div style="overflow-x:auto;">
-      <table class="pos-table" id="closedPosTable">
+      <table class="pos-table" id="allClosedPosTable">
         <thead><tr><th>Sembol/TF</th><th>Sistem</th><th>Giriş</th><th>Çıkış</th><th>PnL %</th><th>Süre</th><th>Açılış → Kapanış</th></tr></thead>
-        <tbody id="closedPosBody"><tr><td colspan="7" style="text-align:center;padding:30px;color:var(--muted);">Kapalı pozisyon yok</td></tr></tbody>
+        <tbody></tbody>
       </table>
     </div>
   </div>
 </div>
-<!-- END TAB 1 -->
-
 <!-- ══════════ TAB 2: BİLDİRİMLER ══════════ -->
 <div class="tab-content" id="content2">
   <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0 8px;">
@@ -925,6 +957,26 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
 </div>
 <!-- END TAB 3 -->
 <!-- ══════════ TAB 4: ML ENGINE ══════════ -->
+<div style="display:flex; justify-content:space-between; margin:10px 0;">
+  <h2 style="color:var(--purple2);">🧠 ML ENGINE + 500 AJAN DERİN ANALİZ</h2>
+  <button onclick="runDeepAgentAnalysisOnML()" class="btn ascension" style="font-size:12px;">🔮 500 Ajan Analiz Başlat</button>
+</div>
+<!-- 500 Agent Consensus Panel -->
+<div class="collective-panel" style="margin-bottom:12px;">
+  <div class="collective-header">🐝 500 AJAN KOLEKTİF ZEKA (ML Engine)</div>
+  <div class="collective-signal-big HOLD" id="mlAgentCollectiveSignal">HOLD</div>
+  <div style="padding:8px 12px;">
+    <div style="display:flex; justify-content:space-between; font-size:10px;"><span style="color:var(--green);">AL: <strong id="mlAgentBuyVotes">0</strong></span><span style="color:var(--orange);">HOLD: <strong id="mlAgentHoldVotes">0</strong></span><span style="color:var(--red);">SAT: <strong id="mlAgentSellVotes">0</strong></span></div>
+    <div class="lab-vote-bar" style="height:8px;"><div class="lab-vote-buy" id="mlAgentBuyBar"></div><div class="lab-vote-hold" id="mlAgentHoldBar"></div><div class="lab-vote-sell" id="mlAgentSellBar"></div></div>
+    <div id="mlAgentInsights" style="max-height:150px; overflow-y:auto; font-size:11px; margin-top:8px; background:rgba(0,0,0,0.3); padding:6px; border-radius:6px;"></div>
+  </div>
+</div>
+<!-- Agent Reports / Charts -->
+<div class="panels-grid">
+  <div class="panel"><div class="panel-header">📈 AJAN GÜVEN DAĞILIMI</div><canvas id="mlAgentConfidenceChart" height="180"></canvas></div>
+  <div class="panel"><div class="panel-header">⚠️ RİSK SKORU (Ajan Ortalaması)</div><div id="mlAgentRiskScore" style="font-size:28px; text-align:center; padding:20px;">—</div></div>
+  <div class="panel"><div class="panel-header">📊 AJAN RAPORU (Özet)</div><div id="mlAgentReport" style="padding:12px; font-size:11px;"></div></div>
+</div>
 <div class="tab-content" id="content4">
   <div style="padding:10px 0 8px;">
     <h2 style="color:var(--purple2);font-family:var(--font-display);font-size:14px;letter-spacing:2px;">🧠 AETHER ML MASTER ENGINE v2.1</h2>
