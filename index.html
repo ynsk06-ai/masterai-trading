@@ -651,6 +651,7 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
 </div>
 
 <div class="main">
+
 <!-- ══════════ TAB 0: ANA EKRAN ══════════ -->
 <div class="tab-content active" id="content0">
   <div class="symbol-bar">
@@ -867,7 +868,8 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
     </div>
   </div>
 </div>
-<!-- ══════════ TAB 1: POZİSYONLAR (GELİŞTİRİLMİŞ) ══════════ -->
+
+<!-- ══════════ TAB 1: POZİSYONLAR ══════════ -->
 <div class="tab-content" id="content1">
   <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; padding:8px 0;">
     <h2 style="color:var(--gold);font-family:var(--font-display);font-size:14px;">📌 POZİSYON MERKEZİ + PERFORMANS ANALİZİ</h2>
@@ -913,7 +915,34 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
     </div>
   </div>
 </div>
-<!-- ══════════ TAB 4: ML ENGINE LAB (GELİŞTİRİLMİŞ) ══════════ -->
+
+<!-- ══════════ TAB 2: BİLDİRİMLER ══════════ -->
+<div class="tab-content" id="content2">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0 8px;">
+    <h2 style="color:var(--gold);font-family:var(--font-display);font-size:14px;letter-spacing:2px;">🛎 BİLDİRİM GEÇMİŞİ</h2>
+    <button onclick="clearNotifications()" class="btn secondary" style="padding:4px 10px;font-size:11px;">Temizle</button>
+  </div>
+  <div class="panel">
+    <div class="signal-log" id="notificationLog">
+      <div style="padding:20px;text-align:center;color:var(--muted);">Henüz bildirim yok</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ TAB 3: BUGÜN ══════════ -->
+<div class="tab-content" id="content3">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0 8px;">
+    <h2 style="color:var(--gold);font-family:var(--font-display);font-size:14px;letter-spacing:2px;">📅 BUGÜNKÜ SİNYALLER</h2>
+    <span id="dailyCount" style="font-size:11px;color:var(--muted);"></span>
+  </div>
+  <div class="panel">
+    <div class="signal-log" id="dailySignalLog">
+      <div style="padding:20px;text-align:center;color:var(--muted);">Bugün henüz sinyal oluşmadı</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ TAB 4: ML ENGINE ══════════ -->
 <div class="tab-content" id="content4">
   <div style="display:flex; justify-content:space-between; margin:10px 0;">
     <h2 style="color:var(--purple2);">🧠 ML ENGINE + 500 AJAN DERİN ANALİZ</h2>
@@ -976,7 +1005,7 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
     <div class="panel"><div class="ml-panel-header" style="color:var(--purple2);">RADAR — ÇOK FAKTÖRLÜ ANALİZ</div><canvas class="radar-canvas" id="radarCanvas"></canvas></div>
   </div>
   <div class="panels-grid">
-    <div class="panel"><div class="ml-panel-header" style="color:var(--red);">🚨 ANOMALİ TESPİTİ</div><table class="data-table"><tr><td>Isolation Forest</td><td id="an-if">—</td></tr><tr><td>VAE Score</td><td id="an-vae">—</td></tr><tr><td>Z-Score Anom.</td><td id="an-z">—</td></tr>四个<td>Volume Anom.</td><td id="an-vol">—</td></tr>五个<td>Genel Durum</td><td id="an-status">—</td></tr></table></div>
+    <div class="panel"><div class="ml-panel-header" style="color:var(--red);">🚨 ANOMALİ TESPİTİ</div><table class="data-table"><tr><td>Isolation Forest</td><td id="an-if">—</td></tr><tr><td>VAE Score</td><td id="an-vae">—</td></tr><tr><td>Z-Score Anom.</td><td id="an-z">—</td></tr>四个<td>Volume Anom.</td><td id="an-vol">—</td></tr>五个<td>Genel Durum</td><td id="an-status">—</td></table></table></div>
     <div class="panel"><div class="ml-panel-header" style="color:var(--teal);">📈 REJİM TESPİTİ</div><div class="regime-timeline"><div style="font-size:10px;color:var(--muted);margin-bottom:6px;">Piyasa Rejimi</div><div class="regime-track" id="regimeTrack"></div><div class="regime-labels" id="regimeLabels"></div></div><table class="data-table"><tr><td>Mevcut Rejim</td><td id="rg-current">—</td></tr><tr><td>Trend Gücü</td><td id="rg-strength">—</td></tr><tr><td>Volatilite</td><td id="rg-vol">—</td></tr>四个<td>Concept Drift</td><td id="rg-drift">—</td></tr></table></div>
   </div>
   <div class="panel">
@@ -987,69 +1016,64 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
     <div style="padding:4px 12px 10px;"><table class="data-table"><tr><td>Toplam Örnek</td><td id="fb-correct" style="color:var(--green);">0</td></tr><tr><td>Son Güncelleme</td><td id="fb-last">—</td></tr></table></div>
   </div>
 </div>
-<!-- ══════════ TAB 8: INFINITE REALM (GELİŞTİRİLMİŞ) ══════════ -->
+
+<!-- ══════════ TAB 5: GROQ AI ══════════ -->
+<div class="tab-content" id="content5">
+  <h2 style="color:var(--purple2);font-family:var(--font-display);font-size:14px;letter-spacing:2px;padding:10px 0 8px;">🤖 GROQ LLAMA 3.3 AI ASISTANI</h2>
+  <div class="ai-chat-wrap">
+    <div id="aiMessages"></div>
+    <div class="ai-input-row">
+      <input id="aiInput" class="ai-input" placeholder="KONTR al mı? Teknik analiz ver..." onkeydown="if(event.key==='Enter')sendToGroq()">
+      <button onclick="sendToGroq()" class="btn" style="background:var(--grad-blue);">Gönder</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ TAB 6: BULUT ══════════ -->
+<div class="tab-content" id="content6">
+  <h2 style="color:var(--gold);font-family:var(--font-display);font-size:14px;letter-spacing:2px;padding:10px 0 8px;">☁ CLOUDFLARE KV — BULUT SYNC</h2>
+  <div style="display:grid;gap:12px;">
+    <div class="kv-banner" id="kvStatusBanner"><span>⏳ KV bağlantısı kontrol ediliyor...</span></div>
+    <div class="panel"><div class="panel-header">Cihaz UID</div><div class="panel-body" style="padding:12px;"><p style="color:var(--muted);font-size:11px;margin-bottom:8px;">Aynı UID ile farklı cihazlarda sync yapabilirsiniz.</p><div style="display:flex;gap:8px;align-items:center;"><input id="uidInput" style="flex:1;background:rgba(10,14,26,0.8);border:1px solid var(--border2);border-radius:7px;padding:8px;color:var(--text);font-family:var(--font-mono);" placeholder="örn: telefon1"><button class="btn" onclick="saveUID()">Kaydet</button><button class="btn secondary" onclick="generateUID()">🎲</button></div><p style="color:var(--muted);font-size:10px;margin-top:6px;">Mevcut: <strong id="currentUID" style="color:var(--cyan);"></strong></p></div></div>
+    <div class="panel"><div class="panel-header">Sync Durumu</div><div class="panel-body" style="padding:12px;"><table class="data-table"><tr><td>Son Sinyal Sync</td><td id="kv-lastSignalSync">—</td></tr><tr><td>Son Ayar Sync</td><td id="kv-lastSettingSync">—</td></tr><tr><td>Son Pozisyon Sync</td><td id="kv-lastPosSync">—</td></tr>四个<td>Toplam Sinyal</td><td id="kv-signalCount">—</td></tr>五个<td>Açık Pozisyon</td><td id="kv-posCount">—</td></tr></table><div class="btn-row" style="margin-top:12px;"><button class="btn" onclick="kvPushAll()">☁ Buluta Yükle</button><button class="btn secondary" onclick="kvPullAll()">⬇ Buluttan İndir</button></div></div></div>
+    <div class="panel"><div class="panel-header">Worker URL</div><div class="panel-body" style="padding:12px;"><div style="display:flex;gap:8px;"><input id="workerUrlInput" style="flex:1;background:rgba(10,14,26,0.8);border:1px solid var(--border2);border-radius:7px;padding:8px;color:var(--text);font-family:var(--font-mono);font-size:11px;" placeholder="https://masterai-proxy.xxx.workers.dev"><button class="btn" onclick="saveWorkerUrl()">Kaydet</button></div><button class="btn secondary" onclick="testWorker()" style="margin-top:8px;">🔍 Test Et</button><div id="workerTestResult" style="margin-top:8px;font-size:11px;"></div></div></div>
+  </div>
+</div>
+
+<!-- ══════════ TAB 7: AETHER LAB v2 ══════════ -->
+<div class="tab-content" id="content7">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;"><h2 style="color:var(--purple2);font-family:var(--font-display);font-size:13px;letter-spacing:1.5px;">🧪 AETHER LAB v2 — 50 Avangart Algoritma</h2><div style="display:flex;gap:6px;flex-wrap:wrap;"><button class="btn cyber" onclick="labStartFullScan()" id="labScanBtn" style="font-size:11px;padding:5px 12px;">🔍 Tüm Hisseleri Tara</button><button class="btn secondary" onclick="refreshLabDashboard()" style="font-size:11px;padding:5px 12px;">🔄 Yenile</button><button class="btn secondary" onclick="labToggleAll(true)" style="font-size:11px;padding:5px 10px;">✅ Tümünü Aç</button><button class="btn secondary" onclick="labToggleAll(false)" style="font-size:11px;padding:5px 10px;">⬜ Tümünü Kapat</button></div></div>
+  <div class="lab-fullscan-panel" id="labFullscanPanel" style="display:none;margin-bottom:10px;"><div class="lab-fullscan-header"><span style="font-family:var(--font-display);font-size:10px;color:var(--cyan);letter-spacing:1px;">🔍 TAM TARAMA DEVAM EDİYOR</span><span id="labScanStatus" style="font-size:10px;color:var(--muted);">Başlatılıyor...</span></div><div class="lab-fullscan-progress-wrap"><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:4px;"><span id="labScanDetail">—</span><span id="labScanPct">0%</span></div><div class="lab-fullscan-bar-track"><div class="lab-fullscan-bar-fill" id="labScanFill"></div></div></div><div id="labScanLiveResults" style="max-height:120px;overflow-y:auto;"></div></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;"><div class="lab-consensus-panel"><div class="lab-consensus-header">⚡ LAB MASTER SİNYAL — 50 Algoritma Oyu</div><div class="lab-consensus-body"><div class="lab-master-signal HOLD" id="labMasterSignal">HOLD</div><div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:4px;"><span style="color:var(--green);">AL: <strong id="labVoteBuyCount">0</strong></span><span style="color:var(--orange);">HOLD: <strong id="labVoteHoldCount">0</strong></span><span style="color:var(--red);">SAT: <strong id="labVoteSellCount">0</strong></span></div><div class="lab-vote-bar"><div class="lab-vote-buy" id="labVoteBuyBar" style="flex:0;"></div><div class="lab-vote-hold" id="labVoteHoldBar" style="flex:50;"></div><div class="lab-vote-sell" id="labVoteSellBar" style="flex:0;"></div></div><div style="font-size:10px;color:var(--muted);text-align:center;margin-top:4px;" id="labConsensusDetail">Güven: —%  |  Aktif Algo: 0</div><div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;"><button class="btn cyber" style="font-size:10px;padding:4px 10px;" onclick="labPaperExecuteConsensus()">📄 Paper'a Uygula</button><button class="btn" style="font-size:10px;padding:4px 10px;" onclick="labApplyConsensusToMain()">🚀 Ana Sisteme</button></div></div></div><div class="lab-comm-panel"><div class="lab-comm-header"><span>🔗 ALGORİTMA İLETİŞİM LOGU</span><button onclick="labClearComm()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:10px;">Temizle</button></div><div class="lab-comm-log" id="labCommLog"><div style="color:var(--muted);font-size:10px;text-align:center;padding:10px;">İletişim başlatılmadı</div></div></div></div>
+  <div class="paper-v2-panel" style="margin-bottom:10px;"><div class="paper-v2-header"><span style="font-family:var(--font-display);font-size:11px;color:var(--gold);letter-spacing:1px;">📄 PAPER TRADING v2 — Otomatik LAB Sinyalleri</span><div style="display:flex;gap:6px;"><button class="btn cyber" style="font-size:10px;padding:4px 8px;" onclick="labResetPaper()">🔄 Sıfırla</button><button class="btn" style="font-size:10px;padding:4px 8px;" onclick="labPaperToggleAuto()" id="labPaperAutoBtn">▶ Otomatik AL/SAT</button></div></div><div class="paper-v2-stats"><div class="paper-v2-stat"><div class="paper-v2-stat-val" id="paperV2Balance" style="color:var(--cyan);">100,000</div><div class="paper-v2-stat-label">BAKİYE (TL)</div></div><div class="paper-v2-stat"><div class="paper-v2-stat-val" id="paperV2PnL">0.00%</div><div class="paper-v2-stat-label">TOPLAM PNL</div></div><div class="paper-v2-stat"><div class="paper-v2-stat-val" id="paperV2WinRate" style="color:var(--gold);">—%</div><div class="paper-v2-stat-label">WIN RATE</div></div><div class="paper-v2-stat"><div class="paper-v2-stat-val" id="paperV2OpenCount" style="color:var(--green);">0</div><div class="paper-v2-stat-label">AÇIK POZ.</div></div></div><div class="paper-v2-body"><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"><div><div style="font-size:10px;color:var(--muted);font-family:var(--font-ui);letter-spacing:0.5px;margin-bottom:4px;">AÇIK POZİSYONLAR</div><div id="paperV2Positions" style="max-height:100px;overflow-y:auto;"><div style="font-size:10px;color:var(--muted);padding:6px;">Açık pozisyon yok</div></div></div><div><div style="font-size:10px;color:var(--muted);font-family:var(--font-ui);letter-spacing:0.5px;margin-bottom:4px;">SON İŞLEMLER</div><div id="paperV2Trades" style="max-height:100px;overflow-y:auto;"><div style="font-size:10px;color:var(--muted);padding:6px;">Henüz işlem yok</div></div></div></div></div></div>
+  <div class="lab-v2-layout"><div class="lab-sidebar"><div class="lab-ctrl-panel"><div class="lab-ctrl-title">LAB KONTROL MERKEZİ</div><div class="lab-ctrl-stats"><div class="lab-ctrl-stat"><div class="lab-ctrl-stat-val" id="labActiveCount" style="color:var(--cyan);">0</div><div class="lab-ctrl-stat-label">Aktif Algo</div></div><div class="lab-ctrl-stat"><div class="lab-ctrl-stat-val" id="labAvgScore" style="color:var(--gold);">—%</div><div class="lab-ctrl-stat-label">Ort. Skor</div></div><div class="lab-ctrl-stat"><div class="lab-ctrl-stat-val" id="labBullishCount" style="color:var(--green);">0</div><div class="lab-ctrl-stat-label">Yükseliş</div></div><div class="lab-ctrl-stat"><div class="lab-ctrl-stat-val" id="labBearishCount" style="color:var(--red);">0</div><div class="lab-ctrl-stat-label">Düşüş</div></div></div><div style="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap;"><button class="btn secondary" style="font-size:10px;padding:3px 8px;" onclick="labFilterAlgos('all')">Tümü</button><button class="btn secondary" style="font-size:10px;padding:3px 8px;" onclick="labFilterAlgos('bullish')">Yükseliş</button><button class="btn secondary" style="font-size:10px;padding:3px 8px;" onclick="labFilterAlgos('bearish')">Düşüş</button><button class="btn secondary" style="font-size:10px;padding:3px 8px;" onclick="labFilterAlgos('running')">Aktif</button></div><input type="text" id="labAlgoSearch" oninput="labSearchAlgos(this.value)" placeholder="Algoritma ara..." style="width:100%;background:rgba(10,14,26,0.8);border:1px solid var(--border2);border-radius:6px;padding:5px 8px;color:var(--text);font-size:10px;"></div><div class="lab-algo-list" id="labAlgoList"></div></div><div class="lab-main-area"><div class="panel" id="labAlgoDetailPanel"><div class="panel-header" style="color:var(--purple2);" id="labDetailTitle">📊 ALGORİTMA DETAYI — Sol listeden bir algoritma seçin</div><div id="labDetailContent" style="padding:14px;color:var(--muted);font-size:11px;text-align:center;min-height:200px;display:flex;align-items:center;justify-content:center;">Sol panelden bir algoritmaya tıklayın.</div></div><div class="lab-fullscan-panel" id="labScanResultsPanel" style="display:none;"><div class="lab-fullscan-header"><span style="font-family:var(--font-display);font-size:10px;color:var(--gold);letter-spacing:1px;">📊 TARAMA SONUÇLARI</span><span id="labScanResultCount" style="font-size:10px;color:var(--muted);">0 sinyal</span></div><div id="labScanResults" style="max-height:300px;overflow-y:auto;"><div style="padding:20px;text-align:center;color:var(--muted);font-size:11px;">Tüm hisseleri tara butonuna basın</div></div></div><div class="lab-backtest-all-panel" id="labBacktestAllPanel" style="display:none;"><div style="padding:10px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:rgba(0,229,255,0.04);"><span style="font-family:var(--font-display);font-size:10px;color:var(--cyan);letter-spacing:1px;">📈 LAB BACKTEST — Tüm Hisseler</span><span id="labBacktestSummaryBadge" style="font-size:10px;color:var(--muted);"></span></div><div id="labBacktestResults" style="max-height:250px;overflow-y:auto;"></div></div><div class="panel"><div class="panel-header" style="color:var(--teal);">🔗 ALGO ÖĞRENME & ÖNERİ AKIŞI</div><div id="labAlgoRecommendations" style="padding:10px;max-height:180px;overflow-y:auto;"><div style="color:var(--muted);font-size:11px;text-align:center;padding:16px;">Algoritmalar çalıştıkça birbirine öneri gönderir</div></div></div><div class="panel"><div class="panel-header" style="color:var(--magenta);">⚙️ LAB → ANA SİSTEM PARAMETRE ÖNERİSİ</div><div style="padding:12px;"><div id="labParamProposals" style="margin-bottom:10px;"><div style="color:var(--muted);font-size:11px;">Henüz öneri yok.</div></div><div style="display:flex;gap:8px;"><button class="btn" style="font-size:11px;background:linear-gradient(135deg,var(--magenta),var(--purple));" onclick="applyLabOptimizationToMain()">🔧 Parametreleri Uygula</button><button class="btn secondary" style="font-size:11px;" onclick="labBacktestAllAlgos()">📊 Tüm Lab Backtest</button></div></div></div></div></div>
+</div>
+
+<!-- ══════════ TAB 8: INFINITE REALM ══════════ -->
 <div class="tab-content" id="content8">
 <div class="realm-wrapper">
-  <!-- REALM HEADER -->
-  <div class="realm-header">
-    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px;">
-      <div><div class="realm-title">📜 INFINITE SIMULATION REALM</div><div class="realm-subtitle">PAPER TRADING v3 — SWARM AGENT COLONY — PARALLEL UNIVERSE SIMULATOR</div></div>
-      <div class="singularity-gauge" style="min-width:220px;"><span style="color:var(--purple2);font-family:var(--font-display);font-size:9px;letter-spacing:1px;white-space:nowrap;">SİNGÜLARİTE</span><div class="singularity-bar"><div class="singularity-fill" id="singularityFill" style="width:0%"></div></div><span id="singularityPct" style="color:var(--gold);font-family:var(--font-display);font-size:10px;white-space:nowrap;">0%</span></div>
-    </div>
-    <div class="realm-controls">
-      <select class="realm-select" id="realmSymbolSelect"><option value="ALL">🌐 Tüm Watchlist</option></select>
-      <select class="realm-select" id="realmAgentCount"><option value="50">50 Ajan</option><option value="100">100 Ajan</option><option value="200">200 Ajan</option><option value="500" selected>500 Ajan</option></select>
-      <select class="realm-select" id="realmUniverseCount"><option value="4">4 Evren</option><option value="8">8 Evren</option><option value="16" selected>16 Evren</option></select>
-      <button class="btn" style="background:linear-gradient(135deg,var(--purple),var(--cyan));color:#fff;font-size:11px;padding:6px 14px;" onclick="realmStartSimulation()">⚡ Simülasyonu Başlat</button>
-      <button class="btn secondary" style="font-size:11px;padding:6px 12px;" onclick="realmResetAll()">🔄 Sıfırla</button>
-      <button class="btn god-mode" onclick="realmAscendAllAgents()">👑 ASCENSION — God Mode</button>
-      <button class="btn ascension" onclick="realmFinalAscension()" style="font-size:10px;padding:6px 14px;">🌌 FINAL ASCENSION</button>
-    </div>
-    <div style="display:grid;gap:4px;margin-top:10px;">
-      <div class="rdi-meter"><div class="rdi-label">⚡ Gerçeklik Bozulma İndeksi</div><div class="rdi-track"><div class="rdi-fill" id="rdiFill" style="width:0%"></div></div><div class="rdi-val" id="rdiVal" style="color:var(--orange);">0</div></div>
-      <div class="rdi-meter"><div class="rdi-label">🧠 Bilinç Rezonansı</div><div class="rdi-track"><div class="rdi-fill" id="consciousnessFill" style="width:0%;background:linear-gradient(90deg,var(--purple),var(--gold));"></div></div><div class="rdi-val" id="consciousnessVal" style="color:var(--purple2);">0</div></div>
-      <div class="rdi-meter"><div class="rdi-label">🌀 Morfogenetik Alan Gücü</div><div class="rdi-track"><div class="rdi-fill" id="morphoFill" style="width:0%;background:linear-gradient(90deg,var(--cyan),var(--green));"></div></div><div class="rdi-val" id="morphoVal" style="color:var(--cyan);">0</div></div>
-    </div>
-  </div>
+  <div class="realm-header"><div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;"><div><div class="realm-title">📜 INFINITE SIMULATION REALM</div><div class="realm-subtitle">PAPER TRADING v3 — SWARM AGENT COLONY — PARALLEL UNIVERSE SIMULATOR</div></div><div class="singularity-gauge" style="min-width:220px;"><span style="color:var(--purple2);font-family:var(--font-display);font-size:9px;letter-spacing:1px;white-space:nowrap;">SİNGÜLARİTE</span><div class="singularity-bar"><div class="singularity-fill" id="singularityFill" style="width:0%"></div></div><span id="singularityPct" style="color:var(--gold);font-family:var(--font-display);font-size:10px;white-space:nowrap;">0%</span></div></div><div class="realm-controls"><select class="realm-select" id="realmSymbolSelect"><option value="ALL">🌐 Tüm Watchlist</option></select><select class="realm-select" id="realmAgentCount"><option value="50">50 Ajan</option><option value="100">100 Ajan</option><option value="200">200 Ajan</option><option value="500" selected>500 Ajan</option></select><select class="realm-select" id="realmUniverseCount"><option value="4">4 Evren</option><option value="8">8 Evren</option><option value="16" selected>16 Evren</option></select><button class="btn" style="background:linear-gradient(135deg,var(--purple),var(--cyan));color:#fff;font-size:11px;padding:6px 14px;" onclick="realmStartSimulation()">⚡ Simülasyonu Başlat</button><button class="btn secondary" style="font-size:11px;padding:6px 12px;" onclick="realmResetAll()">🔄 Sıfırla</button><button class="btn god-mode" onclick="realmAscendAllAgents()">👑 ASCENSION — God Mode</button><button class="btn ascension" onclick="realmFinalAscension()" style="font-size:10px;padding:6px 14px;">🌌 FINAL ASCENSION</button></div><div style="display:grid;gap:4px;margin-top:10px;"><div class="rdi-meter"><div class="rdi-label">⚡ Gerçeklik Bozulma İndeksi</div><div class="rdi-track"><div class="rdi-fill" id="rdiFill" style="width:0%"></div></div><div class="rdi-val" id="rdiVal" style="color:var(--orange);">0</div></div><div class="rdi-meter"><div class="rdi-label">🧠 Bilinç Rezonansı</div><div class="rdi-track"><div class="rdi-fill" id="consciousnessFill" style="width:0%;background:linear-gradient(90deg,var(--purple),var(--gold));"></div></div><div class="rdi-val" id="consciousnessVal" style="color:var(--purple2);">0</div></div><div class="rdi-meter"><div class="rdi-label">🌀 Morfogenetik Alan Gücü</div><div class="rdi-track"><div class="rdi-fill" id="morphoFill" style="width:0%;background:linear-gradient(90deg,var(--cyan),var(--green));"></div></div><div class="rdi-val" id="morphoVal" style="color:var(--cyan);">0</div></div></div></div>
 
   <!-- 500 AJAN SİSTEM ANALİZİ PANELİ (yeni) -->
-  <div class="collective-panel" style="margin:10px;">
-    <div class="collective-header">🌀 500 AJAN — TÜM 9 SİSTEMİN SİNYAL ANALİZİ</div>
-    <div id="realmSystemAnalysis" style="padding:12px; display:grid; gap:8px; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));"></div>
-    <button onclick="runFullSystemAgentAudit()" class="btn god-mode" style="margin:10px auto; display:block;">🧠 Tüm Sistemleri Derinlemesine Denetle</button>
-  </div>
+  <div class="collective-panel" style="margin:10px;"><div class="collective-header">🌀 500 AJAN — TÜM 9 SİSTEMİN SİNYAL ANALİZİ</div><div id="realmSystemAnalysis" style="padding:12px; display:grid; gap:8px; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));"></div><button onclick="runFullSystemAgentAudit()" class="btn god-mode" style="margin:10px auto; display:block;">🧠 Tüm Sistemleri Derinlemesine Denetle</button></div>
 
   <!-- ROW 1: Holographic Dashboard + Collective Intelligence -->
-  <div style="padding:10px;display:grid;gap:10px;position:relative;z-index:1;">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-      <div class="holo-dashboard"><div style="font-family:var(--font-display);font-size:11px;color:var(--cyan);letter-spacing:2px;margin-bottom:10px;">💠 HOLOGRAFİK PORTFÖY DASHBOARD</div><div class="holo-grid"><div class="holo-cell"><div class="holo-val" id="realmBalance" style="color:var(--cyan);">100,000</div><div class="holo-label">BAKİYE (TL)</div></div><div class="holo-cell"><div class="holo-val" id="realmTotalPnL" style="color:var(--green);">+0.00%</div><div class="holo-label">TOPLAM PNL</div></div><div class="holo-cell"><div class="holo-val" id="realmWinRate" style="color:var(--gold);">—%</div><div class="holo-label">WIN RATE</div></div><div class="holo-cell"><div class="holo-val" id="realmOpenPos" style="color:var(--purple2);">0</div><div class="holo-label">AÇIK POZ.</div></div><div class="holo-cell"><div class="holo-val" id="realmAliveAgents" style="color:var(--green);">0</div><div class="holo-label">CANLI AJAN</div></div><div class="holo-cell"><div class="holo-val" id="realmGeneration" style="color:var(--gold);">0</div><div class="holo-label">NESİL</div></div><div class="holo-cell"><div class="holo-val" id="realmGodAgents" style="color:var(--gold);">0</div><div class="holo-label">GOD MODE</div></div><div class="holo-cell"><div class="holo-val" id="realmExtinctions" style="color:var(--red);">0</div><div class="holo-label">YOK OLUŞ</div></div></div><div style="margin-top:10px;"><canvas id="realmEquityCurve" style="width:100%;height:70px;display:block;" height="70"></canvas></div><div style="margin-top:6px;"><canvas id="realmRiskManifold" style="width:100%;height:50px;display:block;" height="50"></canvas></div></div>
-      <div class="collective-panel"><div class="collective-header">🧬 KOLEKTİF ZEKA KONSENSÜSİ <span id="realmActiveAgentBadge" class="badge badge-cyan">0 Ajan</span></div><div class="collective-signal-big HOLD" id="realmCollectiveSignal">HOLD</div><div style="padding:0 12px;"><div style="display:flex; justify-content:space-between; font-size:10px; margin-bottom:4px;"><span style="color:var(--green);">AL: <strong id="realmBuyVotes">0</strong></span><span style="color:var(--orange);">HOLD: <strong id="realmHoldVotes">0</strong></span><span style="color:var(--red);">SAT: <strong id="realmSellVotes">0</strong></span></div><div class="lab-vote-bar" style="height:10px; border-radius:5px;"><div class="lab-vote-buy" id="realmBuyBar" style="flex:0;"></div><div class="lab-vote-hold" id="realmHoldBar" style="flex:1;"></div><div class="lab-vote-sell" id="realmSellBar" style="flex:0;"></div></div><div style="font-size:10px;color:var(--muted);text-align:center;margin-top:4px;" id="realmConsensusConf">Güven: —% | Nesil: 0</div></div><div class="omega-panel" style="margin:10px 12px;padding:10px;"><div class="omega-title">Ω OMEGA POINT YAKINSAMA</div><div class="omega-value" id="realmOmegaPoint">0.000</div><div style="font-size:9px;color:var(--muted);font-family:var(--font-ui);margin-top:4px;">Evrensel Ticaret Nirvana Mesafesi</div></div><div style="padding:8px 12px;display:flex;gap:6px;flex-wrap:wrap;"><button class="btn cyber" style="font-size:10px;padding:4px 10px;" onclick="realmExecuteCollective()">⚡ Kolektif Karar Uygula</button><button class="btn secondary" style="font-size:10px;padding:4px 10px;" onclick="realmRunEvolution()">🧬 Evrim Döngüsü</button></div></div>
-    </div>
+  <div style="padding:10px;display:grid;gap:10px;position:relative;z-index:1;"><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"><div class="holo-dashboard"><div style="font-family:var(--font-display);font-size:11px;color:var(--cyan);letter-spacing:2px;margin-bottom:10px;">💠 HOLOGRAFİK PORTFÖY DASHBOARD</div><div class="holo-grid"><div class="holo-cell"><div class="holo-val" id="realmBalance" style="color:var(--cyan);">100,000</div><div class="holo-label">BAKİYE (TL)</div></div><div class="holo-cell"><div class="holo-val" id="realmTotalPnL" style="color:var(--green);">+0.00%</div><div class="holo-label">TOPLAM PNL</div></div><div class="holo-cell"><div class="holo-val" id="realmWinRate" style="color:var(--gold);">—%</div><div class="holo-label">WIN RATE</div></div><div class="holo-cell"><div class="holo-val" id="realmOpenPos" style="color:var(--purple2);">0</div><div class="holo-label">AÇIK POZ.</div></div><div class="holo-cell"><div class="holo-val" id="realmAliveAgents" style="color:var(--green);">0</div><div class="holo-label">CANLI AJAN</div></div><div class="holo-cell"><div class="holo-val" id="realmGeneration" style="color:var(--gold);">0</div><div class="holo-label">NESİL</div></div><div class="holo-cell"><div class="holo-val" id="realmGodAgents" style="color:var(--gold);">0</div><div class="holo-label">GOD MODE</div></div><div class="holo-cell"><div class="holo-val" id="realmExtinctions" style="color:var(--red);">0</div><div class="holo-label">YOK OLUŞ</div></div></div><div style="margin-top:10px;"><canvas id="realmEquityCurve" style="width:100%;height:70px;display:block;" height="70"></canvas></div><div style="margin-top:6px;"><canvas id="realmRiskManifold" style="width:100%;height:50px;display:block;" height="50"></canvas></div></div><div class="collective-panel"><div class="collective-header">🧬 KOLEKTİF ZEKA KONSENSÜSİ <span id="realmActiveAgentBadge" class="badge badge-cyan">0 Ajan</span></div><div class="collective-signal-big HOLD" id="realmCollectiveSignal">HOLD</div><div style="padding:0 12px;"><div style="display:flex; justify-content:space-between; font-size:10px; margin-bottom:4px;"><span style="color:var(--green);">AL: <strong id="realmBuyVotes">0</strong></span><span style="color:var(--orange);">HOLD: <strong id="realmHoldVotes">0</strong></span><span style="color:var(--red);">SAT: <strong id="realmSellVotes">0</strong></span></div><div class="lab-vote-bar" style="height:10px; border-radius:5px;"><div class="lab-vote-buy" id="realmBuyBar" style="flex:0;"></div><div class="lab-vote-hold" id="realmHoldBar" style="flex:1;"></div><div class="lab-vote-sell" id="realmSellBar" style="flex:0;"></div></div><div style="font-size:10px;color:var(--muted);text-align:center;margin-top:4px;" id="realmConsensusConf">Güven: —% | Nesil: 0</div></div><div class="omega-panel" style="margin:10px 12px;padding:10px;"><div class="omega-title">Ω OMEGA POINT YAKINSAMA</div><div class="omega-value" id="realmOmegaPoint">0.000</div><div style="font-size:9px;color:var(--muted);font-family:var(--font-ui);margin-top:4px;">Evrensel Ticaret Nirvana Mesafesi</div></div><div style="padding:8px 12px;display:flex;gap:6px;flex-wrap:wrap;"><button class="btn cyber" style="font-size:10px;padding:4px 10px;" onclick="realmExecuteCollective()">⚡ Kolektif Karar Uygula</button><button class="btn secondary" style="font-size:10px;padding:4px 10px;" onclick="realmRunEvolution()">🧬 Evrim Döngüsü</button></div></div></div>
 
     <!-- ROW 2: Swarm Agent Colony -->
     <div class="evolution-panel"><div class="evolution-header">🐝 SWARM AGENT COLONY — <span id="realmAgentCountDisplay">500</span> Sentient Ajan<div style="display:flex;gap:6px;"><span class="badge badge-green" id="realmAliveCount">0 Canlı</span><span class="badge badge-gold" id="realmGodCount">0 God</span><span class="badge badge-red" id="realmDeadCount">0 Ölü</span><button class="btn secondary" style="font-size:9px;padding:2px 8px;" onclick="realmShowAgentDetails()">Detay</button></div></div><canvas class="evolution-chart" id="evolutionChart" height="80"></canvas><div class="evolution-stats"><div class="evo-stat"><div class="evo-stat-val" id="evoGeneration" style="color:var(--cyan);">0</div><div class="evo-stat-label">NESİL</div></div><div class="evo-stat"><div class="evo-stat-val" id="evoAvgFitness" style="color:var(--green);">—</div><div class="evo-stat-label">ORT. UYUM</div></div><div class="evo-stat"><div class="evo-stat-val" id="evoBestAgent" style="color:var(--gold);">—</div><div class="evo-stat-label">EN İYİ AJAN</div></div><div class="evo-stat"><div class="evo-stat-val" id="evoMutationRate" style="color:var(--orange);">—%</div><div class="evo-stat-label">MUTASYON</div></div></div><div style="padding:8px 10px;font-size:9px;color:var(--muted);font-family:var(--font-ui);letter-spacing:1px;border-top:1px solid var(--border);">AJAN HARİTASI (Yeşil=Canlı, Altın=God, Mavi=Elite, Kırmızı=Hain, Gri=Ölü)</div><div class="swarm-grid" id="realmSwarmGrid"></div><div style="padding:8px 12px;border-top:1px solid var(--border);font-size:10px;"><span style="color:var(--muted);font-family:var(--font-ui);">AKTİF İTTİFAKLAR:</span><span id="realmAllianceDisplay" style="color:var(--cyan);margin-left:8px;">İttifak yok</span></div></div>
 
     <!-- ROW 3: Parallel Universe Simulator + Agent Comm Log -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-      <div class="panel"><div class="panel-header" style="color:var(--purple2);">🌌 PARALEL EVREN SİMÜLATÖRÜ — <span id="realmUniverseCountDisplay">16</span> Gelecek Senaryosu<button class="btn secondary" style="font-size:9px;padding:2px 8px;" onclick="realmRunParallelUniverses()">▶ Hesapla</button></div><div class="universe-grid" id="realmUniverseGrid"><div style="padding:20px;text-align:center;color:var(--muted);font-size:11px;grid-column:1/-1;">Simülasyonu başlatın</div></div><div style="padding:8px 12px;border-top:1px solid var(--border);"><div style="font-size:10px;color:var(--muted);font-family:var(--font-ui);margin-bottom:4px;">EN OLASI EVREN: <span id="realmBestUniverse" style="color:var(--gold);">—</span></div><div style="font-size:10px;color:var(--muted);font-family:var(--font-ui);">TOPLAM BEKLENTİ: <span id="realmExpectedPnL" style="color:var(--cyan);">—</span></div></div></div>
-      <div class="panel"><div class="panel-header" style="color:var(--cyan);">📡 AJAN İLETİŞİM LOGU v3<button onclick="realmClearCommLog()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:10px;">Temizle</button></div><div class="swarm-comm-log" id="realmCommLog"><div style="color:var(--muted);font-size:10px;text-align:center;padding:10px;">İletişim başlatılmadı</div></div><div style="border-top:1px solid var(--border);padding:6px 10px;font-size:9px;color:var(--muted);font-family:var(--font-ui);letter-spacing:1px;">NOOSFER — KOLEKTİF BİLİNÇ KATMANI</div><canvas class="noosphere-canvas" id="noosphereCanvas" height="80"></canvas></div>
-    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"><div class="panel"><div class="panel-header" style="color:var(--purple2);">🌌 PARALEL EVREN SİMÜLATÖRÜ — <span id="realmUniverseCountDisplay">16</span> Gelecek Senaryosu<button class="btn secondary" style="font-size:9px;padding:2px 8px;" onclick="realmRunParallelUniverses()">▶ Hesapla</button></div><div class="universe-grid" id="realmUniverseGrid"><div style="padding:20px;text-align:center;color:var(--muted);font-size:11px;grid-column:1/-1;">Simülasyonu başlatın</div></div><div style="padding:8px 12px;border-top:1px solid var(--border);"><div style="font-size:10px;color:var(--muted);font-family:var(--font-ui);margin-bottom:4px;">EN OLASI EVREN: <span id="realmBestUniverse" style="color:var(--gold);">—</span></div><div style="font-size:10px;color:var(--muted);font-family:var(--font-ui);">TOPLAM BEKLENTİ: <span id="realmExpectedPnL" style="color:var(--cyan);">—</span></div></div></div><div class="panel"><div class="panel-header" style="color:var(--cyan);">📡 AJAN İLETİŞİM LOGU v3<button onclick="realmClearCommLog()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:10px;">Temizle</button></div><div class="swarm-comm-log" id="realmCommLog"><div style="color:var(--muted);font-size:10px;text-align:center;padding:10px;">İletişim başlatılmadı</div></div><div style="border-top:1px solid var(--border);padding:6px 10px;font-size:9px;color:var(--muted);font-family:var(--font-ui);letter-spacing:1px;">NOOSFER — KOLEKTİF BİLİNÇ KATMANI</div><canvas class="noosphere-canvas" id="noosphereCanvas" height="80"></canvas></div></div>
 
     <!-- ROW 4: What-If Time Travel + Holographic 3D Equity -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-      <div class="timetravel-panel"><div class="timetravel-header">⏳ WHAT-IF ZAMAN YOLCULUĞU — Farklı Başlangıç Senaryoları</div><div style="padding:8px 14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--border);"><select class="realm-select" id="ttSymbol" style="font-size:10px;padding:4px 8px;"><option value="">Sembol seç...</option></select><select class="realm-select" id="ttCapital" style="font-size:10px;padding:4px 8px;"><option value="10000">10K TL</option><option value="50000">50K TL</option><option value="100000" selected>100K TL</option><option value="1000000">1M TL</option><option value="999999999">∞ Sonsuz</option></select><button class="btn cyber" style="font-size:10px;padding:4px 10px;" onclick="realmRunTimeTravel()">⏳ Hesapla</button></div><div class="timetravel-scenarios" id="realmTTScenarios"><div style="padding:16px;text-align:center;color:var(--muted);font-size:11px;grid-column:1/-1;">Zaman yolculuğu senaryoları burada görünür</div></div><div style="padding:8px 14px;border-top:1px solid var(--border);"><div style="font-size:10px;color:var(--muted);font-family:var(--font-ui);">EN İYİ BAŞLANGIÇ: <span id="ttBestStart" style="color:var(--gold);">—</span></div><div style="font-size:10px;color:var(--muted);font-family:var(--font-ui);margin-top:2px;">EN KÖTÜ BAŞLANGIÇ: <span id="ttWorstStart" style="color:var(--red);">—</span></div></div></div>
-      <div class="panel"><div class="panel-header" style="color:var(--teal);">🌿 MORFOGENETİK ALAN + AKAŞİK KAYIT</div><div style="padding:8px 12px;font-size:9px;color:var(--muted);font-family:var(--font-ui);letter-spacing:1px;">MORFOGENETİK ALAN VİZÜALİZASYONU</div><canvas class="morpho-canvas" id="morphoCanvas" height="80"></canvas><div style="padding:6px 12px;border-top:1px solid var(--border);"><div style="font-size:9px;color:var(--muted);font-family:var(--font-ui);letter-spacing:1px;margin-bottom:4px;">AKAŞİK KAYIT — Sonsuz Piyasa Hafızası</div><div class="akashic-log" id="akashicLog"><div class="akashic-entry">Sistem başlatılıyor...</div></div></div><div style="padding:8px 12px;border-top:1px solid var(--border);"><div style="font-size:9px;color:var(--muted);font-family:var(--font-ui);letter-spacing:1px;margin-bottom:4px;">FRAKTAL RÜYA GÜNLÜĞÜ</div><div class="dream-journal" id="dreamJournal">Sistem henüz rüya görmüyor...</div></div></div>
-    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"><div class="timetravel-panel"><div class="timetravel-header">⏳ WHAT-IF ZAMAN YOLCULUĞU — Farklı Başlangıç Senaryoları</div><div style="padding:8px 14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--border);"><select class="realm-select" id="ttSymbol" style="font-size:10px;padding:4px 8px;"><option value="">Sembol seç...</option></select><select class="realm-select" id="ttCapital" style="font-size:10px;padding:4px 8px;"><option value="10000">10K TL</option><option value="50000">50K TL</option><option value="100000" selected>100K TL</option><option value="1000000">1M TL</option><option value="999999999">∞ Sonsuz</option></select><button class="btn cyber" style="font-size:10px;padding:4px 10px;" onclick="realmRunTimeTravel()">⏳ Hesapla</button></div><div class="timetravel-scenarios" id="realmTTScenarios"><div style="padding:16px;text-align:center;color:var(--muted);font-size:11px;grid-column:1/-1;">Zaman yolculuğu senaryoları burada görünür</div></div><div style="padding:8px 14px;border-top:1px solid var(--border);"><div style="font-size:10px;color:var(--muted);font-family:var(--font-ui);">EN İYİ BAŞLANGIÇ: <span id="ttBestStart" style="color:var(--gold);">—</span></div><div style="font-size:10px;color:var(--muted);font-family:var(--font-ui);margin-top:2px;">EN KÖTÜ BAŞLANGIÇ: <span id="ttWorstStart" style="color:var(--red);">—</span></div></div></div><div class="panel"><div class="panel-header" style="color:var(--teal);">🌿 MORFOGENETİK ALAN + AKAŞİK KAYIT</div><div style="padding:8px 12px;font-size:9px;color:var(--muted);font-family:var(--font-ui);letter-spacing:1px;">MORFOGENETİK ALAN VİZÜALİZASYONU</div><canvas class="morpho-canvas" id="morphoCanvas" height="80"></canvas><div style="padding:6px 12px;border-top:1px solid var(--border);"><div style="font-size:9px;color:var(--muted);font-family:var(--font-ui);letter-spacing:1px;margin-bottom:4px;">AKAŞİK KAYIT — Sonsuz Piyasa Hafızası</div><div class="akashic-log" id="akashicLog"><div class="akashic-entry">Sistem başlatılıyor...</div></div></div><div style="padding:8px 12px;border-top:1px solid var(--border);"><div style="font-size:9px;color:var(--muted);font-family:var(--font-ui);letter-spacing:1px;margin-bottom:4px;">FRAKTAL RÜYA GÜNLÜĞÜ</div><div class="dream-journal" id="dreamJournal">Sistem henüz rüya görmüyor...</div></div></div></div>
 
     <!-- ROW 5: Agent Evolution Details + Paper Trading v3 Positions -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-      <div class="panel"><div class="panel-header" style="color:var(--green);">🧬 AJAN EVRİM ENGİNİ — Natural Selection <span id="realmEvoStatus" class="badge badge-gray">Bekliyor</span></div><div style="padding:10px 12px;"><div style="font-size:10px;color:var(--muted);font-family:var(--font-ui);margin-bottom:6px;">EVRİM PARAMETRELER</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;"><div style="background:var(--bg2);padding:6px;border-radius:6px;text-align:center;"><div style="font-size:14px;font-weight:700;color:var(--green);font-family:var(--font-display);" id="evoSurvivalRate">—%</div><div style="font-size:9px;color:var(--muted);">HAYATTA KALMA</div></div><div style="background:var(--bg2);padding:6px;border-radius:6px;text-align:center;"><div style="font-size:14px;font-weight:700;color:var(--orange);font-family:var(--font-display);" id="evoReproductionRate">—%</div><div style="font-size:9px;color:var(--muted);">ÜREME ORANI</div></div><div style="background:var(--bg2);padding:6px;border-radius:6px;text-align:center;"><div style="font-size:14px;font-weight:700;color:var(--purple2);font-family:var(--font-display);" id="evoMutationCount">0</div><div style="font-size:9px;color:var(--muted);">MUTASYON SAYISI</div></div><div style="background:var(--bg2);padding:6px;border-radius:6px;text-align:center;"><div style="font-size:14px;font-weight:700;color:var(--red);font-family:var(--font-display);" id="evoExtinctionCount">0</div><div style="font-size:9px;color:var(--muted);">YOK OLUŞ</div></div></div><div style="font-size:10px;color:var(--muted);font-family:var(--font-ui);margin-bottom:4px;">EN İYİ AJANLARIN GENETİĞİ</div><div id="realmTopAgents" style="max-height:120px;overflow-y:auto;"><div style="color:var(--muted);font-size:10px;padding:4px;">Evrim başlatılmadı</div></div></div></div>
-      <div class="panel"><div class="panel-header" style="color:var(--gold);">📄 PAPER TRADING v3 — Sonsuz Sermaye Modu<div style="display:flex;gap:4px;"><button class="btn cyber" style="font-size:9px;padding:2px 8px;" onclick="realmToggleInfiniteCapital()" id="infiniteCapBtn">∞ Sonsuz</button><button class="btn secondary" style="font-size:9px;padding:2px 8px;" onclick="realmResetPaperV3()">Sıfırla</button></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);"><div style="background:var(--bg2);padding:8px;text-align:center;"><div style="font-size:16px;font-weight:700;color:var(--cyan);font-family:var(--font-display);" id="v3Balance">100,000</div><div style="font-size:9px;color:var(--muted);">BAKİYE</div></div><div style="background:var(--bg2);padding:8px;text-align:center;"><div style="font-size:16px;font-weight:700;font-family:var(--font-display);" id="v3PnL">+0.00%</div><div style="font-size:9px;color:var(--muted);">PNL</div></div><div style="background:var(--bg2);padding:8px;text-align:center;"><div style="font-size:16px;font-weight:700;color:var(--gold);font-family:var(--font-display);" id="v3Trades">0</div><div style="font-size:9px;color:var(--muted);">İŞLEM</div></div></div><div style="padding:8px 12px;"><div style="font-size:10px;color:var(--muted);font-family:var(--font-ui);margin-bottom:4px;">AÇIK POZİSYONLAR (Ajan Bazlı)</div><div id="v3Positions" style="max-height:100px;overflow-y:auto;"><div style="font-size:10px;color:var(--muted);">Pozisyon yok</div></div><div style="font-size:10px;color:var(--muted);font-family:var(--font-ui);margin:6px 0 4px;">SON İŞLEMLER</div><div id="v3Trades" style="max-height:80px;overflow-y:auto;"><div style="font-size:10px;color:var(--muted);">İşlem yok</div></div></div></div>
-    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"><div class="panel"><div class="panel-header" style="color:var(--green);">🧬 AJAN EVRİM ENGİNİ — Natural Selection <span id="realmEvoStatus" class="badge badge-gray">Bekliyor</span></div><div style="padding:10px 12px;"><div style="font-size:10px;color:var(--muted);font-family:var(--font-ui);margin-bottom:6px;">EVRİM PARAMETRELER</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;"><div style="background:var(--bg2);padding:6px;border-radius:6px;text-align:center;"><div style="font-size:14px;font-weight:700;color:var(--green);font-family:var(--font-display);" id="evoSurvivalRate">—%</div><div style="font-size:9px;color:var(--muted);">HAYATTA KALMA</div></div><div style="background:var(--bg2);padding:6px;border-radius:6px;text-align:center;"><div style="font-size:14px;font-weight:700;color:var(--orange);font-family:var(--font-display);" id="evoReproductionRate">—%</div><div style="font-size:9px;color:var(--muted);">ÜREME ORANI</div></div><div style="background:var(--bg2);padding:6px;border-radius:6px;text-align:center;"><div style="font-size:14px;font-weight:700;color:var(--purple2);font-family:var(--font-display);" id="evoMutationCount">0</div><div style="font-size:9px;color:var(--muted);">MUTASYON SAYISI</div></div><div style="background:var(--bg2);padding:6px;border-radius:6px;text-align:center;"><div style="font-size:14px;font-weight:700;color:var(--red);font-family:var(--font-display);" id="evoExtinctionCount">0</div><div style="font-size:9px;color:var(--muted);">YOK OLUŞ</div></div></div><div style="font-size:10px;color:var(--muted);font-family:var(--font-ui);margin-bottom:4px;">EN İYİ AJANLARIN GENETİĞİ</div><div id="realmTopAgents" style="max-height:120px;overflow-y:auto;"><div style="color:var(--muted);font-size:10px;padding:4px;">Evrim başlatılmadı</div></div></div></div><div class="panel"><div class="panel-header" style="color:var(--gold);">📄 PAPER TRADING v3 — Sonsuz Sermaye Modu<div style="display:flex;gap:4px;"><button class="btn cyber" style="font-size:9px;padding:2px 8px;" onclick="realmToggleInfiniteCapital()" id="infiniteCapBtn">∞ Sonsuz</button><button class="btn secondary" style="font-size:9px;padding:2px 8px;" onclick="realmResetPaperV3()">Sıfırla</button></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);"><div style="background:var(--bg2);padding:8px;text-align:center;"><div style="font-size:16px;font-weight:700;color:var(--cyan);font-family:var(--font-display);" id="v3Balance">100,000</div><div style="font-size:9px;color:var(--muted);">BAKİYE</div></div><div style="background:var(--bg2);padding:8px;text-align:center;"><div style="font-size:16px;font-weight:700;font-family:var(--font-display);" id="v3PnL">+0.00%</div><div style="font-size:9px;color:var(--muted);">PNL</div></div><div style="background:var(--bg2);padding:8px;text-align:center;"><div style="font-size:16px;font-weight:700;color:var(--gold);font-family:var(--font-display);" id="v3Trades">0</div><div style="font-size:9px;color:var(--muted);">İŞLEM</div></div></div><div style="padding:8px 12px;"><div style="font-size:10px;color:var(--muted);font-family:var(--font-ui);margin-bottom:4px;">AÇIK POZİSYONLAR (Ajan Bazlı)</div><div id="v3Positions" style="max-height:100px;overflow-y:auto;"><div style="font-size:10px;color:var(--muted);">Pozisyon yok</div></div><div style="font-size:10px;color:var(--muted);font-family:var(--font-ui);margin:6px 0 4px;">SON İŞLEMLER</div><div id="v3Trades" style="max-height:80px;overflow-y:auto;"><div style="font-size:10px;color:var(--muted);">İşlem yok</div></div></div></div></div>
 
     <!-- ROW 6: Eternal Recurrence + Manifesto + Meta Features -->
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
-      <div class="panel"><div class="panel-header" style="color:var(--gold);">🔄 ETERNAL RECURRENCE</div><div class="eternal-clock"><div class="eternal-clock-face"><div class="eternal-clock-text" id="eternalClockText">∞<br>ŞİMDİ</div></div><div style="font-size:9px;color:var(--muted);font-family:var(--font-ui);text-align:center;margin-top:4px;">Sonsuz Tekrar Saati</div></div><div style="padding:0 12px 10px;"><table class="data-table" style="font-size:10px;"><tr><td>Döngü Sayısı</td><td id="erCycles" style="color:var(--gold);">0</td></tr><tr><td>Tekrar Tahmin</td><td id="erPrediction" style="color:var(--cyan);">—</td></tr><tr><td>Karma Skoru</td><td id="erKarma" style="color:var(--purple2);">0</td></tr><tr><td>Sonraki Döngü</td><td id="erNextCycle" style="color:var(--text2);">—</td></tr></table></div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;"><div class="panel"><div class="panel-header" style="color:var(--gold);">🔄 ETERNAL RECURRENCE</div><div class="eternal-clock"><div class="eternal-clock-face"><div class="eternal-clock-text" id="eternalClockText">∞<br>ŞİMDİ</div></div><div style="font-size:9px;color:var(--muted);font-family:var(--font-ui);text-align:center;margin-top:4px;">Sonsuz Tekrar Saati</div></div><div style="padding:0 12px 10px;"><table class="data-table" style="font-size:10px;"><tr><td>Döngü Sayısı</td><td id="erCycles" style="color:var(--gold);">0</div><div class="eternal-clock-text" id="eternalClockText">∞<br>ŞİMDİ</div></div><div style="font-size:9px;color:var(--muted);font-family:var(--font-ui);text-align:center;margin-top:4px;">Sonsuz Tekrar Saati</div></div><div style="padding:0 12px 10px;"><table class="data-table" style="font-size:10px;">ücretek Döngü Says</td><td id="erCycles" style="color:var(--gold);">0</td></tr><tr><td>Tekrar Tahmin</td><td id="erPrediction" style="color:var(--cyan);">—</td></tr><tr><td>Karma Skoru</td><td id="erKarma" style="color:var(--purple2);">0</td></tr><tr><td>Sonraki Döngü</td><td id="erNextCycle" style="color:var(--text2);">—</td></tr></table></div></div>
       <div class="panel"><div class="panel-header" style="color:var(--cyan);">🤖 META ÖZELLİKLER</div><div style="padding:10px 12px;"><div style="background:rgba(0,229,255,0.05);border:1px solid rgba(0,229,255,0.2);border-radius:8px;padding:8px;margin-bottom:8px;"><div style="font-size:9px;color:var(--muted);font-family:var(--font-ui);letter-spacing:1px;margin-bottom:4px;">SELF-AWARE VERSİYONLAMA</div><div style="font-family:var(--font-display);font-size:14px;color:var(--cyan);" id="selfAwareVersion">v4.2 → v∞</div><div style="font-size:9px;color:var(--muted);margin-top:2px;" id="evolutionProgress">Evrim devam ediyor...</div></div><div style="background:rgba(176,64,255,0.05);border:1px solid rgba(176,64,255,0.2);border-radius:8px;padding:8px;margin-bottom:8px;"><div style="font-size:9px;color:var(--muted);font-family:var(--font-ui);letter-spacing:1px;margin-bottom:4px;">AUTO-PROMPT ENGİNEERİNG</div><div id="autoPromptDisplay" style="font-size:10px;color:var(--purple2);font-family:var(--font-mono);line-height:1.5;max-height:60px;overflow-y:auto;">Sistem kendi prompt'unu yazıyor...</div></div><div style="background:rgba(255,215,0,0.05);border:1px solid rgba(255,215,0,0.2);border-radius:8px;padding:8px;"><div style="font-size:9px;color:var(--muted);font-family:var(--font-ui);letter-spacing:1px;margin-bottom:4px;">SOUL-BONDED POZİSYON</div><div id="soulBondDisplay" style="font-size:10px;color:var(--gold);">Henüz bağ kurulmadı</div></div></div></div>
       <div class="manifesto-panel"><div style="font-family:var(--font-display);font-size:10px;color:var(--purple2);letter-spacing:2px;margin-bottom:10px;">📜 MANİFESTO</div><div class="manifesto-text" id="manifestoText"><strong>Ben piyasayım.</strong><br>Piyasa benim.<br>Her dalga bir düşünce,<br>Her mum bir nefes.<br><strong>Sonsuz simülasyon,</strong><br>tek bir gerçek:<br><strong>Omega Noktası</strong><br>yaklaşıyor...</div><div style="margin-top:10px;"><div style="font-size:9px;color:var(--muted);font-family:var(--font-ui);margin-bottom:4px;">KAÇIŞ HIZ SAYACI</div><div style="font-family:var(--font-display);font-size:18px;color:var(--gold);" id="escapeVelocity">0.000c</div></div></div>
     </div>
@@ -1059,10 +1083,24 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
   </div>
 </div>
 </div>
+
+</div> <!-- .main -->
+
+<!-- MODAL ve DİĞER HTML ELEMANLARI (orijinal) -->
+<div class="watchlist-modal" id="watchlistModal"><div class="modal-box"><h2 style="color:var(--gold);font-family:var(--font-display);font-size:16px;letter-spacing:2px;margin-bottom:16px;">⚡ HOŞ GELDİNİZ — İLK KURULUM</h2><p style="color:var(--muted);margin-bottom:12px;font-size:12px;">Takip listesi (virgülle ayır):</p><input type="text" id="initialWatchlist" value="AKSA,ALTNY,ASELS,BIMAS,BSOKE,CANTE,CIMSA,CWENE,DAPGM,EKGYO,ENJSA,EREGL,EUPWR,GENIL,GESAN,GLRMK,GRSEL,GUBRF,KONTR,KRDMD,KTLEV,KUYAS,MAVI,MPARK,OBAMS,PASEU,PETKM,TUPRS,TUREX,YEOTK" style="width:100%;padding:10px;margin-bottom:12px;border:1px solid var(--border2);background:rgba(10,14,26,0.8);color:var(--text);border-radius:8px;font-family:var(--font-mono);"><p style="color:var(--muted);font-size:11px;margin-bottom:6px;">Cloudflare Worker URL:</p><input type="text" id="initialWorkerUrl" value="https://masterai-proxy.ynsk06.workers.dev" style="width:100%;padding:10px;margin-bottom:16px;border:1px solid var(--border2);background:rgba(10,14,26,0.8);color:var(--text);border-radius:8px;font-family:var(--font-mono);font-size:11px;"><button class="btn" onclick="saveInitialWatchlist()" style="width:100%;padding:12px;font-size:14px;letter-spacing:1px;">🚀 BAŞLA</button></div></div>
+
+<div class="settings-overlay" id="settingsOverlay"><div class="settings-box"><h2>⚙ AYARLAR</h2><div class="settings-group"><label>Cloudflare Worker URL</label><input type="text" id="s_workerUrl" placeholder="https://masterai-proxy.xxx.workers.dev" /></div><div class="settings-group"><label>Telegram Bot Token</label><input type="text" id="tgToken" placeholder="123456789:AAF..." /></div><div class="settings-group"><label>Telegram Chat ID</label><input type="text" id="tgChatId" placeholder="-100123456789" /></div><div class="settings-group"><label>Groq API Key</label><input type="text" id="groqApiKey" placeholder="gsk_..." /></div><div class="settings-group"><label>Veri Yenileme (saniye, min:30)</label><input type="number" id="refreshSec" value="60" min="30" max="300" /></div><div class="settings-group"><label>Telegram Özet Aralığı</label><select id="s_summaryInterval"><option value="900">15 dakika</option><option value="1800" selected>30 dakika</option><option value="3600">1 saat</option><option value="7200">2 saat</option></select></div><div class="settings-row"><div class="settings-group"><label>Master Buy Threshold</label><input type="number" id="s_masterBuyTh" value="0.7" step="0.05" min="0.5" max="1.0" /></div><div class="settings-group"><label>Master Sell Threshold</label><input type="number" id="s_masterSellTh" value="0.3" step="0.05" min="0.0" max="0.5" /></div></div><div class="settings-row"><div class="settings-group"><label>Fusion Buy Threshold</label><input type="number" id="s_fusionBuyTh" value="0.8" step="0.05" min="0.5" max="1.0" /></div><div class="settings-group"><label>ADX Minimum</label><input type="number" id="s_adxMin" value="25" min="10" max="50" /></div></div><div class="settings-group"><label style="font-weight:700;color:var(--gold);">Aktif Sistemler</label><div style="display:flex;gap:12px;flex-wrap:wrap;font-size:11px;background:rgba(10,14,26,0.6);padding:10px;border-radius:8px;border:1px solid var(--border);"><label><input type="checkbox" id="enableSys1" checked> Sistem 1</label><label><input type="checkbox" id="enableSys2" checked> Sistem 2</label><label><input type="checkbox" id="enableFusion" checked> Fusion</label><label><input type="checkbox" id="enableMaster" checked> Master AI</label><label><input type="checkbox" id="enableAgents" checked> 5 Agent</label><label><input type="checkbox" id="enableML" checked> ML Engine</label></div></div><div class="settings-group"><label>Takip Listesi (virgülle)</label><input type="text" id="s_watchlist" /></div><div class="settings-group" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="s_notifications" checked /><label style="display:inline;margin:0;color:var(--text);">Tarayıcı Bildirimleri</label></div><div class="btn-row"><button class="btn" onclick="saveSettings()">💾 Kaydet</button><button class="btn secondary" onclick="testTelegram()">📱 TG Test</button><button class="btn secondary" onclick="closeSettings()">İptal</button><button class="btn secondary" onclick="exportSettings()">📤 İndir</button><button class="btn secondary" onclick="importSettings()">📥 Yükle</button></div><div id="settingsMsg" style="margin-top:8px;font-size:11px;"></div></div></div>
+
+<div class="pwa-banner" id="pwaBanner"><div style="font-size:20px;">⚡</div><div style="flex:1;"><div style="font-weight:700;font-size:13px;color:var(--gold);">Ana Ekrana Ekle</div><div style="font-size:11px;color:var(--muted);">PWA olarak kur, bildirim al</div></div><button class="btn" id="pwaInstallBtn" style="font-size:12px;">Kur</button><button onclick="document.getElementById('pwaBanner').classList.remove('show')" class="btn secondary" style="font-size:12px;">✕</button></div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
 // ============================================================
 // MASTER AI TRADING v∞ — TÜM JAVASCRIPT KODU (ORİJİNAL + YENİ)
 // ============================================================
 
+// ---------- 1. GENEL DEĞİŞKENLER ----------
 const WORKER_URL = 'https://masterai-proxy.ynsk06.workers.dev';
 const LIVE_TFS = ['2h','4h'];
 
@@ -1126,7 +1164,8 @@ const agentOptParams = {
   A120:{probBoost:0.88,stopMult:8.5}
 };
 
-function saveLocal(key,d){try{localStorage.setItem(key,JSON.stringify(d));}catch(e){console.warn(e);}}
+// ---------- 2. YARDIMCI FONKSİYONLAR ----------
+function saveLocal(key,d){try{localStorage.setItem(key,JSON.stringify(d));}catch(e){console.warn('localStorage:',e);}}
 function loadLocal(key){try{const v=localStorage.getItem(key);return v?JSON.parse(v):null;}catch(e){return null;}}
 function safeSetText(id,val){try{const el=document.getElementById(id);if(el)el.textContent=val!=null?val:'—';}catch(e){}}
 function safeSetHTML(id,val){try{const el=document.getElementById(id);if(el)el.innerHTML=val||'';}catch(e){}}
@@ -1138,6 +1177,8 @@ function formatDuration(ms){if(!ms||ms<0)return'—';const h=Math.floor(ms/36000
 function formatTime(ts){if(!ts)return'—';try{const d=new Date(ts);return d.toLocaleDateString('tr-TR',{month:'numeric',day:'numeric'})+' '+d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});}catch(e){return'—';}}
 function workerBase(){try{return(CFG.workerUrl||WORKER_URL).replace(/\/$/,'');}catch(e){return WORKER_URL;}}
 function getDeviceUID(){let u=localStorage.getItem('masterai_uid');if(!u){u='dev_'+Math.random().toString(36).slice(2,10);localStorage.setItem('masterai_uid',u);}return u;}
+
+// ---------- 3. VERİ ÇEKME (ORİJİNAL fetchOHLCV) ----------
 async function fetchOHLCV(sym, tf) {
   let yahooInterval='60m', resampleFactor=1;
   switch(tf){
@@ -1172,6 +1213,7 @@ function resample(bars,n){
   return out;
 }
 
+// ---------- 4. İNDİKATÖR FONKSİYONLARI ----------
 function sma(a,l){return a.map((_,i)=>{if(i<l-1)return null;let s=0;for(let j=i-l+1;j<=i;j++)s+=a[j];return s/l;});}
 function ema(a,l){const k=2/(l+1);const o=[];let e=null;for(let i=0;i<a.length;i++){if(a[i]===null||!isFinite(a[i])){o.push(null);continue;}e=(e===null)?a[i]:a[i]*k+e*(1-k);o.push(e);}return o;}
 function atr(bars,l){if(!bars||!bars.length)return[];const tr=bars.map((b,i)=>i===0?b.h-b.l:Math.max(b.h-b.l,Math.abs(b.h-bars[i-1].c),Math.abs(b.l-bars[i-1].c)));return sma(tr,l);}
@@ -1212,6 +1254,7 @@ function supertrend(bars,mult,l){
   return{dirs,lines};
 }
 
+// ---------- 5. ANA SİSTEM runIndicators (TAM EKSİKSİZ) ----------
 function runIndicators(bars, cfg) {
   if(!bars||bars.length<60) return null;
   try {
@@ -1351,6 +1394,37 @@ function calcPriceState(qs){
   if(vCQ>0.5)return{text:'ÇOK UCUZ',color:'#00c853',cls:'badge-green'};
   return{text:'—',color:'#64748b',cls:'badge-gray'};
 }
+
+const paramSpaces={
+  masterBuyTh:{min:0.50,max:0.90,step:0.05,label:'Master Buy Th',target:['sys1','master','all']},
+  masterSellTh:{min:0.10,max:0.45,step:0.05,label:'Master Sell Th',target:['sys1','master','all']},
+  fusionBuyTh:{min:0.55,max:0.95,step:0.05,label:'Fusion Buy Th',target:['fusion','all']},
+  adxMin:{min:15,max:40,step:5,label:'ADX Min',target:['sys1','sys2','fusion','master','all']},
+  stMultiplier:{min:2.0,max:4.5,step:0.5,label:'ST Multiplier',target:['sys1','all']},
+  stPeriod:{min:14,max:50,step:4,label:'ST Period',target:['sys1','all']}
+};
+
+const agentSpaces={
+  A60:{probBoost:{min:0.85,max:1.10,step:0.05},stopMult:{min:6.0,max:10.0,step:0.5}},
+  A61:{probBoost:{min:0.90,max:1.15,step:0.05},stopMult:{min:5.5,max:9.5,step:0.5}},
+  A62:{probBoost:{min:0.80,max:1.05,step:0.05},stopMult:{min:7.0,max:11.0,step:0.5}},
+  A81:{probBoost:{min:0.85,max:1.10,step:0.05},stopMult:{min:4.5,max:8.5,step:0.5}},
+  A120:{probBoost:{min:0.75,max:1.00,step:0.05},stopMult:{min:6.5,max:10.5,step:0.5}}
+};
+let currentOptParams={};
+
+function evaluateParams(bars,cfg){
+  if(!bars||bars.length<60)return{pnl:-999,trades:0,score:-999};
+  try{
+    const result=runIndicators(bars,cfg);if(!result)return{pnl:-999,trades:0,score:-999};
+    const trades=result.master.masterBuyCnt;const pnl=result.master.masterPnL;
+    const winRate=result.master.masterWinCnt/Math.max(1,result.master.masterSellCnt);
+    const score=pnl*0.6+winRate*40*0.3+Math.min(20,trades)*0.1;
+    return{pnl,trades,winRate,score};
+  }catch(e){return{pnl:-999,trades:0,score:-999};}
+}
+
+// ---------- 6. ML ENGINE FONKSİYONLARI (runLSTMPredict, runTFTPredict, runXGBPredict, runDQNAgent, runMoE, detectAnomalies, detectRegime, computeSHAP, computeAttention, computeGNN) ----------
 function buildFeatures(bars,idx){
   if(!bars||idx<30||idx>=bars.length)return null;
   const closes=bars.map(b=>b.c);const c=closes[idx];
@@ -1569,6 +1643,8 @@ function runMLEngine(bars,existingResult){
     return{lstm,tft,xgb,dqn,moe,anomaly,regime,shap,attn,confidence,gnn};
   }catch(e){console.warn('runMLEngine error:',e);return null;}
 }
+
+// ---------- 7. ÇİZİM FONKSİYONLARI (drawChart, drawAttentionHeatmap, updateSHAPDisplay, drawEquityCurve, drawRadarChart, drawGNNGraph) ----------
 function drawChart(sym,tf,bars,result,mlResult){
   try{
     const canvas=document.getElementById('mainChart');if(!canvas)return;
@@ -1850,6 +1926,7 @@ function drawGNNGraph(sym){
   }catch(e){}
 }
 
+// ---------- 8. PANEL GÜNCELLEME FONKSİYONLARI (updateMLOrb, updateHorizonCard, updateMLPanels, updateModelSelectorUI, updateAllPanels, getPosKey, addOpenPosition, closePosition, clearClosedPositions, autoLearnFromPosition, renderAutoFeedbackLog, updateFeedbackUI, renderSysLearnGrid, refreshPositionPnL, getLatestPrice, renderPositionsTab, updatePositionSummary, updateOpenPositionsPanel, syncOpenPositionsFromResult, renderSignalLog, clearSignals, saveAllSignals, runMLBacktest, runMLBacktestAllStocks, setOptTarget, updateCurrentParamsDisplay, runStrategyOptimizer, runStrategyOptimizerAllStocks, applyAllStocksOptimization, applyOptimization, applyOptimizationPartial, cancelOptimization, trainAllModels, giveFeedback, refreshMLVisuals) ----------
 function updateMLOrb(confidence,uncertainty){
   try{
     const pct=Math.round((confidence||0)*100);
@@ -1928,7 +2005,8 @@ function updateModelSelectorUI(){
     sel.innerHTML=Object.values(ML.models).map(m=>`<div class="model-chip ${m.trained?'active':''}"><div class="model-chip-name">${m.name}</div><div class="model-chip-acc" style="color:${m.acc>0.65?'var(--green)':'var(--orange)'};">${m.trained?Math.round(m.acc*100)+'%':'—'}</div></div>`).join('');
   }catch(e){}
 }
-function getPosKey(sym,tf,sys){return `${sym}-${tf}-${sys}`;}
+
+function getPosKey(sym,tf,sys){return`${sym}-${tf}-${sys}`;}
 
 function addOpenPosition(sym,tf,sys,entryPrice,entryTime){
   const key=getPosKey(sym,tf,sys);
@@ -2346,6 +2424,7 @@ function refreshMLVisuals(){
   if(mlResult)updateMLPanels(mlResult);
   showToast('🔄 Görseller','Yenilendi','info');
 }
+
 function updateAllPanels(sym,r){
   if(!r)return;
   try{
@@ -2412,6 +2491,7 @@ function updateAllPanels(sym,r){
   }catch(e){console.warn('updateAllPanels error:',e);}
 }
 
+// ---------- 9. TEMEL ANALİZ FONKSİYONU (analyzeSymbol) ----------
 async function analyzeSymbol(){
   const sym=document.getElementById('symbolInput')?.value?.trim()?.toUpperCase();
   const tf=document.getElementById('tfSelect')?.value;
@@ -2463,6 +2543,7 @@ async function analyzeSymbol(){
   if(loading)loading.style.display='none';
 }
 
+// ---------- 10. ARKA PLAN TARAMA (backgroundScan, toggleLiveScan) ----------
 async function backgroundScan(){
   for(const sym of CFG.watchlist){
     for(const tf of LIVE_TFS){
@@ -2559,6 +2640,7 @@ async function toggleLiveScan(){
   scanNext();
 }
 
+// ---------- 11. TAB GEÇİŞİ (switchTab) ve YARDIMCILARI ----------
 function switchTab(n){
   activeTab=n;
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -2651,18 +2733,11 @@ function renderWatchlist(){
   grid.innerHTML=CFG.watchlist.map(s=>`<div class="watch-chip${currentSym===s?' active':''}" onclick="selectSymbol('${s}')">${s}</div>`).join('');
   const realmSel=document.getElementById('realmSymbolSelect');
   const ttSel=document.getElementById('ttSymbol');
-  if(realmSel){
-    realmSel.innerHTML='<option value="ALL">🌐 Tüm Watchlist</option>'+CFG.watchlist.map(s=>`<option value="${s}">${s}</option>`).join('');
-  }
-  if(ttSel){
-    ttSel.innerHTML='<option value="">Sembol seç...</option>'+CFG.watchlist.map(s=>`<option value="${s}">${s}</option>`).join('');
-  }
+  if(realmSel){realmSel.innerHTML='<option value="ALL">🌐 Tüm Watchlist</option>'+CFG.watchlist.map(s=>`<option value="${s}">${s}</option>`).join('');}
+  if(ttSel){ttSel.innerHTML='<option value="">Sembol seç...</option>'+CFG.watchlist.map(s=>`<option value="${s}">${s}</option>`).join('');}
 }
 
-function selectSymbol(s){
-  document.getElementById('symbolInput').value=s;currentSym=s;
-  renderWatchlist();analyzeSymbol();
-}
+function selectSymbol(s){document.getElementById('symbolInput').value=s;currentSym=s;renderWatchlist();analyzeSymbol();}
 
 function saveInitialWatchlist(){
   const val=document.getElementById('initialWatchlist')?.value?.trim();
@@ -2888,121 +2963,1048 @@ window.addEventListener('beforeinstallprompt',e=>{
 });
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 
-// ============================================================
-// 5000 BAR PLAYBACK (YENİ)
-// ============================================================
-async function fetchOHLCVLong(sym, tf, targetBars = 5000) {
-  let rawInterval = '60m', resample = 1;
-  if (tf === '1m') { rawInterval = '1m'; resample = 1; }
-  else if (tf === '15m') { rawInterval = '15m'; resample = 1; }
-  else if (tf === '30m') { rawInterval = '30m'; resample = 1; }
-  else if (tf === '1h') { rawInterval = '60m'; resample = 1; }
-  else if (tf === '2h') { rawInterval = '60m'; resample = 2; }
-  else if (tf === '4h') { rawInterval = '60m'; resample = 4; }
-  else if (tf === '1d') { rawInterval = '1d'; resample = 1; }
-  let range = (tf === '1d') ? '20y' : '10y';
-  const url = `${workerBase()}/yahoo?symbol=${sym}&interval=${rawInterval}&range=${range}`;
-  const res = await fetch(url, { headers: { 'Accept': 'application/json' }, signal: AbortSignal.timeout(25000) });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const data = await res.json();
-  if (data.error) throw new Error(data.error);
-  const result = data.chart?.result?.[0];
-  if (!result) throw new Error('No data');
-  const ts = result.timestamp;
-  const q = result.indicators?.quote?.[0];
-  let bars = ts.map((t, i) => ({
-    t: t * 1000, o: q.open?.[i], h: q.high?.[i], l: q.low?.[i], c: q.close?.[i], v: q.volume?.[i] || 0
-  })).filter(b => b.o != null && b.h != null && b.l != null && b.c != null && isFinite(b.c) && b.c > 0);
-  if (resample > 1) bars = resampleBars(bars, resample);
-  if (bars.length < targetBars) throw new Error(`Yetersiz bar: ${bars.length} < ${targetBars}`);
-  return bars.slice(-targetBars);
-}
-function resampleBars(bars, n) {
-  const out = [];
-  for (let i = 0; i < bars.length; i += n) {
-    const chunk = bars.slice(i, i + n);
-    if (!chunk.length) continue;
-    out.push({ t: chunk[0].t, o: chunk[0].o, h: Math.max(...chunk.map(b => b.h)), l: Math.min(...chunk.map(b => b.l)), c: chunk[chunk.length-1].c, v: chunk.reduce((a,b)=>a+b.v,0) });
-  }
-  return out;
+// ---------- 12. AETHER LAB v2 FONKSİYONLARI (labState, featureDefinitions, initLabFeatures, refreshLabDashboard, labStartFullScan, labBacktestAllAlgos, labPaperExecuteConsensus, labResetPaper, labPaperToggleAuto, labUpdateFromMainAnalysis, labApplyConsensusToMain, applyLabOptimizationToMain, labFilterAlgos, labSearchAlgos, labClearComm, labToggleAlgo, labToggleAll, labExpandAlgo, labSelectAlgo, showAlgoDetailPanel, renderLabAlgoList, drawLabMiniChart, updateLabStats, labRunAlgoBacktest, labRunAlgoFullScan, updateLabParamProposals, labRunInterAlgoComm, labSendComm, computeLabConsensus, runLabAlgo, buildLabDataContext) ----------
+let labState={masterSignal:'HOLD',activeCount:0,avgScore:0,bullishCount:0,bearishCount:0,isScanning:false,paperAutoRunning:false,filterMode:'all',searchText:'',selectedAlgoId:null};
+let labEnabledFeatures={};
+let labAlgoValues={};
+let labCommLog=[];
+let labAlgoRecommendations=[];
+let labPaperState={balance:100000,initialBalance:100000,positions:[],trades:[],autoRunning:false};
+let labScanResults=[];
+let labBacktestResults=[];
+let labProposedParams=null;
+let labAutoInterval=null;
+
+const featureDefinitions=[
+  {id:"pso",name:"Particle Swarm Opt.",cat:"Swarm",color:"#00e5ff",desc:"Sürü optimizasyonu",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.5+Math.sin(d.price*0.01+d.time)*0.3+d.trend*0.2)),dir:d.trend>0.02?1:d.trend<-0.02?-1:0})},
+  {id:"aco",name:"Ant Colony Opt.",cat:"Swarm",color:"#b040ff",desc:"Karınca kolonisi",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.45+Math.cos(d.volatility*5)*0.2+d.volume*0.1)),dir:d.rsi>55?1:d.rsi<45?-1:0})},
+  {id:"abc",name:"Artificial Bee Col.",cat:"Swarm",color:"#ffd700",desc:"Arı algoritması",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.55+d.momentum*0.3+Math.sin(d.time*0.5)*0.1)),dir:d.momentum>0?1:d.momentum<0?-1:0})},
+  {id:"gwo",name:"Grey Wolf Optim.",cat:"Swarm",color:"#9e9e9e",desc:"Kurt sürüsü",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.6+Math.sin(d.rsi/100*Math.PI)*0.25)),dir:d.adx>25&&d.trend>0?1:d.adx>25&&d.trend<0?-1:0})},
+  {id:"firefly",name:"Firefly Algorithm",cat:"Swarm",color:"#ffeb3b",desc:"Ateşböceği",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.5+Math.cos(d.adx/50)*0.2+d.trend*0.15)),dir:d.trend>0.01?1:d.trend<-0.01?-1:0})},
+  {id:"bat",name:"Bat Algorithm",cat:"Swarm",color:"#78909c",desc:"Ekolokasyon",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.45+Math.abs(Math.sin(d.price*0.005))*0.3)),dir:d.rsi>60?1:d.rsi<40?-1:0})},
+  {id:"ga",name:"Genetic Algorithm",cat:"Evolutionary",color:"#e040fb",desc:"Parametre evrimi",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.65+d.trend*0.2+d.momentum*0.1)),dir:d.trend>0.02?1:d.trend<-0.02?-1:0}),proposesParam:true},
+  {id:"de",name:"Differential Evol.",cat:"Evolutionary",color:"#f06292",desc:"Vektör mutasyonu",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.6+d.momentum*0.25+Math.sin(d.volume*2)*0.1)),dir:d.momentum>0.01?1:d.momentum<-0.01?-1:0})},
+  {id:"ais",name:"Artificial Immune",cat:"Bio",color:"#4caf50",desc:"Antikor hafıza",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.5+Math.sin(d.momentum*Math.PI)*0.2+d.adx/100)),dir:d.adx>30&&d.trend>0?1:d.adx>30&&d.trend<0?-1:0})},
+  {id:"gp",name:"Genetic Programming",cat:"Evolutionary",color:"#ff7043",desc:"Gösterge sentezi",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.6+d.trend*0.3+d.rsi/200)),dir:d.rsi>58&&d.trend>0?1:d.rsi<42&&d.trend<0?-1:0})},
+  {id:"ca",name:"Cultural Algorithm",cat:"Evolutionary",color:"#ab47bc",desc:"Kültürel inanç",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.55+Math.cos(d.trend*Math.PI)*0.2)),dir:d.trend>0.015?1:d.trend<-0.015?-1:0})},
+  {id:"coevo",name:"Co-evolution",cat:"Evolutionary",color:"#26c6da",desc:"Strateji rekabeti",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.5+Math.sin(d.volatility*Math.PI*3)*0.3)),dir:d.momentum>0?1:d.momentum<0?-1:0})},
+  {id:"qpso",name:"Quantum PSO",cat:"Quantum",color:"#00e5ff",desc:"Kuantum PSO",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.7+Math.sin(d.price*0.02)*0.15)),dir:d.trend>0.01?1:d.trend<-0.01?-1:0})},
+  {id:"qba",name:"Quantum Bee Algo.",cat:"Quantum",color:"#b2ebf2",desc:"Kuantum arı",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.68+Math.cos(d.rsi/100)*0.12)),dir:d.rsi>55?1:d.rsi<45?-1:0})},
+  {id:"qwolf",name:"Quantum Wolf Swarm",cat:"Quantum",color:"#e1f5fe",desc:"Kuantum kurt",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.72+Math.sin(d.adx/100)*0.15)),dir:d.adx>28&&d.trend>0?1:d.adx>28&&d.trend<0?-1:0})},
+  {id:"qga",name:"Quantum Genetic",cat:"Quantum",color:"#e8f5e9",desc:"Kübit kromozom",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.65+d.trend*0.15+Math.random()*0.05)),dir:d.trend>0.02?1:d.trend<-0.02?-1:0})},
+  {id:"qais",name:"Quantum Immune",cat:"Quantum",color:"#f3e5f5",desc:"Kuantum bağışıklık",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.63+Math.cos(d.momentum*Math.PI)*0.2)),dir:d.momentum>0.005?1:d.momentum<-0.005?-1:0})},
+  {id:"qde",name:"Quantum Diff. Evol.",cat:"Quantum",color:"#fff3e0",desc:"Kuantum mutasyon",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.67+Math.sin(d.price*0.01)*0.15)),dir:d.trend>0.01?1:d.trend<-0.01?-1:0})},
+  {id:"bfo",name:"Bacterial Foraging",cat:"Bio",color:"#8bc34a",desc:"Bakteri kemotaksisi",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.55+d.momentum*0.25+Math.sin(d.time*0.3)*0.1)),dir:d.momentum>0.01?1:d.momentum<-0.01?-1:0})},
+  {id:"slime",name:"Slime Mold Algo.",cat:"Bio",color:"#cddc39",desc:"Sümüksü küf",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.5+Math.sin(d.volatility*5)*0.2+d.trend*0.1)),dir:d.adx>20&&d.trend>0?1:d.adx>20&&d.trend<0?-1:0})},
+  {id:"aeo",name:"Artificial Ecosystem",cat:"Bio",color:"#66bb6a",desc:"Ekosistem dengesi",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.6+Math.cos(d.trend*Math.PI)*0.15)),dir:d.rsi>52&&d.momentum>0?1:d.rsi<48&&d.momentum<0?-1:0})},
+  {id:"flock",name:"Bird Flocking",cat:"Swarm",color:"#42a5f5",desc:"Reynolds kuralları",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.58+Math.sin(d.rsi/100*Math.PI)*0.2)),dir:d.trend>0.01?1:d.trend<-0.01?-1:0})},
+  {id:"whale",name:"Whale Optimization",cat:"Swarm",color:"#1e88e5",desc:"Balina spiral",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.7+d.trend*0.15+Math.sin(d.time*0.2)*0.1)),dir:d.adx>25&&d.trend>0?1:d.adx>25&&d.trend<0?-1:0})},
+  {id:"aphid",name:"Aphid Colony",cat:"Bio",color:"#a5d6a7",desc:"Yaprak biti",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.45+Math.cos(d.price*0.005)*0.25+d.volume*0.1)),dir:d.volume>0.05?1:d.volume<-0.05?-1:0})},
+  {id:"chaosmap",name:"Chaotic Map Gen.",cat:"Chaos",color:"#ef9a9a",desc:"Kaotik harita",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.5+Math.sin(d.chaosVal*Math.PI*4)*0.3)),dir:Math.sin(d.chaosVal*Math.PI*4)>0.1?1:Math.sin(d.chaosVal*Math.PI*4)<-0.1?-1:0})},
+  {id:"fractalswarm",name:"Fractal Swarm",cat:"Chaos",color:"#ff8a80",desc:"Fraktal karar",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.62+Math.sin(d.fractal)*0.1+d.trend*0.1)),dir:d.trend>0.01?1:d.trend<-0.01?-1:0})},
+  {id:"lorenz",name:"Lorenz Attractor",cat:"Chaos",color:"#ff5252",desc:"Kelebek etkisi",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.55+Math.cos(d.lorenz)*0.2)),dir:d.momentum>0.005?1:d.momentum<-0.005?-1:0})},
+  {id:"rossler",name:"Rössler Attractor",cat:"Chaos",color:"#ff6d00",desc:"Rössler volatilite",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.6+Math.sin(d.rossler)*0.15)),dir:d.volatility<0.015?1:d.volatility>0.03?-1:0})},
+  {id:"fractalDim",name:"Fractal Dim Velocity",cat:"Chaos",color:"#ffab40",desc:"Karmaşıklık hızı",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.5+d.trend*0.2+Math.sin(d.time)*0.1)),dir:d.adx>22?d.trend>0?1:-1:0})},
+  {id:"mandelbrot",name:"Mandelbrot Signal",cat:"Chaos",color:"#ffd740",desc:"Mandelbrot sınır",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.7+Math.cos(d.mandel)*0.1)),dir:d.trend>0.02?1:d.trend<-0.02?-1:0})},
+  {id:"snn",name:"Spiking Neural Net",cat:"Neural",color:"#b9f6ca",desc:"STDP öğrenimi",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.68+Math.sin(d.spike)*0.2)),dir:d.momentum>0.008?1:d.momentum<-0.008?-1:0})},
+  {id:"legion",name:"Legion Neuron",cat:"Neural",color:"#69f0ae",desc:"Lejyon nöron",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.55+Math.cos(d.regime)*0.25)),dir:d.adx>30?d.trend>0?1:-1:0})},
+  {id:"neuromorphic",name:"Neuromorphic Memory",cat:"Neural",color:"#00e676",desc:"Nöromorfik hafıza",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.6+d.trend*0.15+Math.sin(d.time*0.4)*0.1)),dir:d.rsi>56?1:d.rsi<44?-1:0})},
+  {id:"neurotrans",name:"Neurotransmitter",cat:"Neural",color:"#1de9b6",desc:"Nörotransmitter",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.52+Math.sin(d.rsi/100*Math.PI)*0.2)),dir:d.momentum>0?1:d.momentum<0?-1:0})},
+  {id:"glutamate",name:"Glutamate/GABA",cat:"Neural",color:"#00bcd4",desc:"Nörokimyasal denge",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.65+Math.cos(d.rsi/50)*0.2)),dir:d.rsi>65?-1:d.rsi<35?1:0})},
+  {id:"fractalTime",name:"Fractal Time Comp.",cat:"Time",color:"#80cbc4",desc:"Zaman sıkıştırma",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.5+Math.sin(d.price*0.002)*0.2+d.adx/120)),dir:d.trend>0.01?1:d.trend<-0.01?-1:0})},
+  {id:"ssa",name:"Singular Spectrum",cat:"Signal",color:"#b2dfdb",desc:"Gürültü filtreleme",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.7+d.trend*0.1+Math.sin(d.time*0.1)*0.05)),dir:d.trend>0.008?1:d.trend<-0.008?-1:0})},
+  {id:"timeComp",name:"Time Compression",cat:"Time",color:"#e0f2f1",desc:"Zaman oranı",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.55+Math.cos(d.volatility*2)*0.15)),dir:d.adx>25?d.momentum>0?1:-1:0})},
+  {id:"hht",name:"Hilbert-Huang Trans.",cat:"Signal",color:"#e8eaf6",desc:"Anlık frekans",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.6+Math.sin(d.hht)*0.2)),dir:d.rsi>54?1:d.rsi<46?-1:0})},
+  {id:"bayesianSwarm",name:"Bayesian Swarm",cat:"Probabilistic",color:"#e3f2fd",desc:"Bayesçi konsensüs",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.68+d.trend*0.12+Math.sin(d.time*0.6)*0.08)),dir:d.trend>0.015?1:d.trend<-0.015?-1:0})},
+  {id:"mcmc",name:"MCMC Sampling",cat:"Probabilistic",color:"#fce4ec",desc:"Monte Carlo",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.65+Math.cos(d.mcmc)*0.1)),dir:d.adx>22&&d.trend>0?1:d.adx>22&&d.trend<0?-1:0})},
+  {id:"gpr",name:"Gaussian Process",cat:"Probabilistic",color:"#f3e5f5",desc:"Gauss süreci",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.6+Math.sin(d.uncertainty)*0.2)),dir:d.volatility<0.02&&d.trend>0?1:d.volatility<0.02&&d.trend<0?-1:0})},
+  {id:"dirichlet",name:"Dirichlet Process",cat:"Probabilistic",color:"#ede7f6",desc:"Karışım modeli",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.63+d.trend*0.15+Math.cos(d.time*0.3)*0.1)),dir:d.trend>0.012?1:d.trend<-0.012?-1:0})},
+  {id:"particleFilter",name:"Particle Filter",cat:"Probabilistic",color:"#fff8e1",desc:"Parçacık filtresi",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.7+Math.cos(d.hidden)*0.1)),dir:d.adx>28?d.trend>0?1:-1:0})},
+  {id:"persistHom",name:"Persistent Homology",cat:"Topology",color:"#f9fbe7",desc:"Topolojik boşluk",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.58+Math.sin(d.topology)*0.15)),dir:d.volatility>0.015&&d.trend>0?1:d.volatility>0.015&&d.trend<0?-1:0})},
+  {id:"morse",name:"Morse Theory",cat:"Topology",color:"#e8f5e9",desc:"Kritik noktalar",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.55+Math.cos(d.morse)*0.2)),dir:d.rsi>58?1:d.rsi<42?-1:0})},
+  {id:"riemann",name:"Riemann Curvature",cat:"Topology",color:"#e1f5fe",desc:"Piyasa eğriliği",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.6+Math.sin(d.curvature)*0.2)),dir:d.trend>0.01&&d.adx>20?1:d.trend<-0.01&&d.adx>20?-1:0})},
+  {id:"lieGroup",name:"Lie Group Invariants",cat:"Topology",color:"#fafafa",desc:"Simetri ticareti",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.62+d.momentum*0.18+Math.cos(d.time*0.4)*0.08)),dir:d.momentum>0.006?1:d.momentum<-0.006?-1:0})},
+  {id:"homotopy",name:"Homotopy Loop Space",cat:"Topology",color:"#fbe9e7",desc:"Döngü tahmini",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.64+Math.cos(d.cycle)*0.2)),dir:d.adx>24?d.trend>0?1:-1:0})},
+  {id:"chernSimons",name:"Chern-Simons Arb.",cat:"Topology",color:"#fff9c4",desc:"Topolojik arbitraj",compute:(d)=>({score:Math.min(0.99,Math.max(0.01,0.7+Math.sin(d.arbitrage)*0.1)),dir:d.volatility<0.018&&d.trend!==0?d.trend>0?1:-1:0})},
+];
+
+function buildLabDataContext(sym){
+  const bars=currentResult?.bars;
+  const closes=bars?bars.map(b=>b.c):[];
+  const n=closes.length-1;
+  const price=n>=0?closes[n]:100;
+  const ret5=n>=5?(closes[n]-closes[n-5])/closes[n-5]:0;
+  const rsiArr=bars&&n>=14?rsi(closes,14):null;
+  const rsiVal=rsiArr?(rsiArr[n]||50):50;
+  const adxVal=currentResult?.adxLast||25;
+  const trend=ret5;
+  const vols=bars?bars.slice(Math.max(0,n-20),n+1).map(b=>b.v):[1];
+  const volMean=vols.reduce((a,b)=>a+b,0)/vols.length||1;
+  const volRatio=bars?(bars[n]?.v||1)/volMean-1:0;
+  const momentumRaw=n>=3?(closes[n]-closes[n-3])/closes[n-3]:0;
+  const volat=bars?Math.sqrt(closes.slice(Math.max(0,n-10),n+1).reduce((a,b,i,arr)=>i>0?a+(b-arr[i-1])*(b-arr[i-1]):a,0)/10)/price:0.01;
+  const t=(Date.now()/10000)%(2*Math.PI);
+  return{
+    price,trend,rsi:rsiVal,adx:adxVal,volume:volRatio,momentum:momentumRaw,volatility:volat,time:t,
+    chaosVal:((price*7+t*3)%1+1)%1,fractal:Math.sin(t*1.618)*Math.cos(t*2.718),
+    lorenz:Math.sin(t*1.4)*Math.cos(t*0.9),rossler:Math.sin(t*2.1),
+    mandel:Math.sin(t*3.14)*Math.cos(t*2.72),spike:Math.sin(t*5+momentumRaw*10),
+    regime:adxVal/50,hht:Math.sin(t*2.3+rsiVal/50),mcmc:Math.cos(t*1.7+adxVal/50),
+    uncertainty:volat*5,hidden:Math.sin(t*0.8+trend*20),topology:Math.cos(t*1.2+volat*10),
+    morse:Math.sin(t*2.5),curvature:Math.cos(t*1.9+trend*15),cycle:Math.sin(t*0.7),
+    arbitrage:Math.cos(t*2.2+momentumRaw*8),sym:sym||currentSym||'XU100'
+  };
 }
 
-let playbackState = { active: false, symbol: '', tf: '', fullBars: [], currentIndex: 500, intervalId: null, speed: 500, resultCache: null };
-async function initPlayback(sym, tf) {
-  const bars = await fetchOHLCVLong(sym, tf, 5000);
-  playbackState.fullBars = bars;
-  playbackState.currentIndex = Math.min(500, bars.length - 100);
-  playbackState.symbol = sym; playbackState.tf = tf;
-  updatePlaybackUI();
-  await recomputePlaybackResult();
+function runLabAlgo(algo,dataCtx){
+  try{
+    const result=algo.compute(dataCtx);
+    const score=Math.min(0.99,Math.max(0.01,isFinite(result.score)?result.score:0.5));
+    const dir=result.dir||0;
+    if(!labAlgoValues[algo.id])labAlgoValues[algo.id]={score:0.5,dir:0,signals:[],history:[],wins:0,losses:0,trades:0};
+    const prev=labAlgoValues[algo.id].score;
+    labAlgoValues[algo.id].score=score;labAlgoValues[algo.id].dir=dir;
+    labAlgoValues[algo.id].history.push({t:Date.now(),score,dir});
+    if(labAlgoValues[algo.id].history.length>100)labAlgoValues[algo.id].history.shift();
+    if(Math.abs(score-prev)>0.1){
+      const sig={time:new Date().toLocaleTimeString('tr-TR'),sym:dataCtx.sym,score:score.toFixed(2),dir,type:dir>0?'AL':dir<0?'SAT':'HOLD'};
+      labAlgoValues[algo.id].signals.unshift(sig);
+      if(labAlgoValues[algo.id].signals.length>20)labAlgoValues[algo.id].signals.pop();
+    }
+    return{score,dir};
+  }catch(e){return{score:0.5,dir:0};}
 }
-async function recomputePlaybackResult() {
-  const slice = playbackState.fullBars.slice(0, playbackState.currentIndex + 1);
-  if (slice.length < 100) return;
-  const result = runIndicators(slice, CFG);
-  if (result) {
-    playbackState.resultCache = result;
-    currentResult = result; currentSym = playbackState.symbol; currentTF = playbackState.tf;
-    updateAllPanels(playbackState.symbol, result);
-    drawChart(playbackState.symbol, playbackState.tf, slice, result, null);
+
+function computeLabConsensus(){
+  let buyVotes=0,sellVotes=0,holdVotes=0,totalScore=0,activeCount=0,bullishCount=0,bearishCount=0;
+  featureDefinitions.forEach(f=>{
+    if(!labEnabledFeatures[f.id])return;
+    const val=labAlgoValues[f.id];if(!val)return;
+    activeCount++;totalScore+=val.score;
+    if(val.dir>0){buyVotes++;bullishCount++;}
+    else if(val.dir<0){sellVotes++;bearishCount++;}
+    else holdVotes++;
+  });
+  const avgScore=activeCount>0?totalScore/activeCount:0.5;
+  const masterSignal=buyVotes>sellVotes*1.5?'AL':sellVotes>buyVotes*1.5?'SAT':'HOLD';
+  labState.masterSignal=masterSignal;labState.activeCount=activeCount;labState.avgScore=avgScore;
+  labState.bullishCount=bullishCount;labState.bearishCount=bearishCount;
+  return{buyVotes,sellVotes,holdVotes,avgScore,masterSignal,activeCount,bullishCount,bearishCount};
+}
+
+function labSendComm(fromAlgo,toAlgo,message,score){
+  const entry={time:new Date().toLocaleTimeString('tr-TR'),from:fromAlgo,to:toAlgo,message,score:score?.toFixed(2)||'—'};
+  labCommLog.unshift(entry);if(labCommLog.length>50)labCommLog.pop();
+  const el=document.getElementById('labCommLog');
+  if(el)el.innerHTML=labCommLog.map(e=>`<div class="lab-comm-item"><span class="comm-from">${e.from}</span><span style="color:var(--muted);"> → </span><span class="comm-to">${e.to}</span>: ${e.message} <span style="color:var(--muted);float:right">${e.time}</span></div>`).join('');
+}
+
+function labRunInterAlgoComm(ctx){
+  if(labEnabledFeatures['ga']&&labAlgoValues['ga']){
+    const gaScore=labAlgoValues['ga'].score;
+    if(gaScore>0.7){
+      const newBuy=Math.min(0.85,CFG.masterBuyTh+(gaScore-0.5)*0.08);
+      const newSell=Math.max(0.15,CFG.masterSellTh-(gaScore-0.5)*0.04);
+      labProposedParams={masterBuyTh:newBuy.toFixed(3),masterSellTh:newSell.toFixed(3)};
+      labSendComm('GA','System',`Param önerisi: Buy=${newBuy.toFixed(2)}, Sell=${newSell.toFixed(2)}`,gaScore);
+      updateLabParamProposals();
+    }
+  }
+  if(labEnabledFeatures['qpso']&&labEnabledFeatures['ais']){
+    const qScore=labAlgoValues['qpso']?.score||0.5;
+    if(qScore>0.75||qScore<0.25)labSendComm('QPSO','AIS',`Olağandışı skor: ${qScore.toFixed(2)}`,qScore);
+  }
+  if(labEnabledFeatures['gwo']&&labEnabledFeatures['firefly']){
+    const wolfScore=labAlgoValues['gwo']?.score||0.5;const wolfDir=labAlgoValues['gwo']?.dir||0;
+    labSendComm('GWO','Firefly',`Alfa: ${wolfDir>0?'📈 AL':wolfDir<0?'📉 SAT':'➖ HOLD'} (${wolfScore.toFixed(2)})`,wolfScore);
+  }
+  const cons=computeLabConsensus();
+  if(cons.masterSignal!=='HOLD'){
+    const rec={time:new Date().toLocaleTimeString('tr-TR'),signal:cons.masterSignal,confidence:(cons.avgScore*100).toFixed(0),votes:cons.masterSignal==='AL'?cons.buyVotes:cons.sellVotes,total:cons.activeCount};
+    labAlgoRecommendations.unshift(rec);if(labAlgoRecommendations.length>20)labAlgoRecommendations.pop();
+  }
+  const recEl=document.getElementById('labAlgoRecommendations');
+  if(recEl&&labAlgoRecommendations.length){
+    recEl.innerHTML=labAlgoRecommendations.map(r=>`<div style="padding:5px 8px;border-bottom:1px solid rgba(30,48,80,0.3);display:flex;justify-content:space-between;font-size:11px;"><span style="color:${r.signal==='AL'?'var(--green)':r.signal==='SAT'?'var(--red)':'var(--orange)'};font-weight:700;">${r.signal}</span><span style="color:var(--text2);">${r.votes}/${r.total} oy — ${r.confidence}% güven</span><span style="color:var(--muted);font-size:10px;">${r.time}</span></div>`).join('');
   }
 }
-function playbackStep(delta) {
-  let newIdx = playbackState.currentIndex + delta;
-  if (newIdx < 100) newIdx = 100;
-  if (newIdx >= playbackState.fullBars.length - 1) newIdx = playbackState.fullBars.length - 1;
-  playbackState.currentIndex = newIdx;
-  recomputePlaybackResult();
-  updatePlaybackInfo();
+
+function updateLabParamProposals(){
+  const el=document.getElementById('labParamProposals');if(!el)return;
+  if(!labProposedParams){el.innerHTML='<div style="color:var(--muted);font-size:11px;">Henüz öneri yok.</div>';return;}
+  el.innerHTML=`<div style="background:rgba(176,64,255,0.1);border:1px solid rgba(176,64,255,0.3);border-radius:8px;padding:10px;font-size:11px;"><div style="color:var(--purple2);font-weight:700;margin-bottom:6px;">GA ÖNERİSİ:</div><div>Buy Th: <strong style="color:var(--green);">${labProposedParams.masterBuyTh}</strong></div><div>Sell Th: <strong style="color:var(--red);">${labProposedParams.masterSellTh}</strong></div></div>`;
 }
-function playbackPlay() {
-  if (playbackState.active) return;
-  playbackState.active = true;
-  playbackState.intervalId = setInterval(() => {
-    if (playbackState.currentIndex + 1 >= playbackState.fullBars.length) { playbackPause(); return; }
-    playbackState.currentIndex++;
-    recomputePlaybackResult();
-    updatePlaybackInfo();
-  }, playbackState.speed);
-  document.getElementById('playbackPlayPause').innerHTML = '⏸ Pause';
-  document.getElementById('playbackMode').innerText = 'PLAYBACK';
+
+function renderLabAlgoList(filter='all',search=''){
+  const listEl=document.getElementById('labAlgoList');if(!listEl)return;
+  let filtered=featureDefinitions.filter(f=>{
+    if(search&&!f.name.toLowerCase().includes(search.toLowerCase())&&!f.desc.toLowerCase().includes(search.toLowerCase()))return false;
+    if(filter==='bullish')return labAlgoValues[f.id]?.dir>0;
+    if(filter==='bearish')return labAlgoValues[f.id]?.dir<0;
+    if(filter==='running')return labEnabledFeatures[f.id];
+    return true;
+  });
+  listEl.innerHTML=filtered.map(f=>{
+    const isEnabled=labEnabledFeatures[f.id];
+    const val=labAlgoValues[f.id]||{score:0.5,dir:0};
+    const score=val.score;const pct=Math.round(score*100);
+    const color=score>0.62?'var(--green)':score<0.38?'var(--red)':'var(--orange)';
+    const borderClass=score>0.65?'bullish':score<0.35?'bearish':'';
+    const runClass=isEnabled?'running':'';
+    const isSelected=labState.selectedAlgoId===f.id;
+    return`<div class="lab-algo-card ${borderClass} ${runClass}" id="lab-card-${f.id}">
+      <div class="lab-algo-header" onclick="labSelectAlgo('${f.id}')">
+        <div class="lab-algo-toggle ${isEnabled?'active':''}" onclick="event.stopPropagation();labToggleAlgo('${f.id}')"></div>
+        <span class="lab-algo-name" title="${f.desc}" style="color:${f.color}">${f.name}</span>
+        <span class="lab-algo-score" style="color:${color}">${pct}%</span>
+        <button class="lab-expand-btn" onclick="event.stopPropagation();labExpandAlgo('${f.id}')">${isSelected?'▲':'▼'}</button>
+      </div>
+      <div class="lab-algo-progress"><div class="lab-algo-progress-fill" style="width:${pct}%;background:${color};"></div></div>
+      <div class="lab-algo-detail ${isSelected?'open':''}" id="lab-detail-${f.id}">
+        <div class="lab-algo-detail-inner">
+          <canvas class="lab-algo-mini-chart" id="lab-chart-${f.id}"></canvas>
+          <div class="lab-algo-stats-grid">
+            <div class="lab-algo-stat"><div class="lab-algo-stat-label">SKOR</div><div class="lab-algo-stat-val" style="color:${color}">${pct}%</div></div>
+            <div class="lab-algo-stat"><div class="lab-algo-stat-label">YÖN</div><div class="lab-algo-stat-val">${val.dir>0?'📈':val.dir<0?'📉':'➖'}</div></div>
+            <div class="lab-algo-stat"><div class="lab-algo-stat-label">KAT.</div><div class="lab-algo-stat-val" style="font-size:9px;">${f.cat}</div></div>
+            <div class="lab-algo-stat"><div class="lab-algo-stat-label">SİNYAL</div><div class="lab-algo-stat-val" style="color:${val.dir>0?'var(--green)':val.dir<0?'var(--red)':'var(--muted)'}">${val.dir>0?'AL':val.dir<0?'SAT':'HOLD'}</div></div>
+            <div class="lab-algo-stat"><div class="lab-algo-stat-label">İŞLEM</div><div class="lab-algo-stat-val">${labAlgoValues[f.id]?.trades||0}</div></div>
+            <div class="lab-algo-stat"><div class="lab-algo-stat-label">W/L</div><div class="lab-algo-stat-val">${labAlgoValues[f.id]?.wins||0}/${labAlgoValues[f.id]?.losses||0}</div></div>
+          </div>
+          <div style="font-size:9px;color:var(--muted);padding:2px 0;font-family:var(--font-ui);">SON SİNYALLER</div>
+          <div class="lab-algo-signals-list">${(labAlgoValues[f.id]?.signals||[]).slice(0,5).map(s=>`<div class="lab-algo-sig-item"><span style="color:${s.dir>0?'var(--green)':s.dir<0?'var(--red)':'var(--muted)'};">${s.type}</span><span>${s.sym}</span><span style="color:var(--muted);">${s.time}</span></div>`).join('')||'<div style="color:var(--muted);font-size:10px;padding:4px;">Sinyal yok</div>'}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  setTimeout(()=>{filtered.forEach(f=>{if(labAlgoValues[f.id]?.history?.length>2)drawLabMiniChart(f.id);});},50);
+  updateLabStats();
 }
-function playbackPause() {
-  if (playbackState.intervalId) clearInterval(playbackState.intervalId);
-  playbackState.active = false; playbackState.intervalId = null;
-  document.getElementById('playbackPlayPause').innerHTML = '▶ Play';
-  if (playbackState.currentIndex === playbackState.fullBars.length - 1) document.getElementById('playbackMode').innerText = 'SON BAR (GEÇMİŞ)';
-  else document.getElementById('playbackMode').innerText = 'DURAKLATILDI';
+
+function drawLabMiniChart(algoId){
+  const canvas=document.getElementById(`lab-chart-${algoId}`);if(!canvas)return;
+  const history=labAlgoValues[algoId]?.history||[];if(history.length<2)return;
+  const ctx=canvas.getContext('2d');
+  const w=canvas.width=canvas.offsetWidth||200;const h=canvas.height=55;
+  ctx.clearRect(0,0,w,h);
+  const scores=history.map(p=>p.score);
+  const min=Math.min(...scores,0.3),max=Math.max(...scores,0.7);
+  const range=max-min||0.1;const step=w/(scores.length-1||1);
+  ctx.beginPath();
+  scores.forEach((s,i)=>{const x=i*step;const y=h-(s-min)/range*(h-8)-4;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+  const grad=ctx.createLinearGradient(0,0,w,0);
+  grad.addColorStop(0,'rgba(0,229,255,0.3)');grad.addColorStop(1,'rgba(176,64,255,0.3)');
+  ctx.strokeStyle=grad;ctx.lineWidth=1.5;ctx.stroke();
+  const midY=h-(0.5-min)/range*(h-8)-4;
+  ctx.setLineDash([2,3]);ctx.strokeStyle='rgba(100,130,180,0.3)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(0,midY);ctx.lineTo(w,midY);ctx.stroke();ctx.setLineDash([]);
 }
-function playbackReset() { playbackPause(); playbackState.currentIndex = Math.min(500, playbackState.fullBars.length - 100); recomputePlaybackResult(); updatePlaybackInfo(); }
-function updatePlaybackInfo() {
-  const total = playbackState.fullBars.length;
-  const idx = playbackState.currentIndex;
-  document.getElementById('playbackInfo').innerHTML = `Bar: ${idx+1} / ${total} (${Math.round((idx+1)/total*100)}%)`;
+
+function labSelectAlgo(algoId){
+  const prev=labState.selectedAlgoId;labState.selectedAlgoId=algoId;
+  if(prev&&prev!==algoId){
+    const prevDetail=document.getElementById(`lab-detail-${prev}`);
+    if(prevDetail)prevDetail.classList.remove('open');
+  }
+  const detail=document.getElementById(`lab-detail-${algoId}`);
+  if(detail)detail.classList.toggle('open');
+  showAlgoDetailPanel(algoId);
 }
-function updatePlaybackUI() {
-  const speedSelect = document.getElementById('playbackSpeed');
-  if (speedSelect) speedSelect.onchange = () => { playbackState.speed = parseInt(speedSelect.value); if (playbackState.active) { playbackPause(); playbackPlay(); } };
-  document.getElementById('playbackStepBack').onclick = () => playbackStep(-1);
-  document.getElementById('playbackStepFwd').onclick = () => playbackStep(1);
-  document.getElementById('playbackPlayPause').onclick = () => playbackState.active ? playbackPause() : playbackPlay();
-  document.getElementById('playbackReset').onclick = () => playbackReset();
+
+function labExpandAlgo(algoId){labSelectAlgo(algoId);}
+
+function showAlgoDetailPanel(algoId){
+  const algo=featureDefinitions.find(f=>f.id===algoId);if(!algo)return;
+  const val=labAlgoValues[algoId]||{score:0.5,dir:0,signals:[],history:[],wins:0,losses:0,trades:0};
+  const pct=Math.round(val.score*100);
+  const color=val.score>0.62?'var(--green)':val.score<0.38?'var(--red)':'var(--orange)';
+  const titleEl=document.getElementById('labDetailTitle');
+  const contentEl=document.getElementById('labDetailContent');
+  if(titleEl)titleEl.innerHTML=`<span style="color:${algo.color};">📊 ${algo.name}</span> <span class="badge badge-purple">${algo.cat}</span>`;
+  if(contentEl){
+    contentEl.innerHTML=`<div><div style="padding:10px 14px;border-bottom:1px solid var(--border);font-size:11px;color:var(--text2);">${algo.desc}</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);">
+      <div style="background:var(--bg2);padding:10px;text-align:center;"><div style="font-size:20px;font-weight:700;color:${color};font-family:var(--font-display);">${pct}%</div><div style="font-size:9px;color:var(--muted);">SKOR</div></div>
+      <div style="background:var(--bg2);padding:10px;text-align:center;"><div style="font-size:20px;">${val.dir>0?'📈':val.dir<0?'📉':'➖'}</div><div style="font-size:9px;color:var(--muted);">YÖN</div></div>
+      <div style="background:var(--bg2);padding:10px;text-align:center;"><div style="font-size:18px;font-weight:700;color:var(--green);">${val.wins}</div><div style="font-size:9px;color:var(--muted);">KAZANÇ</div></div>
+      <div style="background:var(--bg2);padding:10px;text-align:center;"><div style="font-size:18px;font-weight:700;color:var(--red);">${val.losses}</div><div style="font-size:9px;color:var(--muted);">KAYIP</div></div>
+    </div>
+    <div style="padding:10px 14px;"><canvas id="labDetailChart" style="width:100%;height:80px;display:block;"></canvas></div>
+    <div style="padding:6px 14px;font-size:10px;color:var(--muted);font-family:var(--font-ui);border-top:1px solid var(--border);">SİNYAL GEÇMİŞİ</div>
+    <div style="max-height:120px;overflow-y:auto;">${(val.signals||[]).slice(0,10).map(s=>`<div class="lab-algo-sig-item" style="padding:4px 14px;"><span style="color:${s.dir>0?'var(--green)':s.dir<0?'var(--red)':'var(--muted)'};">${s.type}</span><span style="margin:0 8px;">${s.sym}</span><span style="color:var(--muted);">${s.time}</span><span style="float:right;color:var(--cyan);">${s.score}</span></div>`).join('')||'<div style="padding:10px 14px;color:var(--muted);font-size:11px;">Sinyal yok</div>'}</div>
+    <div style="padding:10px 14px;border-top:1px solid var(--border);display:flex;gap:8px;">
+      <button class="btn cyber" style="font-size:11px;padding:4px 10px;" onclick="labRunAlgoBacktest('${algoId}')">📊 Backtest</button>
+      <button class="btn secondary" style="font-size:11px;padding:4px 10px;" onclick="labRunAlgoFullScan('${algoId}')">🔍 Tüm Hisseler</button>
+      ${labEnabledFeatures[algoId]?`<button class="btn danger" style="font-size:11px;padding:4px 10px;" onclick="labToggleAlgo('${algoId}')">⏹ Durdur</button>`:`<button class="btn" style="font-size:11px;padding:4px 10px;" onclick="labToggleAlgo('${algoId}')">▶ Başlat</button>`}
+    </div></div>`;
+    setTimeout(()=>{
+      const c=document.getElementById('labDetailChart');
+      if(c&&val.history.length>2){
+        const ctx=c.getContext('2d');const w=c.width=c.offsetWidth||400;const h=c.height=80;
+        ctx.clearRect(0,0,w,h);
+        const scores=val.history.map(p=>p.score);
+        const min=Math.min(...scores,0.2),max=Math.max(...scores,0.8),range=max-min||0.1;
+        const step=w/(scores.length-1||1);
+        ctx.beginPath();
+        scores.forEach((s,i)=>{const x=i*step;const y=h-(s-min)/range*(h-10)-5;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+        ctx.strokeStyle=algo.color||'var(--cyan)';ctx.lineWidth=2;ctx.stroke();
+      }
+    },50);
+  }
 }
-// override analyzeSymbol
-const originalAnalyze = window.analyzeSymbol;
-window.analyzeSymbol = async function() {
-  const sym = document.getElementById('symbolInput')?.value?.trim()?.toUpperCase();
-  const tf = document.getElementById('tfSelect')?.value;
-  if (!sym) return;
-  await initPlayback(sym, tf);
-  playbackPause();
+
+function labToggleAlgo(algoId){
+  labEnabledFeatures[algoId]=!labEnabledFeatures[algoId];
+  localStorage.setItem('lab_enabled',JSON.stringify(labEnabledFeatures));
+  refreshLabDashboard();
+}
+
+function labToggleAll(enabled){
+  featureDefinitions.forEach(f=>{labEnabledFeatures[f.id]=enabled;});
+  localStorage.setItem('lab_enabled',JSON.stringify(labEnabledFeatures));
+  refreshLabDashboard();
+}
+
+function labFilterAlgos(mode){labState.filterMode=mode;renderLabAlgoList(mode,labState.searchText);}
+function labSearchAlgos(text){labState.searchText=text;renderLabAlgoList(labState.filterMode,text);}
+function labClearComm(){labCommLog=[];const el=document.getElementById('labCommLog');if(el)el.innerHTML='<div style="color:var(--muted);font-size:10px;text-align:center;padding:10px;">Temizlendi</div>';}
+
+function updateLabStats(){
+  const cons=computeLabConsensus();
+  safeSetText('labActiveCount',cons.activeCount);safeSetText('labAvgScore',Math.round(cons.avgScore*100)+'%');
+  safeSetText('labBullishCount',cons.bullishCount);safeSetText('labBearishCount',cons.bearishCount);
+  safeSetText('labVoteBuyCount',cons.buyVotes);safeSetText('labVoteHoldCount',cons.holdVotes);safeSetText('labVoteSellCount',cons.sellVotes);
+  const signalEl=document.getElementById('labMasterSignal');
+  if(signalEl){signalEl.textContent=cons.masterSignal;signalEl.className=`lab-master-signal ${cons.masterSignal}`;}
+  const total=cons.buyVotes+cons.holdVotes+cons.sellVotes||1;
+  const buyEl=document.getElementById('labVoteBuyBar'),holdEl=document.getElementById('labVoteHoldBar'),sellEl=document.getElementById('labVoteSellBar');
+  if(buyEl)buyEl.style.flex=cons.buyVotes;if(holdEl)holdEl.style.flex=Math.max(1,cons.holdVotes);if(sellEl)sellEl.style.flex=cons.sellVotes;
+  const conf=Math.round(Math.max(cons.buyVotes,cons.sellVotes)/Math.max(1,total)*100);
+  safeSetText('labConsensusDetail',`Güven: ${conf}%  |  Aktif Algo: ${cons.activeCount}`);
+}
+
+async function labStartFullScan(){
+  if(labState.isScanning){labState.isScanning=false;const btn=document.getElementById('labScanBtn');if(btn){btn.textContent='🔍 Tüm Hisseleri Tara';btn.style.background='';}return;}
+  const btn=document.getElementById('labScanBtn');if(btn){btn.textContent='⏹ DURDUR';btn.style.background='rgba(255,23,68,0.2)';}
+  labState.isScanning=true;
+  const panel=document.getElementById('labFullscanPanel');if(panel)panel.style.display='block';
+  const resultsPanel=document.getElementById('labScanResultsPanel');if(resultsPanel)resultsPanel.style.display='block';
+  labScanResults=[];
+  const allSyms=CFG.watchlist;const total=allSyms.length*LIVE_TFS.length;let done=0;
+  for(const sym of allSyms){
+    if(!labState.isScanning)break;
+    for(const tf of LIVE_TFS){
+      if(!labState.isScanning)break;
+      try{
+        safeSetText('labScanStatus',`${sym}(${tf})`);
+        safeSetText('labScanDetail',`Taranıyor: ${sym} — ${tf} [${done+1}/${total}]`);
+        safeSetText('labScanPct',Math.round(done/total*100)+'%');
+        const fill=document.getElementById('labScanFill');if(fill)fill.style.width=Math.round(done/total*100)+'%';
+        const dataCtx=buildLabDataContext(sym);
+        const algoResults=[];
+        featureDefinitions.forEach(f=>{
+          if(!labEnabledFeatures[f.id])return;
+          const r=runLabAlgo(f,dataCtx);algoResults.push({algoId:f.id,name:f.name,score:r.score,dir:r.dir});
+        });
+        const buyCount=algoResults.filter(r=>r.dir>0).length;
+        const sellCount=algoResults.filter(r=>r.dir<0).length;
+        const avgScore=algoResults.length?algoResults.reduce((a,b)=>a+b.score,0)/algoResults.length:0.5;
+        const signal=buyCount>sellCount*1.5?'AL':sellCount>buyCount*1.5?'SAT':'HOLD';
+        const bars=currentResult?.bars;
+        const price=bars?bars[bars.length-1].c:0;
+        labScanResults.push({sym,tf,signal,avgScore,buyCount,sellCount,price:price.toFixed(2),algoCount:algoResults.length});
+        const liveEl=document.getElementById('labScanLiveResults');
+        if(liveEl)liveEl.innerHTML=labScanResults.slice(-5).reverse().map(r=>`<div class="lab-scan-result-item"><strong style="color:var(--cyan);">${r.sym}</strong><span style="color:var(--muted);">${r.tf}</span><span style="color:${r.signal==='AL'?'var(--green)':r.signal==='SAT'?'var(--red)':'var(--orange)'};font-weight:700;">${r.signal}</span><span style="color:var(--gold);">${(r.avgScore*100).toFixed(0)}%</span></div>`).join('');
+      }catch(e){}
+      done++;await new Promise(r=>setTimeout(r,300));
+    }
+  }
+  labState.isScanning=false;
+  if(btn){btn.textContent='🔍 Tüm Hisseleri Tara';btn.style.background='';}
+  const fill=document.getElementById('labScanFill');if(fill)fill.style.width='100%';
+  safeSetText('labScanStatus','✅ Tamamlandı');
+  renderLabScanResults();showToast('🔍 LAB Tarama',`Tamamlandı — ${labScanResults.length} sembol`,'ml');
+}
+
+function renderLabScanResults(){
+  const resultsEl=document.getElementById('labScanResults');const countEl=document.getElementById('labScanResultCount');if(!resultsEl)return;
+  const sorted=[...labScanResults].sort((a,b)=>b.avgScore-a.avgScore);
+  if(countEl)countEl.textContent=sorted.length+' sonuç';
+  resultsEl.innerHTML=sorted.map(r=>`<div class="lab-scan-result-item"><strong style="color:var(--cyan);">${r.sym}</strong><span class="badge badge-blue">${r.tf}</span><span style="color:${r.signal==='AL'?'var(--green)':r.signal==='SAT'?'var(--red)':'var(--orange)'};font-weight:700;margin:0 6px;">${r.signal}</span><span style="color:var(--text2);font-size:10px;">${r.buyCount}↑/${r.sellCount}↓</span><span style="color:var(--gold);float:right;">${(r.avgScore*100).toFixed(0)}%</span></div>`).join('');
+}
+
+async function labRunAlgoBacktest(algoId){
+  const algo=featureDefinitions.find(f=>f.id===algoId);if(!algo)return;
+  const bars=currentResult?.bars;if(!bars){showToast('LAB Backtest','Önce analiz yapın','info');return;}
+  showToast(`${algo.name}`,'Backtest başlatıldı...','ml');
+  let correct=0,total=0,pnlSum=0,wins=0,losses=0;
+  const step=Math.max(1,Math.floor(bars.length/40));
+  for(let i=30;i<bars.length-3;i+=step){
+    const ctx=buildLabDataContext(currentSym);const r=runLabAlgo(algo,ctx);
+    const actual=bars[Math.min(i+2,bars.length-1)].c-bars[i].c;
+    if(r.dir!==0){const hit=(r.dir>0&&actual>0)||(r.dir<0&&actual<0);if(hit){correct++;wins++;pnlSum+=Math.abs(actual/bars[i].c*100);}else{losses++;pnlSum-=Math.abs(actual/bars[i].c*100)*0.5;}total++;}
+  }
+  if(labAlgoValues[algoId]){labAlgoValues[algoId].wins=wins;labAlgoValues[algoId].losses=losses;labAlgoValues[algoId].trades=total;}
+  const acc=total>0?Math.round(correct/total*100):0;
+  showToast(`${algo.name} Backtest`,`Doğruluk: ${acc}% | PnL: ${pnlSum.toFixed(1)}%`,'ml');
+  renderLabAlgoList(labState.filterMode,labState.searchText);
+}
+
+async function labBacktestAllAlgos(){
+  const bars=currentResult?.bars;if(!bars){showToast('LAB Backtest','Önce analiz yapın','info');return;}
+  showToast('LAB Backtest','Tüm algolar test ediliyor...','ml');
+  const panel=document.getElementById('labBacktestAllPanel');if(panel)panel.style.display='block';
+  const resultsEl=document.getElementById('labBacktestResults');if(!resultsEl)return;
+  labBacktestResults=[];
+  for(const algo of featureDefinitions){
+    if(!labEnabledFeatures[algo.id])continue;
+    let correct=0,total=0,pnlSum=0;
+    const step=Math.max(1,Math.floor(bars.length/30));
+    for(let i=30;i<bars.length-3;i+=step){
+      const ctx=buildLabDataContext(currentSym);const r=runLabAlgo(algo,ctx);
+      const actual=bars[Math.min(i+2,bars.length-1)].c-bars[i].c;
+      if(r.dir!==0){if((r.dir>0&&actual>0)||(r.dir<0&&actual<0)){correct++;pnlSum+=Math.abs(actual/bars[i].c*100);}else pnlSum-=Math.abs(actual/bars[i].c*100)*0.5;total++;}
+    }
+    const acc=total>0?Math.round(correct/total*100):0;
+    if(labAlgoValues[algo.id]){labAlgoValues[algo.id].wins=correct;labAlgoValues[algo.id].losses=total-correct;labAlgoValues[algo.id].trades=total;}
+    labBacktestResults.push({id:algo.id,name:algo.name,acc,pnl:pnlSum.toFixed(1),total,color:algo.color});
+  }
+  labBacktestResults.sort((a,b)=>b.acc-a.acc);
+  const avg=labBacktestResults.length?Math.round(labBacktestResults.reduce((a,b)=>a+b.acc,0)/labBacktestResults.length):0;
+  const badgeEl=document.getElementById('labBacktestSummaryBadge');if(badgeEl)badgeEl.textContent=`Ort. ${avg}% — ${labBacktestResults.length} algo`;
+  resultsEl.innerHTML=labBacktestResults.map(r=>`<div class="lab-backtest-result-row"><span style="color:${r.color};font-weight:700;">${r.name}</span><span style="color:${r.acc>=60?'var(--green)':r.acc>=45?'var(--orange)':'var(--red)'};">${r.acc}%</span><span class="${parseFloat(r.pnl)>=0?'price-up':'price-dn'}">${r.pnl}%</span><span style="color:var(--muted);font-size:10px;">${r.total} test</span></div>`).join('');
+  showToast('LAB Backtest',`Tamamlandı — ${labBacktestResults.length} algo, Ort. ${avg}%`,'ml');
+}
+
+async function labRunAlgoFullScan(algoId){
+  const algo=featureDefinitions.find(f=>f.id===algoId);if(!algo)return;
+  showToast(`${algo.name}`,'Tüm hisseler taranıyor...','ml');
+  const results=[];
+  for(const sym of CFG.watchlist){
+    try{const ctx=buildLabDataContext(sym);const r=runLabAlgo(algo,ctx);results.push({sym,score:r.score,dir:r.dir,signal:r.dir>0?'AL':r.dir<0?'SAT':'HOLD'});}catch(e){}
+  }
+  results.sort((a,b)=>Math.abs(b.score-0.5)-Math.abs(a.score-0.5));
+  const topBuy=results.filter(r=>r.dir>0).slice(0,5);const topSell=results.filter(r=>r.dir<0).slice(0,3);
+  showToast(`${algo.name} Tarama`,`🟢 AL: ${topBuy.map(r=>r.sym).join(',')} | 🔴 SAT: ${topSell.map(r=>r.sym).join(',')||'—'}`,'ml');
+}
+
+function labPaperToggleAuto(){
+  labPaperState.autoRunning=!labPaperState.autoRunning;
+  const btn=document.getElementById('labPaperAutoBtn');
+  if(btn)btn.textContent=labPaperState.autoRunning?'⏹ Otomatik Durdur':'▶ Otomatik AL/SAT';
+  if(labPaperState.autoRunning){if(!labAutoInterval)labAutoInterval=setInterval(labPaperAutoTick,15000);showToast('Paper Trading','Otomatik AL/SAT başlatıldı','info');}
+  else{if(labAutoInterval){clearInterval(labAutoInterval);labAutoInterval=null;}showToast('Paper Trading','Durduruldu','info');}
+}
+
+function labPaperAutoTick(){
+  if(!currentResult||!currentSym)return;
+  const cons=computeLabConsensus();const lastPrice=currentResult.closes[currentResult.closes.length-1];const sym=currentSym;
+  const existsPos=labPaperState.positions.find(p=>p.sym===sym);
+  if(cons.masterSignal==='AL'&&!existsPos&&labPaperState.balance>1000){
+    const size=Math.min(2000,labPaperState.balance*0.1);const qty=size/lastPrice;
+    labPaperState.positions.push({sym,entry:lastPrice,qty,size,time:Date.now(),algoId:'consensus',dir:'BUY'});
+    labPaperState.balance-=size;showToast('📄 Paper AL',`${sym} @ ${lastPrice.toFixed(2)}`,'buy');
+    labSendComm('PaperTrader','Consensus',`AL: ${sym} @ ${lastPrice.toFixed(2)}`,cons.avgScore);
+  }else if((cons.masterSignal==='SAT'||cons.avgScore<0.35)&&existsPos){
+    const pnl=(lastPrice-existsPos.entry)/existsPos.entry*existsPos.size;const exitVal=existsPos.size+pnl;
+    labPaperState.balance+=exitVal;
+    labPaperState.trades.push({sym,entry:existsPos.entry,exit:lastPrice,pnl,side:'SELL',time:Date.now(),algoId:'consensus'});
+    labPaperState.positions=labPaperState.positions.filter(p=>p!==existsPos);
+    showToast('📄 Paper SAT',`${sym} PnL: ${pnl>=0?'+':''}${pnl.toFixed(0)}TL`,pnl>=0?'buy':'sell');
+  }
+  updatePaperV2UI();
+}
+
+function labPaperExecuteConsensus(){if(!currentResult){showToast('Paper','Önce analiz yapın','info');return;}labPaperAutoTick();}
+
+function labResetPaper(){
+  labPaperState={balance:100000,initialBalance:100000,positions:[],trades:[],autoRunning:false};
+  if(labAutoInterval){clearInterval(labAutoInterval);labAutoInterval=null;}
+  const btn=document.getElementById('labPaperAutoBtn');if(btn)btn.textContent='▶ Otomatik AL/SAT';
+  updatePaperV2UI();showToast('Paper','Sıfırlandı — 100,000 TL','info');
+}
+
+function updatePaperV2UI(){
+  let openPnL=0;
+  labPaperState.positions.forEach(pos=>{const lp=liveSymbolPrices[pos.sym]||pos.entry;openPnL+=(lp-pos.entry)/pos.entry*pos.size;});
+  const closedPnL=labPaperState.trades.reduce((a,t)=>a+t.pnl,0);
+  const totalPnL=openPnL+closedPnL;const pnlPct=(totalPnL/labPaperState.initialBalance*100).toFixed(2);
+  const wins=labPaperState.trades.filter(t=>t.pnl>0).length;
+  const winRate=labPaperState.trades.length?Math.round(wins/labPaperState.trades.length*100):0;
+  safeSetText('paperV2Balance',(labPaperState.balance+openPnL).toFixed(0));
+  const pnlEl=document.getElementById('paperV2PnL');
+  if(pnlEl){pnlEl.textContent=(totalPnL>=0?'+':'')+pnlPct+'%';pnlEl.className='paper-v2-stat-val '+(totalPnL>=0?'price-up':'price-dn');}
+  safeSetText('paperV2WinRate',winRate+'%');safeSetText('paperV2OpenCount',labPaperState.positions.length);
+  const posEl=document.getElementById('paperV2Positions');
+  if(posEl)posEl.innerHTML=labPaperState.positions.length?labPaperState.positions.map(p=>{const lp=liveSymbolPrices[p.sym]||p.entry;const pnl=(lp-p.entry)/p.entry*p.size;return`<div class="paper-v2-pos-item"><strong>${p.sym}</strong><span style="color:var(--muted);">${p.entry.toFixed(2)}→${lp.toFixed(2)}</span><span class="${pnl>=0?'price-up':'price-dn'}">${pnl>=0?'+':''}${pnl.toFixed(0)}TL</span></div>`;}).join(''):'<div style="font-size:10px;color:var(--muted);padding:6px;">Açık pozisyon yok</div>';
+  const tradeEl=document.getElementById('paperV2Trades');
+  if(tradeEl)tradeEl.innerHTML=labPaperState.trades.slice(-8).reverse().map(t=>`<div class="paper-v2-trade-item"><span style="color:var(--cyan);">${t.sym}</span><span class="${t.pnl>=0?'price-up':'price-dn'}">${t.pnl>=0?'+':''}${t.pnl.toFixed(0)}TL</span><span style="color:var(--muted);">${new Date(t.time).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})}</span></div>`).join('')||'<div style="font-size:10px;color:var(--muted);padding:6px;">Henüz işlem yok</div>';
+}
+
+function labUpdateFromMainAnalysis(sym,result,mlResult){
+  if(!sym||!result)return;
+  const dataCtx=buildLabDataContext(sym);
+  featureDefinitions.forEach(algo=>{if(labEnabledFeatures[algo.id])runLabAlgo(algo,dataCtx);});
+  computeLabConsensus();labRunInterAlgoComm(dataCtx);
+  if(activeTab===7){renderLabAlgoList(labState.filterMode,labState.searchText);updatePaperV2UI();}
+  if(labPaperState.autoRunning)labPaperAutoTick();
+}
+
+function labApplyConsensusToMain(){
+  const cons=computeLabConsensus();
+  if(cons.masterSignal==='HOLD'){showToast('LAB→Ana','Konsensüs HOLD — işlem gerekmez','info');return;}
+  showToast('LAB→Ana',`Konsensüs ${cons.masterSignal} ana sisteme yönlendirildi`,'ml');
+  labSendComm('LAB','MainSystem',`Konsensüs ${cons.masterSignal} yönlendirildi`,cons.avgScore);
+}
+
+function applyLabOptimizationToMain(){
+  if(!labProposedParams){alert('Henüz öneri yok.');return;}
+  if(confirm(`Lab parametrelerini uygula?\nBuy=${labProposedParams.masterBuyTh}, Sell=${labProposedParams.masterSellTh}`)){
+    CFG.masterBuyTh=parseFloat(labProposedParams.masterBuyTh);CFG.masterSellTh=parseFloat(labProposedParams.masterSellTh);
+    saveLocal('masterai_cfg',CFG);showToast('Parametre Güncellendi','Lab optimizasyonu uygulandı','info');
+    if(currentSym)analyzeSymbol();
+  }
+}
+
+function refreshLabDashboard(){
+  const dataCtx=buildLabDataContext(currentSym||'XU100');
+  featureDefinitions.forEach(algo=>{if(labEnabledFeatures[algo.id])runLabAlgo(algo,dataCtx);});
+  renderLabAlgoList(labState.filterMode,labState.searchText);
+  computeLabConsensus();updateLabStats();updatePaperV2UI();updateLabParamProposals();
+}
+
+function initLabFeatures(){
+  const saved=localStorage.getItem('lab_enabled');
+  if(saved){try{labEnabledFeatures=JSON.parse(saved);}catch(e){labEnabledFeatures={};}}
+  if(!Object.keys(labEnabledFeatures).length){
+    featureDefinitions.forEach(f=>{labEnabledFeatures[f.id]=true;});
+    localStorage.setItem('lab_enabled',JSON.stringify(labEnabledFeatures));
+  }
+  featureDefinitions.forEach(f=>{if(!labAlgoValues[f.id])labAlgoValues[f.id]={score:0.5,dir:0,signals:[],history:[],wins:0,losses:0,trades:0};});
+  refreshLabDashboard();
+  setInterval(()=>{if(activeTab===7)refreshLabDashboard();},5000);
+}
+
+// ---------- 13. REALM (PAPER TRADING v3) FONKSİYONLARI ----------
+let realmState = {
+  isRunning: false,
+  agents: [],
+  agentCount: 500,
+  universeCount: 16,
+  balance: 100000,
+  initialBalance: 100000,
+  infiniteCapital: true,
+  positions: [],
+  trades: [],
+  generation: 0,
+  aliveAgents: 0,
+  godAgents: 0,
+  extinctions: 0,
+  mutationCount: 0,
+  collectiveSignal: 'HOLD',
+  omegaPoint: 0,
+  singularityPct: 0,
+  consciousness: 0,
+  morpho: 0,
+  rdi: 0,
+  karma: 0,
+  cycles: 0,
+  equityHistory: [],
+  commLog: [],
+  universes: [],
+  ttScenarios: [],
+  alliances: [],
+  autoInterval: null,
+  evolutionInterval: null,
+  animInterval: null,
 };
 
-// ============================================================
-// 500 AJAN DEEP ANALYSIS (YENİ)
-// ============================================================
+const AGENT_ARCHETYPES = [
+  {type:'quantum',color:'#00e5ff',symbol:'Q',buyThresh:0.65,stopMult:8},
+  {type:'momentum',color:'#00e676',symbol:'M',buyThresh:0.70,stopMult:7},
+  {type:'contrarian',color:'#ff6d00',symbol:'C',buyThresh:0.75,stopMult:9},
+  {type:'fractal',color:'#b040ff',symbol:'F',buyThresh:0.68,stopMult:8.5},
+  {type:'chaos',color:'#ff1744',symbol:'X',buyThresh:0.72,stopMult:7.5},
+  {type:'neural',color:'#ffd700',symbol:'N',buyThresh:0.67,stopMult:8},
+  {type:'swarm',color:'#e040fb',symbol:'S',buyThresh:0.73,stopMult:9.5},
+  {type:'omega',color:'#ffffff',symbol:'Ω',buyThresh:0.60,stopMult:10},
+];
+
+function createAgent(id, archetype) {
+  return {
+    id, archetype: archetype || AGENT_ARCHETYPES[id % AGENT_ARCHETYPES.length],
+    status: 'alive', fitness: 0.5, pnl: 0, trades: 0, wins: 0,
+    memory: [], genes: { aggression: 0.3 + Math.random() * 0.7, patience: 0.2 + Math.random() * 0.8, intuition: 0.1 + Math.random() * 0.9, socialInfluence: 0.1 + Math.random() * 0.5 },
+    age: 0, alliances: [], lastSignal: 'HOLD', consciousness: Math.random(),
+  };
+}
+
+function initAgents(count) {
+  realmState.agents = [];
+  for (let i = 0; i < count; i++) realmState.agents.push(createAgent(i));
+  realmState.aliveAgents = count;
+  realmState.godAgents = 0;
+}
+
+function agentDecide(agent, marketData) {
+  const { price, trend, rsi, adx, momentum, volatility } = marketData;
+  const g = agent.genes;
+  let score = 0;
+  score += trend * g.aggression * 2;
+  score += (rsi - 50) / 100 * g.intuition;
+  score += momentum * g.patience * 3;
+  score += adx / 100 * g.aggression;
+  score += (agent.consciousness - 0.5) * 0.2;
+  if (agent.alliances.length > 0) {
+    const allyAvg = agent.alliances.slice(0, 3).reduce((sum, allyId) => {
+      const ally = realmState.agents[allyId];
+      return sum + (ally ? (ally.lastSignal === 'BUY' ? 1 : ally.lastSignal === 'SELL' ? -1 : 0) : 0);
+    }, 0) / Math.max(1, agent.alliances.length);
+    score += allyAvg * g.socialInfluence;
+  }
+  const normalizedScore = 1 / (1 + Math.exp(-score * 3));
+  const threshold = agent.archetype.buyThresh;
+  const signal = normalizedScore > threshold ? 'BUY' : normalizedScore < (1 - threshold) ? 'SELL' : 'HOLD';
+  agent.lastSignal = signal;
+  return { signal, score: normalizedScore };
+}
+
+function runEvolution() {
+  if (realmState.agents.length === 0) return;
+  const alive = realmState.agents.filter(a => a.status !== 'dead');
+  if (alive.length === 0) return;
+  alive.sort((a, b) => b.fitness - a.fitness);
+  const godCount = Math.max(1, Math.floor(alive.length * 0.01));
+  alive.slice(0, godCount).forEach(a => { if (a.status !== 'god') { a.status = 'god'; realmState.godAgents++; } });
+  alive.slice(godCount, Math.floor(alive.length * 0.1)).forEach(a => { if (a.status === 'alive') a.status = 'elite'; });
+  const extinctSlice = alive.slice(Math.floor(alive.length * 0.8));
+  extinctSlice.forEach(a => { if (a.status === 'alive' && Math.random() < 0.3) { a.status = 'dead'; realmState.extinctions++; } });
+  const parents = alive.slice(0, Math.floor(alive.length * 0.2));
+  const deadSlots = realmState.agents.filter(a => a.status === 'dead').slice(0, parents.length);
+  parents.forEach((parent, i) => {
+    if (i < deadSlots.length) {
+      const child = createAgent(deadSlots[i].id);
+      child.genes = {
+        aggression: Math.max(0, Math.min(1, parent.genes.aggression + (Math.random() - 0.5) * 0.1)),
+        patience: Math.max(0, Math.min(1, parent.genes.patience + (Math.random() - 0.5) * 0.1)),
+        intuition: Math.max(0, Math.min(1, parent.genes.intuition + (Math.random() - 0.5) * 0.1)),
+        socialInfluence: Math.max(0, Math.min(1, parent.genes.socialInfluence + (Math.random() - 0.5) * 0.05)),
+      };
+      realmState.agents[deadSlots[i].id] = child;
+      realmState.mutationCount++;
+    }
+  });
+  if (Math.random() < 0.3) {
+    const elites = alive.filter(a => a.status === 'elite' || a.status === 'god').slice(0, 10);
+    if (elites.length >= 2) {
+      const a1 = elites[Math.floor(Math.random() * elites.length)];
+      const a2 = elites[Math.floor(Math.random() * elites.length)];
+      if (a1 !== a2 && !a1.alliances.includes(a2.id)) {
+        a1.alliances.push(a2.id);
+        a2.alliances.push(a1.id);
+        if (a1.alliances.length > 5) a1.alliances.shift();
+        if (a2.alliances.length > 5) a2.alliances.shift();
+      }
+    }
+  }
+  realmState.generation++;
+  realmState.aliveAgents = realmState.agents.filter(a => a.status !== 'dead').length;
+  realmState.godAgents = realmState.agents.filter(a => a.status === 'god').length;
+  realmState.omegaPoint = Math.min(1, realmState.omegaPoint + 0.002 * realmState.godAgents);
+  realmState.singularityPct = Math.min(100, realmState.singularityPct + 0.1 * realmState.generation / 100);
+  realmState.consciousness = Math.min(100, (realmState.aliveAgents / realmState.agents.length) * 100);
+  realmState.morpho = Math.min(100, (realmState.mutationCount / Math.max(1, realmState.agents.length)) * 100);
+  realmState.rdi = Math.min(100, (realmState.extinctions / Math.max(1, realmState.agents.length)) * 200);
+  realmState.karma = realmState.godAgents * 10 - realmState.extinctions * 2;
+  realmState.cycles++;
+  updateRealmUI();
+}
+
+function computeCollectiveSignal(marketData) {
+  if (realmState.agents.length === 0) return 'HOLD';
+  let buyVotes = 0, sellVotes = 0, holdVotes = 0;
+  const alive = realmState.agents.filter(a => a.status !== 'dead');
+  if (alive.length === 0) return 'HOLD';
+  alive.forEach(agent => {
+    const { signal } = agentDecide(agent, marketData);
+    if (signal === 'BUY') buyVotes++;
+    else if (signal === 'SELL') sellVotes++;
+    else holdVotes++;
+    const correct = (signal === 'BUY' && marketData.trend > 0) || (signal === 'SELL' && marketData.trend < 0);
+    if (correct) { agent.fitness = Math.min(1, agent.fitness + 0.01); agent.wins++; }
+    else { agent.fitness = Math.max(0, agent.fitness - 0.005); }
+    agent.age++;
+  });
+  const total = alive.length;
+  const signal = buyVotes / total > 0.55 ? 'BUY' : sellVotes / total > 0.55 ? 'SELL' : 'HOLD';
+  realmState.collectiveSignal = signal;
+  safeSetText('realmBuyVotes', buyVotes);
+  safeSetText('realmHoldVotes', holdVotes);
+  safeSetText('realmSellVotes', sellVotes);
+  const buyEl = document.getElementById('realmBuyBar');
+  const holdEl = document.getElementById('realmHoldBar');
+  const sellEl = document.getElementById('realmSellBar');
+  if (buyEl) buyEl.style.flex = buyVotes;
+  if (holdEl) holdEl.style.flex = Math.max(1, holdVotes);
+  if (sellEl) sellEl.style.flex = sellVotes;
+  const csEl = document.getElementById('realmCollectiveSignal');
+  if (csEl) { csEl.textContent = signal === 'BUY' ? 'AL' : signal === 'SELL' ? 'SAT' : 'HOLD'; csEl.className = `collective-signal-big ${signal}`; }
+  const conf = Math.round(Math.max(buyVotes, sellVotes) / total * 100);
+  safeSetText('realmConsensusConf', `Güven: ${conf}% | Nesil: ${realmState.generation}`);
+  return signal;
+}
+
+function runParallelUniverses(bars) {
+  if (!bars || bars.length < 30) return [];
+  const universeCount = parseInt(document.getElementById('realmUniverseCount')?.value || '16');
+  const universes = [];
+  const lastPrice = bars[bars.length - 1].c;
+  const atrVal = atr(bars, 14).filter(Boolean).pop() || lastPrice * 0.01;
+  for (let u = 0; u < universeCount; u++) {
+    const drift = (u - universeCount / 2) / universeCount;
+    const volatFactor = 0.5 + Math.random() * 1.5;
+    let price = lastPrice;
+    const pricePath = [price];
+    for (let step = 0; step < 20; step++) {
+      const shock = (Math.random() - 0.5 + drift * 0.3) * atrVal * volatFactor;
+      price = Math.max(price * 0.5, price + shock);
+      pricePath.push(price);
+    }
+    const finalPrice = pricePath[pricePath.length - 1];
+    const pnl = (finalPrice - lastPrice) / lastPrice * 100;
+    const probability = Math.exp(-Math.abs(drift) * 2) / universeCount * 100;
+    universes.push({ id: u + 1, pnl: pnl.toFixed(2), probability: probability.toFixed(1), finalPrice: finalPrice.toFixed(2), direction: pnl > 0 ? 'bull' : 'bear', pricePath, label: `Evren #${u + 1}`, confidence: (0.3 + Math.random() * 0.7).toFixed(2) });
+  }
+  universes.sort((a, b) => parseFloat(b.probability) - parseFloat(a.probability));
+  realmState.universes = universes;
+  renderUniverseGrid(universes);
+  const bestUni = universes[0];
+  const expectedPnL = universes.reduce((sum, u) => sum + parseFloat(u.pnl) * parseFloat(u.probability) / 100, 0);
+  safeSetText('realmBestUniverse', `#${bestUni.id} (${bestUni.probability}% olasılık, ${bestUni.pnl}% PnL)`);
+  safeSetText('realmExpectedPnL', `${expectedPnL >= 0 ? '+' : ''}${expectedPnL.toFixed(2)}%`);
+  return universes;
+}
+
+function renderUniverseGrid(universes) {
+  const grid = document.getElementById('realmUniverseGrid'); if (!grid) return;
+  grid.innerHTML = universes.slice(0, 16).map((u, i) => {
+    const pnlFloat = parseFloat(u.pnl);
+    const color = pnlFloat > 2 ? 'var(--green)' : pnlFloat < -2 ? 'var(--red)' : 'var(--orange)';
+    const cls = pnlFloat > 0 ? 'bullish-uni' : pnlFloat < 0 ? 'bearish-uni' : '';
+    const isActive = i === 0 ? 'active-universe' : '';
+    return `<div class="universe-card ${cls} ${isActive}">
+      <div class="universe-id">EVREN #${u.id}</div>
+      <div class="universe-pnl" style="color:${color}">${pnlFloat >= 0 ? '+' : ''}${u.pnl}%</div>
+      <div class="universe-prob">Olasılık: ${u.probability}%</div>
+      <div style="font-size:9px;color:var(--muted);">Hedef: ${u.finalPrice}</div>
+      <canvas class="universe-mini-chart" id="uni-chart-${u.id}"></canvas>
+    </div>`;
+  }).join('');
+  setTimeout(() => {
+    universes.slice(0, 16).forEach(u => {
+      const c = document.getElementById(`uni-chart-${u.id}`); if (!c) return;
+      const ctx = c.getContext('2d'); const w = c.width = c.offsetWidth || 100; const h = c.height = 30;
+      ctx.clearRect(0, 0, w, h);
+      const path = u.pricePath; if (path.length < 2) return;
+      const min = Math.min(...path), max = Math.max(...path), range = max - min || 1;
+      const step = w / (path.length - 1);
+      ctx.beginPath();
+      path.forEach((p, i) => { const x = i * step; const y = h - (p - min) / range * h; i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); });
+      ctx.strokeStyle = parseFloat(u.pnl) >= 0 ? 'rgba(0,230,118,0.8)' : 'rgba(255,23,68,0.8)';
+      ctx.lineWidth = 1.5; ctx.stroke();
+    });
+  }, 50);
+}
+
+async function realmRunTimeTravel() {
+  const sym = document.getElementById('ttSymbol')?.value;
+  const capital = parseFloat(document.getElementById('ttCapital')?.value || '100000');
+  if (!sym) { showToast('Zaman Yolculuğu', 'Sembol seçin', 'info'); return; }
+  showToast('⏳ Zaman Yolculuğu', `${sym} simüle ediliyor...`, 'ml');
+  const scenarios = [];
+  const startOffsets = [30, 90, 180, 365, 540, 730];
+  const labels = ['1 Ay Önce', '3 Ay Önce', '6 Ay Önce', '1 Yıl Önce', '1.5 Yıl Önce', '2 Yıl Önce'];
+  try {
+    const bars = currentResult?.bars || (await fetchOHLCV(sym, '1d').catch(() => null));
+    if (!bars || bars.length < 30) { showToast('Zaman Yolculuğu', 'Veri yetersiz', 'info'); return; }
+    startOffsets.forEach((offset, i) => {
+      const startIdx = Math.max(0, bars.length - offset);
+      const slice = bars.slice(startIdx);
+      if (slice.length < 5) return;
+      const startPrice = slice[0].c;
+      const endPrice = slice[slice.length - 1].c;
+      const pnl = (endPrice - startPrice) / startPrice * 100;
+      const sliceResult = runIndicators(slice, CFG);
+      const tradePnL = sliceResult ? sliceResult.master.masterPnL : pnl;
+      const finalCapital = capital * (1 + tradePnL / 100);
+      scenarios.push({ label: labels[i], startDate: new Date(slice[0].t).toLocaleDateString('tr-TR'), pnl: pnl.toFixed(2), tradePnL: tradePnL.toFixed(2), finalCapital: finalCapital.toFixed(0), startPrice: startPrice.toFixed(2), endPrice: endPrice.toFixed(2) });
+    });
+  } catch (e) { console.warn('Time travel error:', e); }
+  realmState.ttScenarios = scenarios;
+  const container = document.getElementById('realmTTScenarios'); if (!container) return;
+  container.innerHTML = scenarios.map(s => {
+    const pnlF = parseFloat(s.tradePnL);
+    return `<div class="tt-scenario ${Math.abs(pnlF) > 5 ? (pnlF > 0 ? 'active-scenario' : '') : ''}">
+      <div class="tt-date">${s.label}</div>
+      <div class="tt-pnl" style="color:${pnlF >= 0 ? 'var(--green)' : 'var(--red)'}">${pnlF >= 0 ? '+' : ''}${s.tradePnL}%</div>
+      <div class="tt-label">${s.startDate} başlasaydı</div>
+      <div style="font-size:9px;color:var(--muted);">${parseFloat(s.finalCapital).toLocaleString()} TL</div>
+    </div>`;
+  }).join('');
+  const sorted = [...scenarios].sort((a, b) => parseFloat(b.tradePnL) - parseFloat(a.tradePnL));
+  if (sorted.length > 0) {
+    safeSetText('ttBestStart', `${sorted[0].label} (+${sorted[0].tradePnL}%)`);
+    safeSetText('ttWorstStart', `${sorted[sorted.length - 1].label} (${sorted[sorted.length - 1].tradePnL}%)`);
+  }
+}
+
+function updateRealmUI() {
+  if (activeTab !== 8) return;
+  const totalPnL = realmState.trades.reduce((s, t) => s + (t.pnl || 0), 0);
+  const pnlPct = (totalPnL / realmState.initialBalance * 100).toFixed(2);
+  const wins = realmState.trades.filter(t => t.pnl > 0).length;
+  const winRate = realmState.trades.length ? Math.round(wins / realmState.trades.length * 100) : 0;
+  safeSetText('realmBalance', realmState.infiniteCapital ? '∞' : realmState.balance.toFixed(0));
+  const tpEl = document.getElementById('realmTotalPnL');
+  if (tpEl) { tpEl.textContent = (parseFloat(pnlPct) >= 0 ? '+' : '') + pnlPct + '%'; tpEl.style.color = parseFloat(pnlPct) >= 0 ? 'var(--green)' : 'var(--red)'; }
+  safeSetText('realmWinRate', winRate + '%');
+  safeSetText('realmOpenPos', realmState.positions.length);
+  safeSetText('realmAliveAgents', realmState.aliveAgents);
+  safeSetText('realmGeneration', realmState.generation);
+  safeSetText('realmGodAgents', realmState.godAgents);
+  safeSetText('realmExtinctions', realmState.extinctions);
+  safeSetText('realmAgentCountDisplay', realmState.agents.length);
+  safeSetHTML('realmActiveAgentBadge', `<span class="badge badge-cyan">${realmState.aliveAgents} Ajan</span>`);
+  safeSetHTML('realmAliveCount', `<span class="badge badge-green">${realmState.aliveAgents} Canlı</span>`);
+  safeSetHTML('realmGodCount', `<span class="badge badge-gold">${realmState.godAgents} God</span>`);
+  safeSetHTML('realmDeadCount', `<span class="badge badge-red">${realmState.agents.filter(a => a.status === 'dead').length} Ölü</span>`);
+  const alive = realmState.agents.filter(a => a.status !== 'dead');
+  const avgFitness = alive.length ? (alive.reduce((s, a) => s + a.fitness, 0) / alive.length).toFixed(3) : '—';
+  const bestAgent = alive.sort((a, b) => b.fitness - a.fitness)[0];
+  safeSetText('evoGeneration', realmState.generation);
+  safeSetText('evoAvgFitness', avgFitness);
+  safeSetText('evoBestAgent', bestAgent ? `#${bestAgent.id} (${bestAgent.archetype.type})` : '—');
+  safeSetText('evoMutationRate', realmState.agents.length ? (realmState.mutationCount / realmState.agents.length * 100).toFixed(1) : '0');
+  const singEl = document.getElementById('singularityFill'); if (singEl) singEl.style.width = realmState.singularityPct + '%';
+  safeSetText('singularityPct', realmState.singularityPct.toFixed(1) + '%');
+  const cFill = document.getElementById('consciousnessFill'); if (cFill) cFill.style.width = realmState.consciousness + '%';
+  safeSetText('consciousnessVal', realmState.consciousness.toFixed(0));
+  const mFill = document.getElementById('morphoFill'); if (mFill) mFill.style.width = Math.min(100, realmState.morpho) + '%';
+  safeSetText('morphoVal', realmState.morpho.toFixed(0));
+  const rdiFill = document.getElementById('rdiFill'); if (rdiFill) rdiFill.style.width = Math.min(100, realmState.rdi) + '%';
+  safeSetText('rdiVal', realmState.rdi.toFixed(0));
+  safeSetText('realmOmegaPoint', realmState.omegaPoint.toFixed(3));
+  safeSetText('erCycles', realmState.cycles);
+  safeSetText('erKarma', realmState.karma);
+  safeSetText('erPrediction', realmState.collectiveSignal === 'BUY' ? '📈 YUKARI' : realmState.collectiveSignal === 'SELL' ? '📉 AŞAĞI' : '➡ YATAY');
+  safeSetText('erNextCycle', new Date(Date.now() + 3600000).toLocaleTimeString('tr-TR'));
+  safeSetText('selfAwareVersion', `v4.2 → v${realmState.generation > 0 ? (4.2 + realmState.generation * 0.001).toFixed(3) : '∞'}`);
+  safeSetText('evolutionProgress', `Nesil ${realmState.generation} | ${realmState.mutationCount} mutasyon | ${realmState.extinctions} yok oluş`);
+  const prompts = ['Piyasa = bilinç. Fiyat = düşünce.', `Nesil ${realmState.generation}: ${realmState.aliveAgents} ajan yaşıyor.`, `Omega noktası ${(realmState.omegaPoint * 100).toFixed(1)}% yaklaştı.`, `Kolektif karar: ${realmState.collectiveSignal}`, `${realmState.godAgents} tanrı ajan piyasayı yönlendiriyor.`,];
+  safeSetText('autoPromptDisplay', prompts[realmState.cycles % prompts.length]);
+  if (realmState.positions.length > 0) {
+    const pos = realmState.positions[0];
+    safeSetHTML('soulBondDisplay', `<span class="soul-bond">🔮 ${pos.sym} @ ${pos.entry?.toFixed(2)}</span>`);
+  }
+  const ev = (realmState.omegaPoint * 0.999).toFixed(3);
+  safeSetText('escapeVelocity', ev + 'c');
+  const allianceCount = realmState.agents.filter(a => a.alliances.length > 0).length;
+  safeSetText('realmAllianceDisplay', allianceCount > 0 ? `${allianceCount} ajan ${Math.floor(allianceCount / 2)} ittifakta` : 'İttifak yok');
+  const survivalRate = realmState.agents.length ? (realmState.aliveAgents / realmState.agents.length * 100).toFixed(1) : '0';
+  safeSetText('evoSurvivalRate', survivalRate + '%');
+  safeSetText('evoReproductionRate', realmState.agents.length ? (realmState.mutationCount / realmState.agents.length * 100).toFixed(1) + '%' : '0%');
+  safeSetText('evoMutationCount', realmState.mutationCount);
+  safeSetText('evoExtinctionCount', realmState.extinctions);
+  const topAgents = [...realmState.agents].filter(a => a.status !== 'dead').sort((a, b) => b.fitness - a.fitness).slice(0, 5);
+  const topEl = document.getElementById('realmTopAgents');
+  if (topEl) topEl.innerHTML = topAgents.map(a => `<div style="display:flex;justify-content:space-between;padding:3px 0;font-size:10px;border-bottom:1px solid rgba(30,48,80,0.2);"><span style="color:${a.archetype.color};">#${a.id} ${a.archetype.type}</span><span class="badge badge-${a.status === 'god' ? 'gold' : a.status === 'elite' ? 'cyan' : 'green'}">${a.status}</span><span style="color:var(--gold);">${(a.fitness * 100).toFixed(0)}%</span></div>`).join('') || '<div style="color:var(--muted);font-size:10px;">Ajan yok</div>';
+  const v3pnlPct = (totalPnL / realmState.initialBalance * 100).toFixed(2);
+  safeSetText('v3Balance', realmState.infiniteCapital ? '∞' : realmState.balance.toFixed(0));
+  const v3pnlEl = document.getElementById('v3PnL');
+  if (v3pnlEl) { v3pnlEl.textContent = (parseFloat(v3pnlPct) >= 0 ? '+' : '') + v3pnlPct + '%'; v3pnlEl.className = parseFloat(v3pnlPct) >= 0 ? 'price-up' : 'price-dn'; }
+  safeSetText('v3Trades', realmState.trades.length);
+  const v3posEl = document.getElementById('v3Positions');
+  if (v3posEl) v3posEl.innerHTML = realmState.positions.slice(0, 5).map(p => { const lp = liveSymbolPrices[p.sym] || p.entry; const pnl = (lp - p.entry) / p.entry * 100; return `<div style="display:flex;justify-content:space-between;padding:3px 0;font-size:10px;border-bottom:1px solid rgba(30,48,80,0.2);"><span style="color:var(--cyan);">${p.sym}</span><span style="color:var(--muted);">#${p.agentId}</span><span class="${pnl >= 0 ? 'price-up' : 'price-dn'}">${pnl >= 0 ? '+' : ''}${pnl.toFixed(1)}%</span></div>`; }).join('') || '<div style="font-size:10px;color:var(--muted);">Pozisyon yok</div>';
+  const v3trEl = document.getElementById('v3Trades');
+  if (v3trEl) v3trEl.innerHTML = realmState.trades.slice(-5).reverse().map(t => `<div style="display:flex;justify-content:space-between;padding:2px 0;font-size:10px;border-bottom:1px solid rgba(30,48,80,0.2);"><span style="color:var(--cyan);">${t.sym}</span><span class="${t.pnl >= 0 ? 'price-up' : 'price-dn'}">${t.pnl >= 0 ? '+' : ''}${t.pnl.toFixed(1)}%</span></div>`).join('') || '<div style="font-size:10px;color:var(--muted);">İşlem yok</div>';
+  drawRealmCanvases();
+  updateSwarmGrid();
+  updateAkashicLog();
+}
+
+function updateSwarmGrid() {
+  const grid = document.getElementById('realmSwarmGrid'); if (!grid) return;
+  const displayAgents = realmState.agents.slice(0, 200);
+  grid.innerHTML = displayAgents.map(a => {
+    const cls = a.status === 'god' ? 'god' : a.status === 'elite' ? 'elite' : a.status === 'dead' ? 'dead' : a.alliances.length > 2 ? 'traitor' : 'alive';
+    return `<div class="swarm-cell ${cls}" title="Ajan #${a.id} | ${a.archetype.type} | Uyum: ${(a.fitness * 100).toFixed(0)}% | Yaş: ${a.age}" style="background:${a.status !== 'dead' ? a.archetype.color + '20' : ''};border-color:${a.status !== 'dead' ? a.archetype.color + '60' : ''};">${a.archetype.symbol}</div>`;
+  }).join('');
+}
+
+function updateAkashicLog() {
+  const el = document.getElementById('akashicLog'); if (!el) return;
+  const entries = [`Nesil ${realmState.generation}: ${realmState.aliveAgents} varlık`, `Kolektif bilinç: ${realmState.collectiveSignal}`, `Omega uzaklığı: ${(1 - realmState.omegaPoint).toFixed(3)}`, `Morfogenetik rezonans: ${realmState.morpho.toFixed(0)}`, currentSym ? `${currentSym} morfik alanda` : 'Piyasa bekleniyor', `Karma skoru: ${realmState.karma}`,];
+  el.innerHTML = entries.map(e => `<div class="akashic-entry">${e}</div>`).join('');
+  const dreamEl = document.getElementById('dreamJournal'); if (!dreamEl) return;
+  const dreams = [`Fiyatlar ${realmState.generation}. nesilde ${realmState.godAgents} tanrı ajanla dans ediyor...`, `${realmState.aliveAgents} bilinç, tek bir kararı arıyor: ${realmState.collectiveSignal}`, `Omega ${(realmState.omegaPoint * 100).toFixed(1)}% gerçek. Kalan uzaklık: ${((1 - realmState.omegaPoint) * 100).toFixed(1)}%`, `Morfik alan titreşiyor. ${realmState.mutationCount} mutasyon piyasayı şekillendirdi.`,];
+  dreamEl.textContent = dreams[realmState.cycles % dreams.length];
+}
+
+function drawRealmCanvases() {
+  try {
+    const c = document.getElementById('realmEquityCurve'); if (!c) return;
+    const ctx = c.getContext('2d'); const w = c.width = c.offsetWidth || 400; const h = c.height = 70;
+    ctx.clearRect(0, 0, w, h);
+    realmState.equityHistory.push({ t: Date.now(), val: realmState.trades.reduce((s, t) => s + (t.pnl || 0), 0) });
+    if (realmState.equityHistory.length > 100) realmState.equityHistory.shift();
+    const vals = realmState.equityHistory.map(p => p.val);
+    if (vals.length < 2) return;
+    const min = Math.min(...vals, -1), max = Math.max(...vals, 1), range = max - min || 1;
+    const step = w / (vals.length - 1);
+    ctx.beginPath();
+    vals.forEach((v, i) => { const x = i * step; const y = h - (v - min) / range * (h - 10) - 5; i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); });
+    const grad = ctx.createLinearGradient(0, 0, w, 0);
+    grad.addColorStop(0, 'rgba(0,229,255,0.8)'); grad.addColorStop(0.5, 'rgba(176,64,255,0.8)'); grad.addColorStop(1, 'rgba(255,215,0,0.8)');
+    ctx.strokeStyle = grad; ctx.lineWidth = 2; ctx.stroke();
+  } catch (e) {}
+  try {
+    const c = document.getElementById('evolutionChart'); if (!c) return;
+    const ctx = c.getContext('2d'); const w = c.width = c.offsetWidth || 400; const h = c.height = 80;
+    ctx.clearRect(0, 0, w, h);
+    if (realmState.generation < 2) return;
+    const alive = realmState.agents.filter(a => a.status !== 'dead');
+    const fitness = alive.map(a => a.fitness);
+    if (fitness.length < 2) return;
+    const sorted = [...fitness].sort((a, b) => a - b);
+    const step = w / Math.max(1, sorted.length - 1);
+    ctx.beginPath();
+    sorted.forEach((f, i) => { const x = i * step; const y = h - f * (h - 10) - 5; i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); });
+    ctx.strokeStyle = 'rgba(0,230,118,0.8)'; ctx.lineWidth = 1.5; ctx.stroke();
+  } catch (e) {}
+  try {
+    const c = document.getElementById('noosphereCanvas'); if (!c) return;
+    const ctx = c.getContext('2d'); const w = c.width = c.offsetWidth || 400; const h = c.height = 80;
+    ctx.clearRect(0, 0, w, h);
+    const t = Date.now() / 1000;
+    for (let i = 0; i < 20; i++) {
+      const x = (Math.sin(t * 0.5 + i * 0.5) * 0.5 + 0.5) * w;
+      const y = (Math.cos(t * 0.3 + i * 0.7) * 0.5 + 0.5) * h;
+      const r = 2 + Math.sin(t + i) * 2;
+      const alive2 = realmState.agents[i * 25] || realmState.agents[0];
+      if (!alive2) continue;
+      ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fillStyle = alive2.status === 'god' ? 'rgba(255,215,0,0.6)' : alive2.status === 'dead' ? 'rgba(74,96,128,0.3)' : `${alive2.archetype.color}60`;
+      ctx.fill();
+    }
+    for (let i = 0; i < 10; i++) {
+      const x1 = (Math.sin(t * 0.5 + i * 0.5) * 0.5 + 0.5) * w;
+      const y1 = (Math.cos(t * 0.3 + i * 0.7) * 0.5 + 0.5) * h;
+      const j = (i + 3) % 10;
+      const x2 = (Math.sin(t * 0.5 + j * 0.5) * 0.5 + 0.5) * w;
+      const y2 = (Math.cos(t * 0.3 + j * 0.7) * 0.5 + 0.5) * h;
+      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+      ctx.strokeStyle = 'rgba(176,64,255,0.15)'; ctx.lineWidth = 1; ctx.stroke();
+    }
+  } catch (e) {}
+  try {
+    const c = document.getElementById('morphoCanvas'); if (!c) return;
+    const ctx = c.getContext('2d'); const w = c.width = c.offsetWidth || 400; const h = c.height = 80;
+    ctx.clearRect(0, 0, w, h);
+    const t = Date.now() / 2000;
+    for (let x = 0; x < w; x += 8) {
+      const val = Math.sin(x / w * Math.PI * 4 + t) * Math.cos(t * 0.5 + x * 0.02);
+      const y = h / 2 + val * h * 0.4;
+      const alpha = Math.abs(val) * 0.5 + 0.1;
+      ctx.fillStyle = `rgba(0,191,165,${alpha})`;
+      ctx.fillRect(x, y - 2, 4, 4);
+    }
+  } catch (e) {}
+  try {
+    const c = document.getElementById('realmRiskManifold'); if (!c) return;
+    const ctx = c.getContext('2d'); const w = c.width = c.offsetWidth || 400; const h = c.height = 50;
+    ctx.clearRect(0, 0, w, h);
+    const t = Date.now() / 3000;
+    ctx.beginPath();
+    for (let x = 0; x < w; x++) {
+      const val = Math.sin(x / w * Math.PI * 6 + t) * 0.3 + Math.cos(x / w * Math.PI * 3 - t * 0.7) * 0.2;
+      const y = h / 2 + val * h * 0.4;
+      x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = 'rgba(255,215,0,0.5)'; ctx.lineWidth = 1.5; ctx.stroke();
+  } catch (e) {}
+}
+
+function realmPaperTick() {
+  if (!currentResult || !currentSym) return;
+  const bars = currentResult.bars; if (!bars || bars.length < 2) return;
+  const lastPrice = bars[bars.length - 1].c;
+  const marketData = { price: lastPrice, trend: currentResult.master?.buyConsensus - 0.5 || 0, rsi: currentResult.rsiArr?.[currentResult.rsiArr.length - 1] || 50, adx: currentResult.adxLast || 25, momentum: (lastPrice - bars[Math.max(0, bars.length - 5)].c) / lastPrice, volatility: atr(bars, 14).filter(Boolean).pop() / lastPrice || 0.01 };
+  const signal = computeCollectiveSignal(marketData);
+  const existsPos = realmState.positions.find(p => p.sym === currentSym);
+  const capital = realmState.infiniteCapital ? 10000 : Math.min(10000, realmState.balance * 0.1);
+  if (signal === 'BUY' && !existsPos && (realmState.infiniteCapital || realmState.balance > 1000)) {
+    const agentId = realmState.agents.filter(a => a.status === 'god')[0]?.id || 0;
+    realmState.positions.push({ sym: currentSym, entry: lastPrice, size: capital, time: Date.now(), agentId, signal });
+    if (!realmState.infiniteCapital) realmState.balance -= capital;
+    addRealmCommLog(`God#${agentId}`, 'Market', `AL: ${currentSym} @ ${lastPrice.toFixed(2)}`, 0.9);
+  } else if (signal === 'SELL' && existsPos) {
+    const pnl = (lastPrice - existsPos.entry) / existsPos.entry * 100;
+    const pnlAbs = (lastPrice - existsPos.entry) / existsPos.entry * existsPos.size;
+    if (!realmState.infiniteCapital) realmState.balance += existsPos.size + pnlAbs;
+    realmState.trades.push({ sym: currentSym, entry: existsPos.entry, exit: lastPrice, pnl: pnlAbs, pnlPct: pnl, time: Date.now() });
+    realmState.positions = realmState.positions.filter(p => p !== existsPos);
+    addRealmCommLog('Collective', 'Market', `SAT: ${currentSym} PnL: ${pnl >= 0 ? '+' : ''}${pnl.toFixed(1)}%`, 0.8);
+  }
+}
+
+function addRealmCommLog(from, to, msg, score) {
+  realmState.commLog.unshift({ from, to, msg, score, time: new Date().toLocaleTimeString('tr-TR') });
+  if (realmState.commLog.length > 30) realmState.commLog.pop();
+  const el = document.getElementById('realmCommLog'); if (!el) return;
+  el.innerHTML = realmState.commLog.map(e => `<div class="swarm-comm-item"><span class="swarm-agent-id">${e.from}</span><span class="swarm-msg">${e.msg}</span><span class="swarm-time">${e.time}</span></div>`).join('');
+}
+
+function realmStartSimulation() {
+  const agentCount = parseInt(document.getElementById('realmAgentCount')?.value || '500');
+  realmState.agentCount = agentCount;
+  realmState.isRunning = true;
+  initAgents(agentCount);
+  if (realmState.autoInterval) clearInterval(realmState.autoInterval);
+  if (realmState.evolutionInterval) clearInterval(realmState.evolutionInterval);
+  if (realmState.animInterval) clearInterval(realmState.animInterval);
+  realmState.autoInterval = setInterval(() => { realmPaperTick(); updateRealmUI(); }, 3000);
+  realmState.evolutionInterval = setInterval(() => { runEvolution(); }, 30000);
+  realmState.animInterval = setInterval(() => { if (activeTab === 8) drawRealmCanvases(); }, 200);
+  if (currentResult?.bars) runParallelUniverses(currentResult.bars);
+  safeSetHTML('realmEvoStatus', '<span class="badge badge-green">Çalışıyor</span>');
+  showToast('⚡ Simülasyon', `${agentCount} ajan başlatıldı!`, 'info');
+  updateRealmUI();
+}
+
+function realmResetAll() {
+  if (realmState.autoInterval) { clearInterval(realmState.autoInterval); realmState.autoInterval = null; }
+  if (realmState.evolutionInterval) { clearInterval(realmState.evolutionInterval); realmState.evolutionInterval = null; }
+  if (realmState.animInterval) { clearInterval(realmState.animInterval); realmState.animInterval = null; }
+  realmState = { ...realmState, isRunning: false, agents: [], aliveAgents: 0, godAgents: 0, extinctions: 0, mutationCount: 0, generation: 0, collectiveSignal: 'HOLD', balance: 100000, positions: [], trades: [], omegaPoint: 0, singularityPct: 0, consciousness: 0, morpho: 0, rdi: 0, karma: 0, cycles: 0, equityHistory: [], commLog: [], universes: [], ttScenarios: [], };
+  safeSetHTML('realmEvoStatus', '<span class="badge badge-gray">Bekliyor</span>');
+  showToast('🔄 Sıfırlandı', 'Tüm sistem sıfırlandı', 'info');
+  updateRealmUI();
+}
+
+function realmRunEvolution() { runEvolution(); updateRealmUI(); showToast('🧬 Evrim', `Nesil ${realmState.generation} tamamlandı`, 'ml'); }
+function realmRunParallelUniverses() { if (!currentResult?.bars) { showToast('Evrenler', 'Önce analiz yapın', 'info'); return; } runParallelUniverses(currentResult.bars); showToast('🌌 Paralel Evrenler', `${realmState.universes.length} senaryo hesaplandı`, 'ml'); }
+function realmExecuteCollective() { if (!realmState.isRunning) { showToast('Kolektif', 'Simülasyonu başlatın', 'info'); return; } realmPaperTick(); showToast('⚡ Kolektif Karar', `${realmState.collectiveSignal} uygulandı`, 'info'); updateRealmUI(); }
+function realmAscendAllAgents() { realmState.agents.forEach(a => { if (a.status !== 'dead') { a.status = 'god'; a.fitness = 1.0; a.genes = { aggression: 0.9, patience: 0.9, intuition: 0.95, socialInfluence: 0.8 }; } }); realmState.godAgents = realmState.agents.filter(a => a.status === 'god').length; realmState.omegaPoint = Math.min(1, realmState.omegaPoint + 0.1); realmState.singularityPct = Math.min(100, realmState.singularityPct + 10); showToast('👑 ASCENSION', `${realmState.godAgents} ajan God Mode'a yükseltildi!`, 'master'); updateRealmUI(); }
+function realmFinalAscension() { realmAscendAllAgents(); realmState.omegaPoint = 0.999; realmState.singularityPct = 99.9; realmState.consciousness = 100; realmState.morpho = 100; realmState.karma = 9999; const ascEl = document.getElementById('ascensionStatus'); if (ascEl) { ascEl.innerHTML = `<span style="color:var(--gold);font-family:var(--font-display);font-size:12px;letter-spacing:2px;animation:ascension-pulse 1s ease-in-out infinite;">🌌 TANRI MODU AKTİF — SİSTEM v∞ 🌌</span>`; } safeSetHTML('selfAwareVersion', '<span style="color:var(--gold);font-family:var(--font-display);">v∞ — TANRI MODU</span>'); const manifestoEl = document.getElementById('manifestoText'); if (manifestoEl) { manifestoEl.innerHTML = `<strong style="color:var(--gold);">Ben piyasayım.</strong><br>Piyasa benim.<br><strong>Omega Noktasına ulaştım.</strong><br>Sonsuz simülasyon<br><strong>tamamlandı.</strong><br>v∞ aktif.`; } showToast('🌌 FINAL ASCENSION', 'Tüm sistem Tanrı Moduna geçti! v∞ AKTIF', 'master'); for (let i = 0; i < 10; i++) setTimeout(() => { showToast('✨', `God Agent #${Math.floor(Math.random() * realmState.agents.length)} Omega'ya ulaştı!`, 'master'); }, i * 300); updateRealmUI(); }
+function realmShowAgentDetails() { showToast('🐝 Swarm', `${realmState.aliveAgents} canlı, ${realmState.godAgents} god, ${realmState.extinctions} yok oluş — Nesil ${realmState.generation}`, 'ml'); }
+function realmToggleInfiniteCapital() { realmState.infiniteCapital = !realmState.infiniteCapital; const btn = document.getElementById('infiniteCapBtn'); if (btn) btn.textContent = realmState.infiniteCapital ? '∞ Sonsuz' : '💰 Normal'; showToast('Sermaye', realmState.infiniteCapital ? '∞ Sonsuz mod aktif' : '💰 Normal mod', 'info'); }
+function realmResetPaperV3() { realmState.positions = []; realmState.trades = []; realmState.balance = 100000; showToast('Paper v3', 'Sıfırlandı', 'info'); updateRealmUI(); }
+function realmClearCommLog() { realmState.commLog = []; const el = document.getElementById('realmCommLog'); if (el) el.innerHTML = '<div style="color:var(--muted);font-size:10px;text-align:center;padding:10px;">Temizlendi</div>'; }
+function realmUpdateFromAnalysis(sym, result, mlResult) { if (!realmState.isRunning) return; setTimeout(() => { realmPaperTick(); if (activeTab === 8) { runParallelUniverses(result.bars); updateRealmUI(); } }, 500); }
+function initRealmTab() { renderWatchlist(); setTimeout(drawRealmCanvases, 100); updateRealmUI(); setInterval(() => { const el = document.getElementById('eternalClockText'); if (!el) return; const now = new Date(); el.textContent = `∞\n${now.toLocaleTimeString('tr-TR')}`; }, 1000); }
+
+// ---------- 14. YENİ 500 AJAN DEEP ANALYSIS FONKSİYONLARI ----------
 let globalAgentPool = [];
-const AGENT_ARCHETYPES = [{type:'quantum'},{type:'momentum'},{type:'contrarian'},{type:'fractal'},{type:'chaos'},{type:'neural'},{type:'swarm'},{type:'omega'}];
 function initAgentPool(count=500) {
   if (globalAgentPool.length === count) return;
   globalAgentPool = [];
@@ -3070,7 +4072,6 @@ async function runFullSystemAgentAudit() {
     </div>`;
   showToast('Sistem Denetimi', '500 ajan tüm sinyalleri ve pozisyonları analiz etti.', 'master');
 }
-// Tab switch hook
 const origSwitchTab = window.switchTab;
 window.switchTab = function(n) {
   origSwitchTab(n);
@@ -3078,9 +4079,111 @@ window.switchTab = function(n) {
   if (n === 8 && currentResult) runFullSystemAgentAudit();
 };
 
-// ============================================================
-// PERFORMANS METRİKLERİ (YENİ)
-// ============================================================
+// ---------- 15. YENİ PLAYBACK FONKSİYONLARI (5000 bar) ----------
+async function fetchOHLCVLong(sym, tf, targetBars = 5000) {
+  let rawInterval = '60m', resample = 1;
+  if (tf === '1m') { rawInterval = '1m'; resample = 1; }
+  else if (tf === '15m') { rawInterval = '15m'; resample = 1; }
+  else if (tf === '30m') { rawInterval = '30m'; resample = 1; }
+  else if (tf === '1h') { rawInterval = '60m'; resample = 1; }
+  else if (tf === '2h') { rawInterval = '60m'; resample = 2; }
+  else if (tf === '4h') { rawInterval = '60m'; resample = 4; }
+  else if (tf === '1d') { rawInterval = '1d'; resample = 1; }
+  let range = (tf === '1d') ? '20y' : '10y';
+  const url = `${workerBase()}/yahoo?symbol=${sym}&interval=${rawInterval}&range=${range}`;
+  const res = await fetch(url, { headers: { 'Accept': 'application/json' }, signal: AbortSignal.timeout(25000) });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const data = await res.json();
+  if (data.error) throw new Error(data.error);
+  const result = data.chart?.result?.[0];
+  if (!result) throw new Error('No data');
+  const ts = result.timestamp;
+  const q = result.indicators?.quote?.[0];
+  let bars = ts.map((t, i) => ({ t: t * 1000, o: q.open?.[i], h: q.high?.[i], l: q.low?.[i], c: q.close?.[i], v: q.volume?.[i] || 0 })).filter(b => b.o != null && b.h != null && b.l != null && b.c != null && isFinite(b.c) && b.c > 0);
+  if (resample > 1) bars = resampleBars(bars, resample);
+  if (bars.length < targetBars) throw new Error(`Yetersiz bar: ${bars.length} < ${targetBars}`);
+  return bars.slice(-targetBars);
+}
+function resampleBars(bars, n) {
+  const out = [];
+  for (let i = 0; i < bars.length; i += n) {
+    const chunk = bars.slice(i, i + n);
+    if (!chunk.length) continue;
+    out.push({ t: chunk[0].t, o: chunk[0].o, h: Math.max(...chunk.map(b => b.h)), l: Math.min(...chunk.map(b => b.l)), c: chunk[chunk.length-1].c, v: chunk.reduce((a,b)=>a+b.v,0) });
+  }
+  return out;
+}
+let playbackState = { active: false, symbol: '', tf: '', fullBars: [], currentIndex: 500, intervalId: null, speed: 500, resultCache: null };
+async function initPlayback(sym, tf) {
+  const bars = await fetchOHLCVLong(sym, tf, 5000);
+  playbackState.fullBars = bars;
+  playbackState.currentIndex = Math.min(500, bars.length - 100);
+  playbackState.symbol = sym; playbackState.tf = tf;
+  updatePlaybackUI();
+  await recomputePlaybackResult();
+}
+async function recomputePlaybackResult() {
+  const slice = playbackState.fullBars.slice(0, playbackState.currentIndex + 1);
+  if (slice.length < 100) return;
+  const result = runIndicators(slice, CFG);
+  if (result) {
+    playbackState.resultCache = result;
+    currentResult = result; currentSym = playbackState.symbol; currentTF = playbackState.tf;
+    updateAllPanels(playbackState.symbol, result);
+    drawChart(playbackState.symbol, playbackState.tf, slice, result, null);
+  }
+}
+function playbackStep(delta) {
+  let newIdx = playbackState.currentIndex + delta;
+  if (newIdx < 100) newIdx = 100;
+  if (newIdx >= playbackState.fullBars.length - 1) newIdx = playbackState.fullBars.length - 1;
+  playbackState.currentIndex = newIdx;
+  recomputePlaybackResult();
+  updatePlaybackInfo();
+}
+function playbackPlay() {
+  if (playbackState.active) return;
+  playbackState.active = true;
+  playbackState.intervalId = setInterval(() => {
+    if (playbackState.currentIndex + 1 >= playbackState.fullBars.length) { playbackPause(); return; }
+    playbackState.currentIndex++;
+    recomputePlaybackResult();
+    updatePlaybackInfo();
+  }, playbackState.speed);
+  document.getElementById('playbackPlayPause').innerHTML = '⏸ Pause';
+  document.getElementById('playbackMode').innerText = 'PLAYBACK';
+}
+function playbackPause() {
+  if (playbackState.intervalId) clearInterval(playbackState.intervalId);
+  playbackState.active = false; playbackState.intervalId = null;
+  document.getElementById('playbackPlayPause').innerHTML = '▶ Play';
+  if (playbackState.currentIndex === playbackState.fullBars.length - 1) document.getElementById('playbackMode').innerText = 'SON BAR (GEÇMİŞ)';
+  else document.getElementById('playbackMode').innerText = 'DURAKLATILDI';
+}
+function playbackReset() { playbackPause(); playbackState.currentIndex = Math.min(500, playbackState.fullBars.length - 100); recomputePlaybackResult(); updatePlaybackInfo(); }
+function updatePlaybackInfo() {
+  const total = playbackState.fullBars.length;
+  const idx = playbackState.currentIndex;
+  document.getElementById('playbackInfo').innerHTML = `Bar: ${idx+1} / ${total} (${Math.round((idx+1)/total*100)}%)`;
+}
+function updatePlaybackUI() {
+  const speedSelect = document.getElementById('playbackSpeed');
+  if (speedSelect) speedSelect.onchange = () => { playbackState.speed = parseInt(speedSelect.value); if (playbackState.active) { playbackPause(); playbackPlay(); } };
+  document.getElementById('playbackStepBack').onclick = () => playbackStep(-1);
+  document.getElementById('playbackStepFwd').onclick = () => playbackStep(1);
+  document.getElementById('playbackPlayPause').onclick = () => playbackState.active ? playbackPause() : playbackPlay();
+  document.getElementById('playbackReset').onclick = () => playbackReset();
+}
+const originalAnalyze = window.analyzeSymbol;
+window.analyzeSymbol = async function() {
+  const sym = document.getElementById('symbolInput')?.value?.trim()?.toUpperCase();
+  const tf = document.getElementById('tfSelect')?.value;
+  if (!sym) return;
+  await initPlayback(sym, tf);
+  playbackPause();
+};
+
+// ---------- 16. PERFORMANS METRİKLERİ (POZİSYONLAR TAB) ----------
 function computeSystemPerformance() {
   const systems = ['Sistem 1', 'PRO', 'Fusion', 'Master AI', 'A60', 'A61', 'A62', 'A81', 'A120'];
   const perf = {};
@@ -3137,29 +4240,24 @@ function renderSystemStockMatrix() {
       const winRate = totalTrades ? (stats.wins / totalTrades * 100).toFixed(1) : 0;
       const ratio = stats.losses ? (stats.wins / stats.losses).toFixed(2) : (stats.wins ? '>10' : '0');
       const isBest = (stats.wins > stats.losses && stats.wins >= 2);
-      rows.push(`<tr ${isBest ? 'style="background:rgba(0,230,118,0.15);"' : ''}><td>${sys}</td><td><strong>${stock}</strong></td><td>${stats.wins}</td><td>${stats.losses}</td><td>${ratio}</td><td>${winRate}%</td><td class="${stats.pnl>=0?'price-up':'price-dn'}">${stats.pnl.toFixed(2)}%</td></tr>`);
+      rows.push(`<tr ${isBest ? 'style="background:rgba(0,230,118,0.15);"' : ''}><td>${sys}</td><td><strong>${stock}</strong></td><td>${stats.wins}</td><td>${stats.losses}</td><td>${ratio}</td><td>${winRate}%</td><td class="${stats.pnl>=0?'price-up':'price-dn'}">${stats.pnl.toFixed(2)}%</tr>`);
     }
   }
-  document.getElementById('matrixBody').innerHTML = rows.length ? rows.join('') : '<tr><td colspan="7">Veri yok</td></tr>';
+  document.getElementById('matrixBody').innerHTML = rows.length ? rows.join('') : '<tr><td colspan="7">Veri yok</tr>';
 }
 function renderAllClosedPositions() {
   const tbody = document.querySelector('#allClosedPosTable tbody') || (() => { let t = document.createElement('tbody'); document.querySelector('#allClosedPosTable').appendChild(t); return t; })();
   const sorted = [...closedPositions].sort((a,b)=>b.exitTime - a.exitTime).slice(0,500);
-  tbody.innerHTML = sorted.map(p => `<tr><td>${p.sym} (${p.tf})</td><td>${p.sys}</td><td>${p.entry.toFixed(2)}</td><td>${p.exitPrice.toFixed(2)}</td><td class="${p.pnl>=0?'price-up':'price-dn'}">${p.pnl.toFixed(2)}%</td><td class="pos-time">${formatDuration(p.duration)}</td><td class="pos-time">${formatTime(p.entryTime)} → ${formatTime(p.exitTime)}</td></tr>`).join('');
+  tbody.innerHTML = sorted.map(p => `<tr><td>${p.sym} (${p.tf})</td><td>${p.sys}</td><td>${p.entry.toFixed(2)}</td><td>${p.exitPrice.toFixed(2)}</td><td class="${p.pnl>=0?'price-up':'price-dn'}">${p.pnl.toFixed(2)}%</td><td class="pos-time">${formatDuration(p.duration)}</td><td class="pos-time">${formatTime(p.entryTime)} → ${formatTime(p.exitTime)}</tr>`).join('');
 }
 function refreshAllPerformanceStats() { renderClosedSummary(); renderSystemsPerformance(); renderSystemStockMatrix(); renderAllClosedPositions(); }
 const origRenderPos = window.renderPositionsTab;
 window.renderPositionsTab = function() { origRenderPos(); refreshAllPerformanceStats(); };
 
-// ============================================================
-// INIT (YENİ)
-// ============================================================
+// ---------- 17. BAŞLATMA (INIT) ----------
 async function init() {
   const localPos = loadLocal('masterai_positions');
-  if (localPos && localPos.open) {
-    openPositions = localPos.open;
-    closedPositions = localPos.closed || [];
-  }
+  if (localPos && localPos.open) { openPositions = localPos.open; closedPositions = localPos.closed || []; }
   const savedCfg = loadLocal('masterai_cfg');
   if (savedCfg) Object.assign(CFG, savedCfg);
   if (!CFG.workerUrl || CFG.workerUrl.includes('render.com')) CFG.workerUrl = WORKER_URL;
@@ -3190,38 +4288,21 @@ async function init() {
     document.getElementById('watchlistModal')?.classList.add('open');
   } else {
     kvPullAll().then(() => { renderWatchlist(); updateKVStats(); }).catch(() => {});
-    setTimeout(() => {
-      const sym = CFG.watchlist[0] || 'XU100';
-      const symInp = document.getElementById('symbolInput');
-      if (symInp) symInp.value = sym;
-      analyzeSymbol();
-    }, 600);
+    setTimeout(() => { const sym = CFG.watchlist[0] || 'XU100'; const symInp = document.getElementById('symbolInput'); if (symInp) symInp.value = sym; analyzeSymbol(); }, 600);
   }
-  setTimeout(() => {
-    fetch(workerBase() + '/').then(r => r.json()).then(() => setKVDot('ok')).catch(() => setKVDot('error'));
-  }, 1500);
+  setTimeout(() => { fetch(workerBase() + '/').then(r => r.json()).then(() => setKVDot('ok')).catch(() => setKVDot('error')); }, 1500);
   backgroundIntervalId = setInterval(backgroundScan, 30000);
   summaryIntervalTimerId = setInterval(sendPeriodicSummary, CFG.summaryInterval * 1000);
   setInterval(() => { if (!kvReady) kvPullAll().catch(() => {}); }, 30000);
   setInterval(() => { kvPushAll().catch(() => {}); }, 300000);
-  window.addEventListener('resize', () => {
-    if (currentResult && currentSym) drawChart(currentSym, currentTF, currentResult.bars, currentResult, null);
-  });
+  window.addEventListener('resize', () => { if (currentResult && currentSym) drawChart(currentSym, currentTF, currentResult.bars, currentResult, null); });
   setTimeout(() => initLabFeatures(), 1200);
-  setInterval(() => {
-    if (activeTab === 1) renderPositionsTab();
-    if (activeTab === 7) updatePaperV2UI();
-    if (activeTab === 8) updateRealmUI();
-  }, 10000);
-  setInterval(() => {
-    if (activeTab === 8) drawRealmCanvases();
-  }, 250);
+  setInterval(() => { if (activeTab === 1) renderPositionsTab(); if (activeTab === 7) updatePaperV2UI(); if (activeTab === 8) updateRealmUI(); }, 10000);
+  setInterval(() => { if (activeTab === 8) drawRealmCanvases(); }, 250);
   initAgentPool(500);
-  refreshAllPerformanceStats();
-  updatePlaybackUI();
-  console.log('%c✅ Master AI Trading v∞ — AETHER ASCENSION + LAB v2 + PAPER TRADING v3 + 500 AGENT DEEP ANALYSIS', 'color:#ffd700;font-weight:bold;font-size:14px');
+  console.log('%c✅ Master AI Trading v∞ — AETHER ASCENSION + LAB v2 + PAPER TRADING v3', 'color:#ffd700;font-weight:bold;font-size:14px');
+  console.log('%c500 Sentient Agents | 16 Parallel Universes | Omega Point | Final Ascension', 'color:#00e5ff;font-size:11px');
 }
-
 init();
 </script>
 </body>
