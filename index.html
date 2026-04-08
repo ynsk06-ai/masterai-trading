@@ -5045,6 +5045,309 @@ function initRealmTab() {
     el.textContent = `∞\n${now.toLocaleTimeString('tr-TR')}`;
   }, 1000);
 }
+// =================================================================
+// 1. DATA FETCH ENHANCEMENT: SUPPORT 5000+ BARS
+// =================================================================
+async function fetchOHLCVLong(sym, tf, targetBars = 5000) {
+  let rawInterval = '60m', resample = 1;
+  if (tf === '1m') { rawInterval = '1m'; resample = 1; }
+  else if (tf === '15m') { rawInterval = '15m'; resample = 1; }
+  else if (tf === '30m') { rawInterval = '30m'; resample = 1; }
+  else if (tf === '1h') { rawInterval = '60m'; resample = 1; }
+  else if (tf === '2h') { rawInterval = '60m'; resample = 2; }
+  else if (tf === '4h') { rawInterval = '60m'; resample = 4; }
+  else if (tf === '1d') { rawInterval = '1d'; resample = 1; }
+  let range = (tf === '1d') ? '20y' : '10y';
+  const url = `${workerBase()}/yahoo?symbol=${sym}&interval=${rawInterval}&range=${range}`;
+  const res = await fetch(url, { headers: { 'Accept': 'application/json' }, signal: AbortSignal.timeout(25000) });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const data = await res.json();
+  if (data.error) throw new Error(data.error);
+  const result = data.chart?.result?.[0];
+  if (!result) throw new Error('No data');
+  const ts = result.timestamp;
+  const q = result.indicators?.quote?.[0];
+  let bars = ts.map((t, i) => ({
+    t: t * 1000, o: q.open?.[i], h: q.high?.[i], l: q.low?.[i], c: q.close?.[i], v: q.volume?.[i] || 0
+  })).filter(b => b.o != null && b.h != null && b.l != null && b.c != null && isFinite(b.c) && b.c > 0);
+  if (resample > 1) bars = resampleBars(bars, resample);
+  if (bars.length < targetBars) throw new Error(`Yetersiz bar: ${bars.length} < ${targetBars}`);
+  return bars.slice(-targetBars);
+}
+
+function resampleBars(bars, n) {
+  const out = [];
+  for (let i = 0; i < bars.length; i += n) {
+    const chunk = bars.slice(i, i + n);
+    if (!chunk.length) continue;
+    out.push({
+      t: chunk[0].t,
+      o: chunk[0].o,
+      h: Math.max(...chunk.map(b => b.h)),
+      l: Math.min(...chunk.map(b => b.l)),
+      c: chunk[chunk.length - 1].c,
+      v: chunk.reduce((a, b) => a + b.v, 0)
+    });
+  }
+  return out;
+}
+
+// =================================================================
+// 2. PLAYBACK ENGINE
+// =================================================================
+let playbackState = {
+  active: false, symbol: '', tf: '', fullBars: [], currentIndex: 500,
+  intervalId: null, speed: 500, resultCache: null, runningRealTime: true
+};
+
+async function initPlayback(sym, tf) {
+  const bars = await fetchOHLCVLong(sym, tf, 5000);
+  playbackState.fullBars = bars;
+  playbackState.currentIndex = Math.min(500, bars.length - 100);
+  playbackState.symbol = sym; playbackState.tf = tf;
+  updatePlaybackUI();
+  await recomputePlaybackResult();
+}
+
+async function recomputePlaybackResult() {
+  const slice = playbackState.fullBars.slice(0, playbackState.currentIndex + 1);
+  if (slice.length < 100) return;
+  const result = runIndicators(slice, CFG);
+  if (result) {
+    playbackState.resultCache = result;
+    currentResult = result; currentSym = playbackState.symbol; currentTF = playbackState.tf;
+    updateAllPanels(playbackState.symbol, result);
+    drawChart(playbackState.symbol, playbackState.tf, slice, result, null);
+  }
+}
+
+function playbackStep(delta) {
+  let newIdx = playbackState.currentIndex + delta;
+  if (newIdx < 100) newIdx = 100;
+  if (newIdx >= playbackState.fullBars.length - 1) newIdx = playbackState.fullBars.length - 1;
+  playbackState.currentIndex = newIdx;
+  recomputePlaybackResult();
+  updatePlaybackInfo();
+}
+
+function playbackPlay() {
+  if (playbackState.active) return;
+  playbackState.active = true;
+  playbackState.intervalId = setInterval(() => {
+    if (playbackState.currentIndex + 1 >= playbackState.fullBars.length) { playbackPause(); return; }
+    playbackState.currentIndex++;
+    recomputePlaybackResult();
+    updatePlaybackInfo();
+  }, playbackState.speed);
+  document.getElementById('playbackPlayPause').innerHTML = '⏸ Pause';
+  document.getElementById('playbackMode').innerText = 'PLAYBACK';
+}
+
+function playbackPause() {
+  if (playbackState.intervalId) clearInterval(playbackState.intervalId);
+  playbackState.active = false;
+  playbackState.intervalId = null;
+  document.getElementById('playbackPlayPause').innerHTML = '▶ Play';
+  if (playbackState.currentIndex === playbackState.fullBars.length - 1)
+    document.getElementById('playbackMode').innerText = 'SON BAR (GEÇMİŞ)';
+  else document.getElementById('playbackMode').innerText = 'DURAKLATILDI';
+}
+
+function playbackReset() {
+  playbackPause();
+  playbackState.currentIndex = Math.min(500, playbackState.fullBars.length - 100);
+  recomputePlaybackResult();
+  updatePlaybackInfo();
+}
+
+function updatePlaybackInfo() {
+  const total = playbackState.fullBars.length;
+  const idx = playbackState.currentIndex;
+  document.getElementById('playbackInfo').innerHTML = `Bar: ${idx+1} / ${total} (${Math.round((idx+1)/total*100)}%)`;
+}
+
+function updatePlaybackUI() {
+  const speedSelect = document.getElementById('playbackSpeed');
+  if (speedSelect) speedSelect.onchange = () => { playbackState.speed = parseInt(speedSelect.value); if (playbackState.active) { playbackPause(); playbackPlay(); } };
+  document.getElementById('playbackStepBack').onclick = () => playbackStep(-1);
+  document.getElementById('playbackStepFwd').onclick = () => playbackStep(1);
+  document.getElementById('playbackPlayPause').onclick = () => playbackState.active ? playbackPause() : playbackPlay();
+  document.getElementById('playbackReset').onclick = () => playbackReset();
+}
+
+// override analyzeSymbol
+const originalAnalyze = window.analyzeSymbol;
+window.analyzeSymbol = async function() {
+  const sym = document.getElementById('symbolInput')?.value?.trim()?.toUpperCase();
+  const tf = document.getElementById('tfSelect')?.value;
+  if (!sym) return;
+  await initPlayback(sym, tf);
+  playbackPause();
+};
+
+// =================================================================
+// 3. POZİSYONLAR PERFORMANS METRİKLERİ
+// =================================================================
+function computeSystemPerformance() {
+  const systems = ['Sistem 1', 'PRO', 'Fusion', 'Master AI', 'A60', 'A61', 'A62', 'A81', 'A120'];
+  const perf = {};
+  systems.forEach(sys => { perf[sys] = { totalPnL: 0, winCount: 0, lossCount: 0, trades: 0, avgPnL: 0, maxDrawdown: 0, stockStats: {} }; });
+  closedPositions.forEach(pos => {
+    const sys = pos.sys;
+    if (!perf[sys]) perf[sys] = { totalPnL: 0, winCount: 0, lossCount: 0, trades: 0, avgPnL: 0, maxDrawdown: 0, stockStats: {} };
+    const pnl = pos.pnl;
+    perf[sys].totalPnL += pnl;
+    perf[sys].trades++;
+    if (pnl >= 0) perf[sys].winCount++;
+    else perf[sys].lossCount++;
+    if (!perf[sys].stockStats[pos.sym]) perf[sys].stockStats[pos.sym] = { wins: 0, losses: 0, pnl: 0 };
+    perf[sys].stockStats[pos.sym].pnl += pnl;
+    if (pnl >= 0) perf[sys].stockStats[pos.sym].wins++;
+    else perf[sys].stockStats[pos.sym].losses++;
+  });
+  for (let sys in perf) if (perf[sys].trades) perf[sys].avgPnL = perf[sys].totalPnL / perf[sys].trades;
+  return perf;
+}
+
+function renderClosedSummary() {
+  const perf = computeSystemPerformance();
+  let totalClosedPnL = 0, totalTrades = 0, totalWins = 0;
+  for (let sys in perf) { totalClosedPnL += perf[sys].totalPnL; totalTrades += perf[sys].trades; totalWins += perf[sys].winCount; }
+  const winRate = totalTrades ? (totalWins / totalTrades * 100).toFixed(1) : 0;
+  const avgPnl = totalTrades ? (totalClosedPnL / totalTrades).toFixed(2) : 0;
+  const html = `<div style="background:var(--bg2);padding:10px;text-align:center;"><div style="font-size:9px;color:var(--muted);">KAPALI İŞLEM</div><div style="font-size:18px;font-weight:700;">${totalTrades}</div></div>
+    <div style="background:var(--bg2);padding:10px;text-align:center;"><div style="font-size:9px;color:var(--muted);">TOPLAM PNL</div><div style="font-size:18px;font-weight:700;${totalClosedPnL>=0?'color:var(--green)':'color:var(--red)'}">${totalClosedPnL>=0?'+':''}${totalClosedPnL.toFixed(2)}%</div></div>
+    <div style="background:var(--bg2);padding:10px;text-align:center;"><div style="font-size:9px;color:var(--muted);">WIN RATE</div><div style="font-size:18px;font-weight:700;color:var(--gold);">${winRate}%</div></div>
+    <div style="background:var(--bg2);padding:10px;text-align:center;"><div style="font-size:9px;color:var(--muted);">ORT. PNL</div><div style="font-size:18px;font-weight:700;">${avgPnl}%</div></div>`;
+  document.getElementById('closedSummaryGrid').innerHTML = html;
+}
+
+function renderSystemsPerformance() {
+  const perf = computeSystemPerformance();
+  const container = document.getElementById('systemsPerformanceGrid');
+  container.innerHTML = '';
+  for (let [sys, data] of Object.entries(perf)) {
+    container.innerHTML += `<div class="panel" style="padding:8px;"><div class="panel-header" style="font-size:11px;">${sys}</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:6px;">
+        <div><span style="color:var(--muted);">Toplam PnL</span><br><span style="font-weight:700; ${data.totalPnL>=0?'color:var(--green)':'color:var(--red)'}">${data.totalPnL.toFixed(2)}%</span></div>
+        <div><span style="color:var(--muted);">Win Rate</span><br><span style="color:var(--gold);">${data.winRate}%</span></div>
+        <div><span style="color:var(--muted);">İşlem Sayısı</span><br>${data.trades}</div>
+        <div><span style="color:var(--muted);">Ort. PnL</span><br>${data.avgPnL.toFixed(2)}%</div>
+      </div>
+    </div>`;
+  }
+}
+
+function renderSystemStockMatrix() {
+  const perf = computeSystemPerformance();
+  let rows = [];
+  for (let [sys, data] of Object.entries(perf)) {
+    for (let [stock, stats] of Object.entries(data.stockStats)) {
+      const totalTrades = stats.wins + stats.losses;
+      const winRate = totalTrades ? (stats.wins / totalTrades * 100).toFixed(1) : 0;
+      const ratio = stats.losses ? (stats.wins / stats.losses).toFixed(2) : (stats.wins ? '>10' : '0');
+      const isBest = (stats.wins > stats.losses && stats.wins >= 2);
+      rows.push(`<tr ${isBest ? 'style="background:rgba(0,230,118,0.15);"' : ''}><td>${sys}</td><td><strong>${stock}</strong></td><td>${stats.wins}</td><td>${stats.losses}</td><td>${ratio}</td><td>${winRate}%</td><td class="${stats.pnl>=0?'price-up':'price-dn'}">${stats.pnl.toFixed(2)}%</td></tr>`);
+    }
+  }
+  document.getElementById('matrixBody').innerHTML = rows.length ? rows.join('') : '<tr><td colspan="7">Veri yok</td></tr>';
+}
+
+function renderAllClosedPositions() {
+  const tbody = document.querySelector('#allClosedPosTable tbody') || (() => { let t = document.createElement('tbody'); document.querySelector('#allClosedPosTable').appendChild(t); return t; })();
+  const sorted = [...closedPositions].sort((a,b)=>b.exitTime - a.exitTime).slice(0,500);
+  tbody.innerHTML = sorted.map(p => `<tr><td>${p.sym} (${p.tf})</td><td>${p.sys}</td><td>${p.entry.toFixed(2)}</td><td>${p.exitPrice.toFixed(2)}</td><td class="${p.pnl>=0?'price-up':'price-dn'}">${p.pnl.toFixed(2)}%</td><td>${formatDuration(p.duration)}</td><td>${formatTime(p.entryTime)} → ${formatTime(p.exitTime)}</td></tr>`).join('');
+}
+
+function refreshAllPerformanceStats() { renderClosedSummary(); renderSystemsPerformance(); renderSystemStockMatrix(); renderAllClosedPositions(); }
+const origRenderPos = window.renderPositionsTab;
+window.renderPositionsTab = function() { origRenderPos(); refreshAllPerformanceStats(); };
+
+// =================================================================
+// 4. 500 AJAN DEEP ANALYSIS ENGINE
+// =================================================================
+let globalAgentPool = [];
+const AGENT_ARCHETYPES = [{type:'quantum'},{type:'momentum'},{type:'contrarian'},{type:'fractal'},{type:'chaos'},{type:'neural'},{type:'swarm'},{type:'omega'}];
+function initAgentPool(count=500) {
+  if (globalAgentPool.length === count) return;
+  globalAgentPool = [];
+  for (let i = 0; i < count; i++) {
+    globalAgentPool.push({ id: i, type: AGENT_ARCHETYPES[i % AGENT_ARCHETYPES.length].type, riskTolerance: 0.2 + Math.random() * 0.6, confidenceBias: 0.5 + Math.random() * 0.5, accuracy: 0.5 + Math.random() * 0.4 });
+  }
+}
+function runDeepAgentAnalysis(signalsList, positionsList, marketData) {
+  initAgentPool(500);
+  let buyVotes = 0, sellVotes = 0, holdVotes = 0, totalRisk = 0, totalConfidence = 0, reports = [];
+  for (let agent of globalAgentPool) {
+    let bullishSignals = signalsList.filter(s => s.type === 'AL').length;
+    let bearishSignals = signalsList.filter(s => s.type === 'SAT').length;
+    let netPositions = positionsList.length;
+    let score = (bullishSignals - bearishSignals) / Math.max(1, signalsList.length) + (netPositions * 0.05);
+    let raw = score * agent.riskTolerance * agent.confidenceBias + (Math.random() - 0.5) * 0.1;
+    let signal = raw > 0.3 ? 'BUY' : raw < -0.3 ? 'SELL' : 'HOLD';
+    if (signal === 'BUY') buyVotes++;
+    else if (signal === 'SELL') sellVotes++;
+    else holdVotes++;
+    totalRisk += Math.abs(raw);
+    totalConfidence += agent.confidenceBias;
+    reports.push(`Ajan ${agent.id} (${agent.type}): ${signal} | Risk:${Math.abs(raw).toFixed(2)}`);
+  }
+  const total = globalAgentPool.length;
+  const consensus = buyVotes > sellVotes * 1.3 ? 'AL' : sellVotes > buyVotes * 1.3 ? 'SAT' : 'HOLD';
+  return { consensus, buyVotes, sellVotes, holdVotes, avgRisk: (totalRisk/total).toFixed(2), avgConf: (totalConfidence/total).toFixed(2), reports: reports.slice(0,20) };
+}
+
+async function runDeepAgentAnalysisOnML() {
+  if (!currentResult) { showToast('ML','Önce analiz yapın','info'); return; }
+  const signals = currentResult.signals || [];
+  const positions = Object.values(openPositions);
+  const analysis = runDeepAgentAnalysis(signals, positions, {});
+  document.getElementById('mlAgentCollectiveSignal').innerHTML = analysis.consensus;
+  document.getElementById('mlAgentCollectiveSignal').className = `collective-signal-big ${analysis.consensus}`;
+  document.getElementById('mlAgentBuyVotes').innerText = analysis.buyVotes;
+  document.getElementById('mlAgentSellVotes').innerText = analysis.sellVotes;
+  document.getElementById('mlAgentHoldVotes').innerText = analysis.holdVotes;
+  document.getElementById('mlAgentBuyBar').style.flex = analysis.buyVotes;
+  document.getElementById('mlAgentHoldBar').style.flex = Math.max(1, analysis.holdVotes);
+  document.getElementById('mlAgentSellBar').style.flex = analysis.sellVotes;
+  document.getElementById('mlAgentRiskScore').innerHTML = `${analysis.avgRisk}<span style="font-size:12px;"> / 1.0</span>`;
+  document.getElementById('mlAgentReport').innerHTML = `<div>Güven: ${analysis.avgConf}</div><div>Konsensüs: ${analysis.consensus}</div><div>Toplam Ajan: 500</div><div>Örnek görüşler:</div><ul>${analysis.reports.map(r=>`<li>${r}</li>`).join('')}</ul>`;
+  const ctx = document.getElementById('mlAgentConfidenceChart').getContext('2d');
+  const w=400, h=180;
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle = 'rgba(0,229,255,0.2)'; ctx.fillRect(0,0,w,h);
+  ctx.fillStyle = 'var(--green)'; ctx.fillRect(0, h - (analysis.buyVotes/500)*h, 100, (analysis.buyVotes/500)*h);
+  ctx.fillStyle = 'var(--orange)'; ctx.fillRect(120, h - (analysis.holdVotes/500)*h, 100, (analysis.holdVotes/500)*h);
+  ctx.fillStyle = 'var(--red)'; ctx.fillRect(240, h - (analysis.sellVotes/500)*h, 100, (analysis.sellVotes/500)*h);
+  showToast('500 Ajan Analizi', `Konsensüs: ${analysis.consensus} (AL:${analysis.buyVotes} SAT:${analysis.sellVotes})`, 'ml');
+}
+
+async function runFullSystemAgentAudit() {
+  let allSystemSignals = [];
+  for (let key in allSignals) allSystemSignals.push(...allSignals[key]);
+  const allPositions = [...Object.values(openPositions), ...closedPositions];
+  const analysis = runDeepAgentAnalysis(allSystemSignals, allPositions, {});
+  const container = document.getElementById('realmSystemAnalysis');
+  container.innerHTML = `<div class="panel" style="padding:10px;"><div style="color:var(--gold);">🧠 500 AJAN TOPLU DEĞERLENDİRME</div>
+    <div>Konsensüs: <strong style="color:${analysis.consensus==='AL'?'var(--green)':analysis.consensus==='SAT'?'var(--red)':'var(--orange)'}">${analysis.consensus}</strong></div>
+    <div>AL oyu: ${analysis.buyVotes} | SAT: ${analysis.sellVotes} | HOLD: ${analysis.holdVotes}</div>
+    <div>Ortalama Risk Skoru: ${analysis.avgRisk}</div>
+    <div>Ajan Güven: ${analysis.avgConf}</div>
+    <div style="margin-top:6px; max-height:200px; overflow-y:auto;">${analysis.reports.map(r=>`<div>• ${r}</div>`).join('')}</div>
+    </div>`;
+  showToast('Sistem Denetimi', '500 ajan tüm sinyalleri ve pozisyonları analiz etti.', 'master');
+}
+
+// Tab switch hook
+const origSwitchTab = window.switchTab;
+window.switchTab = function(n) {
+  origSwitchTab(n);
+  if (n === 4 && currentResult) runDeepAgentAnalysisOnML();
+  if (n === 8 && currentResult) runFullSystemAgentAudit();
+};
+
+// Initialize agents on load
+document.addEventListener('DOMContentLoaded', () => { initAgentPool(500); refreshAllPerformanceStats(); updatePlaybackUI(); });
 </script>
 
 <script>
