@@ -1086,15 +1086,73 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
 
 </div> <!-- .main -->
 
-<!-- MODAL ve DİĞER HTML ELEMANLARI (orijinal) -->
-<div class="watchlist-modal" id="watchlistModal"><div class="modal-box"><h2 style="color:var(--gold);font-family:var(--font-display);font-size:16px;letter-spacing:2px;margin-bottom:16px;">⚡ HOŞ GELDİNİZ — İLK KURULUM</h2><p style="color:var(--muted);margin-bottom:12px;font-size:12px;">Takip listesi (virgülle ayır):</p><input type="text" id="initialWatchlist" value="AKSA,ALTNY,ASELS,BIMAS,BSOKE,CANTE,CIMSA,CWENE,DAPGM,EKGYO,ENJSA,EREGL,EUPWR,GENIL,GESAN,GLRMK,GRSEL,GUBRF,KONTR,KRDMD,KTLEV,KUYAS,MAVI,MPARK,OBAMS,PASEU,PETKM,TUPRS,TUREX,YEOTK" style="width:100%;padding:10px;margin-bottom:12px;border:1px solid var(--border2);background:rgba(10,14,26,0.8);color:var(--text);border-radius:8px;font-family:var(--font-mono);"><p style="color:var(--muted);font-size:11px;margin-bottom:6px;">Cloudflare Worker URL:</p><input type="text" id="initialWorkerUrl" value="https://masterai-proxy.ynsk06.workers.dev" style="width:100%;padding:10px;margin-bottom:16px;border:1px solid var(--border2);background:rgba(10,14,26,0.8);color:var(--text);border-radius:8px;font-family:var(--font-mono);font-size:11px;"><button class="btn" onclick="saveInitialWatchlist()" style="width:100%;padding:12px;font-size:14px;letter-spacing:1px;">🚀 BAŞLA</button></div></div>
+<!-- ══════════ MODALS ══════════ -->
 
-<div class="settings-overlay" id="settingsOverlay"><div class="settings-box"><h2>⚙ AYARLAR</h2><div class="settings-group"><label>Cloudflare Worker URL</label><input type="text" id="s_workerUrl" placeholder="https://masterai-proxy.xxx.workers.dev" /></div><div class="settings-group"><label>Telegram Bot Token</label><input type="text" id="tgToken" placeholder="123456789:AAF..." /></div><div class="settings-group"><label>Telegram Chat ID</label><input type="text" id="tgChatId" placeholder="-100123456789" /></div><div class="settings-group"><label>Groq API Key</label><input type="text" id="groqApiKey" placeholder="gsk_..." /></div><div class="settings-group"><label>Veri Yenileme (saniye, min:30)</label><input type="number" id="refreshSec" value="60" min="30" max="300" /></div><div class="settings-group"><label>Telegram Özet Aralığı</label><select id="s_summaryInterval"><option value="900">15 dakika</option><option value="1800" selected>30 dakika</option><option value="3600">1 saat</option><option value="7200">2 saat</option></select></div><div class="settings-row"><div class="settings-group"><label>Master Buy Threshold</label><input type="number" id="s_masterBuyTh" value="0.7" step="0.05" min="0.5" max="1.0" /></div><div class="settings-group"><label>Master Sell Threshold</label><input type="number" id="s_masterSellTh" value="0.3" step="0.05" min="0.0" max="0.5" /></div></div><div class="settings-row"><div class="settings-group"><label>Fusion Buy Threshold</label><input type="number" id="s_fusionBuyTh" value="0.8" step="0.05" min="0.5" max="1.0" /></div><div class="settings-group"><label>ADX Minimum</label><input type="number" id="s_adxMin" value="25" min="10" max="50" /></div></div><div class="settings-group"><label style="font-weight:700;color:var(--gold);">Aktif Sistemler</label><div style="display:flex;gap:12px;flex-wrap:wrap;font-size:11px;background:rgba(10,14,26,0.6);padding:10px;border-radius:8px;border:1px solid var(--border);"><label><input type="checkbox" id="enableSys1" checked> Sistem 1</label><label><input type="checkbox" id="enableSys2" checked> Sistem 2</label><label><input type="checkbox" id="enableFusion" checked> Fusion</label><label><input type="checkbox" id="enableMaster" checked> Master AI</label><label><input type="checkbox" id="enableAgents" checked> 5 Agent</label><label><input type="checkbox" id="enableML" checked> ML Engine</label></div></div><div class="settings-group"><label>Takip Listesi (virgülle)</label><input type="text" id="s_watchlist" /></div><div class="settings-group" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="s_notifications" checked /><label style="display:inline;margin:0;color:var(--text);">Tarayıcı Bildirimleri</label></div><div class="btn-row"><button class="btn" onclick="saveSettings()">💾 Kaydet</button><button class="btn secondary" onclick="testTelegram()">📱 TG Test</button><button class="btn secondary" onclick="closeSettings()">İptal</button><button class="btn secondary" onclick="exportSettings()">📤 İndir</button><button class="btn secondary" onclick="importSettings()">📥 Yükle</button></div><div id="settingsMsg" style="margin-top:8px;font-size:11px;"></div></div></div>
+<!-- İlk Kurulum Modalı (Hoş Geldiniz) -->
+<div class="watchlist-modal" id="watchlistModal">
+  <div class="modal-box">
+    <h2 style="color:var(--gold);font-family:var(--font-display);font-size:16px;letter-spacing:2px;margin-bottom:16px;">⚡ HOŞ GELDİNİZ — İLK KURULUM</h2>
+    <p style="color:var(--muted);margin-bottom:12px;font-size:12px;">Takip listesi (virgülle ayır):</p>
+    <input type="text" id="initialWatchlist" value="AKSA,ALTNY,ASELS,BIMAS,BSOKE,CANTE,CIMSA,CWENE,DAPGM,EKGYO,ENJSA,EREGL,EUPWR,GENIL,GESAN,GLRMK,GRSEL,GUBRF,KONTR,KRDMD,KTLEV,KUYAS,MAVI,MPARK,OBAMS,PASEU,PETKM,TUPRS,TUREX,YEOTK" style="width:100%;padding:10px;margin-bottom:12px;border:1px solid var(--border2);background:rgba(10,14,26,0.8);color:var(--text);border-radius:8px;font-family:var(--font-mono);">
+    <p style="color:var(--muted);font-size:11px;margin-bottom:6px;">Cloudflare Worker URL:</p>
+    <input type="text" id="initialWorkerUrl" value="https://masterai-proxy.ynsk06.workers.dev" style="width:100%;padding:10px;margin-bottom:16px;border:1px solid var(--border2);background:rgba(10,14,26,0.8);color:var(--text);border-radius:8px;font-family:var(--font-mono);font-size:11px;">
+    <button class="btn" onclick="saveInitialWatchlist()" style="width:100%;padding:12px;font-size:14px;letter-spacing:1px;">🚀 BAŞLA</button>
+  </div>
+</div>
 
-<div class="pwa-banner" id="pwaBanner"><div style="font-size:20px;">⚡</div><div style="flex:1;"><div style="font-weight:700;font-size:13px;color:var(--gold);">Ana Ekrana Ekle</div><div style="font-size:11px;color:var(--muted);">PWA olarak kur, bildirim al</div></div><button class="btn" id="pwaInstallBtn" style="font-size:12px;">Kur</button><button onclick="document.getElementById('pwaBanner').classList.remove('show')" class="btn secondary" style="font-size:12px;">✕</button></div>
+<!-- Ayarlar Overlay -->
+<div class="settings-overlay" id="settingsOverlay">
+  <div class="settings-box">
+    <h2>⚙ AYARLAR</h2>
+    <div class="settings-group"><label>Cloudflare Worker URL</label><input type="text" id="s_workerUrl" placeholder="https://masterai-proxy.xxx.workers.dev" /></div>
+    <div class="settings-group"><label>Telegram Bot Token</label><input type="text" id="tgToken" placeholder="123456789:AAF..." /></div>
+    <div class="settings-group"><label>Telegram Chat ID</label><input type="text" id="tgChatId" placeholder="-100123456789" /></div>
+    <div class="settings-group"><label>Groq API Key</label><input type="text" id="groqApiKey" placeholder="gsk_..." /></div>
+    <div class="settings-group"><label>Veri Yenileme (saniye, min:30)</label><input type="number" id="refreshSec" value="60" min="30" max="300" /></div>
+    <div class="settings-group"><label>Telegram Özet Aralığı</label>
+      <select id="s_summaryInterval"><option value="900">15 dakika</option><option value="1800" selected>30 dakika</option><option value="3600">1 saat</option><option value="7200">2 saat</option></select>
+    </div>
+    <div class="settings-row">
+      <div class="settings-group"><label>Master Buy Threshold</label><input type="number" id="s_masterBuyTh" value="0.7" step="0.05" min="0.5" max="1.0" /></div>
+      <div class="settings-group"><label>Master Sell Threshold</label><input type="number" id="s_masterSellTh" value="0.3" step="0.05" min="0.0" max="0.5" /></div>
+    </div>
+    <div class="settings-row">
+      <div class="settings-group"><label>Fusion Buy Threshold</label><input type="number" id="s_fusionBuyTh" value="0.8" step="0.05" min="0.5" max="1.0" /></div>
+      <div class="settings-group"><label>ADX Minimum</label><input type="number" id="s_adxMin" value="25" min="10" max="50" /></div>
+    </div>
+    <div class="settings-group">
+      <label style="font-weight:700;color:var(--gold);">Aktif Sistemler</label>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:11px;background:rgba(10,14,26,0.6);padding:10px;border-radius:8px;border:1px solid var(--border);">
+        <label><input type="checkbox" id="enableSys1" checked> Sistem 1</label>
+        <label><input type="checkbox" id="enableSys2" checked> Sistem 2</label>
+        <label><input type="checkbox" id="enableFusion" checked> Fusion</label>
+        <label><input type="checkbox" id="enableMaster" checked> Master AI</label>
+        <label><input type="checkbox" id="enableAgents" checked> 5 Agent</label>
+        <label><input type="checkbox" id="enableML" checked> ML Engine</label>
+      </div>
+    </div>
+    <div class="settings-group"><label>Takip Listesi (virgülle)</label><input type="text" id="s_watchlist" /></div>
+    <div class="settings-group" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="s_notifications" checked /><label style="display:inline;margin:0;color:var(--text);">Tarayıcı Bildirimleri</label></div>
+    <div class="btn-row">
+      <button class="btn" onclick="saveSettings()">💾 Kaydet</button>
+      <button class="btn secondary" onclick="testTelegram()">📱 TG Test</button>
+      <button class="btn secondary" onclick="closeSettings()">İptal</button>
+      <button class="btn secondary" onclick="exportSettings()">📤 İndir</button>
+      <button class="btn secondary" onclick="importSettings()">📥 Yükle</button>
+    </div>
+    <div id="settingsMsg" style="margin-top:8px;font-size:11px;"></div>
+  </div>
+</div>
+
+<!-- PWA Banner -->
+<div class="pwa-banner" id="pwaBanner">
+  <div style="font-size:20px;">⚡</div>
+  <div style="flex:1;"><div style="font-weight:700;font-size:13px;color:var(--gold);">Ana Ekrana Ekle</div><div style="font-size:11px;color:var(--muted);">PWA olarak kur, bildirim al</div></div>
+  <button class="btn" id="pwaInstallBtn" style="font-size:12px;">Kur</button>
+  <button onclick="document.getElementById('pwaBanner').classList.remove('show')" class="btn secondary" style="font-size:12px;">✕</button>
+</div>
 
 <div class="toast-container" id="toastContainer"></div>
-
 <script>
 // ============================================================
 // MASTER AI TRADING v∞ — TÜM JAVASCRIPT KODU (ORİJİNAL + YENİ)
