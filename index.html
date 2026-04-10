@@ -633,7 +633,7 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
   <div class="tab tab-special" onclick="switchTab(8)" id="tab8">📜 INFINITE REALM</div>
 </div>
 
-<!-- PLAYBACK BAR -->
+<!-- PLAYBACK BAR (yeni) -->
 <div class="playback-bar" style="background:rgba(8,13,26,0.9); border-bottom:1px solid var(--border); padding:6px 12px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
   <button id="playbackPlayPause" class="btn cyber" style="padding:4px 12px;">▶ Play</button>
   <button id="playbackStepBack" class="btn secondary" style="padding:4px 12px;">◀ Step -1</button>
@@ -1005,8 +1005,8 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
     <div class="panel"><div class="ml-panel-header" style="color:var(--purple2);">RADAR — ÇOK FAKTÖRLÜ ANALİZ</div><canvas class="radar-canvas" id="radarCanvas"></canvas></div>
   </div>
   <div class="panels-grid">
-    <div class="panel"><div class="ml-panel-header" style="color:var(--red);">🚨 ANOMALİ TESPİTİ</div><table class="data-table"><tr><td>Isolation Forest</td><td id="an-if">—</td></tr><tr><td>VAE Score</td><td id="an-vae">—</td></tr><tr><td>Z-Score Anom.</td><td id="an-z">—</td></tr><tr><td>Volume Anom.</td><td id="an-vol">—</td></tr><tr><td>Genel Durum</td><td id="an-status">—</td></tr></table></div>
-    <div class="panel"><div class="ml-panel-header" style="color:var(--teal);">📈 REJİM TESPİTİ</div><div class="regime-timeline"><div style="font-size:10px;color:var(--muted);margin-bottom:6px;">Piyasa Rejimi</div><div class="regime-track" id="regimeTrack"></div><div class="regime-labels" id="regimeLabels"></div></div><table class="data-table"><tr><td>Mevcut Rejim</td><td id="rg-current">—</td></tr><tr><td>Trend Gücü</td><td id="rg-strength">—</td></tr><tr><td>Volatilite</td><td id="rg-vol">—</td></tr><tr><td>Concept Drift</td><td id="rg-drift">—</td></table></table></div>
+    <div class="panel"><div class="ml-panel-header" style="color:var(--red);">🚨 ANOMALİ TESPİTİ</div><table class="data-table"><tr><td>Isolation Forest</td><td id="an-if">—</td></tr><tr><td>VAE Score</td><td id="an-vae">—</td></tr><tr><td>Z-Score Anom.</td><td id="an-z">—</td></tr>四个<td>Volume Anom.</td><td id="an-vol">—</td></tr>五个<td>Genel Durum</td><td id="an-status">—</td></tr></table></div>
+    <div class="panel"><div class="ml-panel-header" style="color:var(--teal);">📈 REJİM TESPİTİ</div><div class="regime-timeline"><div style="font-size:10px;color:var(--muted);margin-bottom:6px;">Piyasa Rejimi</div><div class="regime-track" id="regimeTrack"></div><div class="regime-labels" id="regimeLabels"></div></div><table class="data-table"><tr><td>Mevcut Rejim</td><td id="rg-current">—</td></tr><tr><td>Trend Gücü</td><td id="rg-strength">—</td></tr><tr><td>Volatilite</td><td id="rg-vol">—</td></tr>四个<td>Concept Drift</td><td id="rg-drift">—</td></tr></table></div>
   </div>
   <div class="panel">
     <div class="ml-panel-header" style="color:var(--gold);">🤖 AUTO ONLINE LEARNING — Pozisyonlardan Otomatik Öğrenme <span style="font-size:10px;color:var(--muted);" id="feedbackCount">0 örnek</span></div>
@@ -1035,7 +1035,7 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
   <div style="display:grid;gap:12px;">
     <div class="kv-banner" id="kvStatusBanner"><span>⏳ KV bağlantısı kontrol ediliyor...</span></div>
     <div class="panel"><div class="panel-header">Cihaz UID</div><div class="panel-body" style="padding:12px;"><p style="color:var(--muted);font-size:11px;margin-bottom:8px;">Aynı UID ile farklı cihazlarda sync yapabilirsiniz.</p><div style="display:flex;gap:8px;align-items:center;"><input id="uidInput" style="flex:1;background:rgba(10,14,26,0.8);border:1px solid var(--border2);border-radius:7px;padding:8px;color:var(--text);font-family:var(--font-mono);" placeholder="örn: telefon1"><button class="btn" onclick="saveUID()">Kaydet</button><button class="btn secondary" onclick="generateUID()">🎲</button></div><p style="color:var(--muted);font-size:10px;margin-top:6px;">Mevcut: <strong id="currentUID" style="color:var(--cyan);"></strong></p></div></div>
-    <div class="panel"><div class="panel-header">Sync Durumu</div><div class="panel-body" style="padding:12px;"><table class="data-table"><tr><td>Son Sinyal Sync</td><td id="kv-lastSignalSync">—</td></tr><tr><td>Son Ayar Sync</td><td id="kv-lastSettingSync">—</td></tr><tr><td>Son Pozisyon Sync</td><td id="kv-lastPosSync">—</td></tr><tr><td>Toplam Sinyal</td><td id="kv-signalCount">—</td></tr><tr><td>Açık Pozisyon</td><td id="kv-posCount">—</td></tr></table><div class="btn-row" style="margin-top:12px;"><button class="btn" onclick="kvPushAll()">☁ Buluta Yükle</button><button class="btn secondary" onclick="kvPullAll()">⬇ Buluttan İndir</button></div></div></div>
+    <div class="panel"><div class="panel-header">Sync Durumu</div><div class="panel-body" style="padding:12px;"><table class="data-table"><tr><td>Son Sinyal Sync</td><td id="kv-lastSignalSync">—</td></tr><tr><td>Son Ayar Sync</td><td id="kv-lastSettingSync">—</td></tr><tr><td>Son Pozisyon Sync</td><td id="kv-lastPosSync">—</td></tr>四个<td>Toplam Sinyal</td><td id="kv-signalCount">—</td></tr>五个<td>Açık Pozisyon</td><td id="kv-posCount">—</td></tr></table><div class="btn-row" style="margin-top:12px;"><button class="btn" onclick="kvPushAll()">☁ Buluta Yükle</button><button class="btn secondary" onclick="kvPullAll()">⬇ Buluttan İndir</button></div></div></div>
     <div class="panel"><div class="panel-header">Worker URL</div><div class="panel-body" style="padding:12px;"><div style="display:flex;gap:8px;"><input id="workerUrlInput" style="flex:1;background:rgba(10,14,26,0.8);border:1px solid var(--border2);border-radius:7px;padding:8px;color:var(--text);font-family:var(--font-mono);font-size:11px;" placeholder="https://masterai-proxy.xxx.workers.dev"><button class="btn" onclick="saveWorkerUrl()">Kaydet</button></div><button class="btn secondary" onclick="testWorker()" style="margin-top:8px;">🔍 Test Et</button><div id="workerTestResult" style="margin-top:8px;font-size:11px;"></div></div></div>
   </div>
 </div>
@@ -1076,7 +1076,7 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
     </div>
   </div>
 
-  <!-- 500 AJAN SİSTEM ANALİZİ PANELİ -->
+  <!-- 500 AJAN SİSTEM ANALİZİ PANELİ (yeni) -->
   <div class="collective-panel" style="margin:10px;">
     <div class="collective-header">🌀 500 AJAN — TÜM 9 SİSTEMİN SİNYAL ANALİZİ</div>
     <div id="realmSystemAnalysis" style="padding:12px; display:grid; gap:8px; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));"></div>
@@ -2275,7 +2275,7 @@ async function runMLBacktestAllStocks(){
   }
   if(fillEl)fillEl.style.width='100%';
   results.sort((a,b)=>b.acc-a.acc);
-  if(bodyEl)bodyEl.innerHTML=results.map(r=>`<tr><td><strong>${r.sym}</strong></td><td>${r.tf}</td><td style="color:${r.acc>=60?'var(--green)':r.acc>=45?'var(--orange)':'var(--red)'}">${r.acc}%</td><td class="${parseFloat(r.pnl)>=0?'price-up':'price-dn'}">${r.pnl}%</td><td style="color:var(--gold)">${r.sharpe}</td><td>${r.total}</td><td><span class="badge ${r.status==='BAŞARILI'?'badge-green':r.status==='HATA'?'badge-red':'badge-gold'}">${r.status}</span></td>`).join('');
+  if(bodyEl)bodyEl.innerHTML=results.map(r=>`<tr><td><strong>${r.sym}</strong></td><td>${r.tf}</td><td style="color:${r.acc>=60?'var(--green)':r.acc>=45?'var(--orange)':'var(--red)'}">${r.acc}%</td><td class="${parseFloat(r.pnl)>=0?'price-up':'price-dn'}">${r.pnl}%</td><td style="color:var(--gold)">${r.sharpe}</td><td>${r.total}</td><td><span class="badge ${r.status==='BAŞARILI'?'badge-green':r.status==='HATA'?'badge-red':'badge-gold'}">${r.status}</span></td></tr>`).join('');
   const avgAcc=results.length?Math.round(results.reduce((a,b)=>a+b.acc,0)/results.length):0;
   const summEl=document.getElementById('mlBacktestAllSummary');
   if(summEl)summEl.innerHTML=`<span style="color:var(--cyan)">Ortalama Doğruluk: <strong>${avgAcc}%</strong></span> | <span style="color:var(--text2)">${results.length} test tamamlandı</span>`;
@@ -2384,7 +2384,7 @@ async function runStrategyOptimizerAllStocks(){
   }
   if(fillEl)fillEl.style.width='100%';if(statusEl)statusEl.textContent='✅ Tüm hisseler tamamlandı!';
   allResults.sort((a,b)=>parseFloat(b.improvement)-parseFloat(a.improvement));
-  if(allBodyEl)allBodyEl.innerHTML=allResults.map(r=>`<tr><td><strong>${r.sym}</strong></td><td>${r.tf}</td><td class="${parseFloat(r.oldPnl)>=0?'price-up':'price-dn'}">${r.oldPnl}%</td><td class="${parseFloat(r.newPnl)>=0?'price-up':'price-dn'}">${r.newPnl}%</td><td class="${parseFloat(r.improvement)>=0?'price-up':'price-dn'}">${parseFloat(r.improvement)>=0?'+':''}${r.improvement}%</td><td style="font-size:10px;color:var(--muted);">${r.bestParam}</td>`).join('');
+  if(allBodyEl)allBodyEl.innerHTML=allResults.map(r=>`<tr><td><strong>${r.sym}</strong></td><td>${r.tf}</td><td class="${parseFloat(r.oldPnl)>=0?'price-up':'price-dn'}">${r.oldPnl}%</td><td class="${parseFloat(r.newPnl)>=0?'price-up':'price-dn'}">${r.newPnl}%</td><td class="${parseFloat(r.improvement)>=0?'price-up':'price-dn'}">${parseFloat(r.improvement)>=0?'+':''}${r.improvement}%</td><td style="font-size:10px;color:var(--muted);">${r.bestParam}</td></tr>`).join('');
   pendingOptResult={bestCfg:globalBestCfg,baseCfg:CFG,bestAgentParams:agentOptParams,targets:Object.keys(paramSpaces),score:globalBestScore,allResults};
   if(allResEl)allResEl.style.display='block';
   setTimeout(()=>{if(wrapEl)wrapEl.style.display='none';},1500);
