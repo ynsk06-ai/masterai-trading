@@ -232,7 +232,6 @@ canvas.radar-canvas{width:100%;height:200px;display:block;}
 .ai-input-row{display:flex;gap:8px;}
 .ai-input{flex:1;background:rgba(10,14,26,0.8);border:1px solid var(--border2);border-radius:10px;padding:12px 14px;color:var(--text);font-family:var(--font-mono);font-size:12px;}
 .ai-input:focus{outline:none;border-color:var(--purple);}
-/* POSITIONS TAB - ENHANCED */
 .pos-section-title{font-family:var(--font-display);font-size:11px;letter-spacing:2px;padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
 .pos-table{width:100%;border-collapse:collapse;font-size:11px;}
 .pos-table th{padding:6px 10px;color:var(--muted);font-family:var(--font-ui);font-size:10px;letter-spacing:0.5px;border-bottom:1px solid var(--border);text-align:left;background:rgba(14,21,37,0.6);}
@@ -242,7 +241,6 @@ canvas.radar-canvas{width:100%;height:200px;display:block;}
 .pos-pnl-positive{color:var(--green);font-weight:700;}
 .pos-pnl-negative{color:var(--red);font-weight:700;}
 .pos-time{color:var(--muted);font-size:10px;}
-/* SYSTEM PERFORMANCE TABLE */
 .sys-perf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
 .sys-perf-card{background:rgba(14,21,37,0.85);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
 .sys-perf-header{padding:8px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(26,37,64,0.3);}
@@ -251,18 +249,15 @@ canvas.radar-canvas{width:100%;height:200px;display:block;}
 .sys-perf-stat{background:var(--bg2);padding:6px;text-align:center;}
 .sys-perf-stat-val{font-size:13px;font-weight:700;font-family:var(--font-display);}
 .sys-perf-stat-label{font-size:9px;color:var(--muted);font-family:var(--font-ui);}
-/* BEST SYMBOLS TABLE */
 .best-sym-table{width:100%;border-collapse:collapse;font-size:11px;}
 .best-sym-table th{padding:5px 10px;color:var(--muted);font-family:var(--font-ui);font-size:10px;border-bottom:1px solid var(--border);text-align:left;background:rgba(14,21,37,0.6);}
 .best-sym-table td{padding:6px 10px;border-bottom:1px solid rgba(30,48,80,0.2);}
 .best-sym-table tr:hover td{background:rgba(0,229,255,0.02);}
-/* BAR SLIDER */
 .bar-slider-wrap{background:rgba(14,21,37,0.6);border:1px solid var(--border);border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 .bar-slider{flex:1;min-width:200px;-webkit-appearance:none;height:4px;border-radius:2px;background:var(--border2);outline:none;}
 .bar-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--cyan);cursor:pointer;box-shadow:0 0 8px rgba(0,229,255,0.5);}
 .bar-slider-label{font-size:10px;color:var(--muted);font-family:var(--font-ui);min-width:80px;}
 .bar-slider-val{font-size:11px;font-weight:700;color:var(--cyan);font-family:var(--font-display);min-width:50px;text-align:right;}
-/* LAB */
 .lab-v2-layout{display:grid;grid-template-columns:340px 1fr;gap:12px;}
 .lab-sidebar{display:flex;flex-direction:column;gap:8px;}
 .lab-main-area{display:flex;flex-direction:column;gap:10px;}
@@ -332,7 +327,6 @@ canvas.radar-canvas{width:100%;height:200px;display:block;}
 .lab-algo-list::-webkit-scrollbar{width:3px;}
 .lab-algo-list::-webkit-scrollbar-thumb{background:var(--border2);}
 .notif-toggle-btn{background:rgba(0,229,255,0.1);color:var(--cyan);border:1px solid var(--border2);border-radius:20px;padding:4px 10px;font-size:11px;cursor:pointer;margin-left:6px;}
-/* REALM */
 .realm-wrapper{background:rgba(5,8,16,0.98);min-height:100%;position:relative;}
 .realm-header{position:relative;z-index:1;padding:16px;border-bottom:1px solid rgba(176,64,255,0.3);background:rgba(10,14,26,0.8);}
 .realm-title{font-family:var(--font-display);font-size:16px;font-weight:900;letter-spacing:3px;background:linear-gradient(135deg,#ffd700,#b040ff,#00e5ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px;}
@@ -428,9 +422,12 @@ canvas.radar-canvas{width:100%;height:200px;display:block;}
 }
 body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:#c4d2e0;--surface:#b8c8da;--border:#9db5cc;--border2:#8aa8c0;--text:#0f1a2e;--text2:#2a4060;--muted:#6080a0;}
 </style>
-
+</style>
+</head>
 <body>
 <div class="matrix-overlay"></div>
+
+<!-- HEADER -->
 <div class="header">
   <div class="header-left">
     <div class="logo">⚡ MASTER AI v∞</div>
@@ -450,6 +447,7 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
   </div>
 </div>
 
+<!-- TAB BAR -->
 <div class="tab-bar">
   <div class="tab active" onclick="switchTab(0)" id="tab0">⚡ Ana Ekran</div>
   <div class="tab" onclick="switchTab(1)" id="tab1">📌 Pozisyonlar</div>
@@ -463,7 +461,8 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
 </div>
 
 <div class="main">
-<!-- TAB 0: ANA EKRAN -->
+
+<!-- ══════════ TAB 0: ANA EKRAN ══════════ -->
 <div class="tab-content active" id="content0">
   <div class="symbol-bar">
     <input type="text" id="symbolInput" value="XU100" placeholder="Sembol"/>
@@ -477,6 +476,7 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
     <button onclick="exportSignalsCSV()" class="multi-tf-btn" style="background:rgba(0,229,255,0.1);color:var(--cyan);border-color:rgba(0,229,255,0.3);">📤 CSV</button>
     <span id="lastUpdate" style="font-size:10px;color:var(--muted);"></span>
   </div>
+
   <!-- BAR SLIDER -->
   <div class="bar-slider-wrap">
     <span class="bar-slider-label">📊 Çubuk Sayısı:</span>
@@ -485,10 +485,12 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
     <button class="btn cyber" style="font-size:10px;padding:4px 10px;" onclick="analyzeSymbol()">▶ Uygula</button>
     <button class="btn secondary" style="font-size:10px;padding:4px 10px;" onclick="setBarCount(5000)">5000 (Max)</button>
   </div>
+
   <div class="watchlist-wrap">
     <div class="watchlist-label">Takip Listesi — Tıkla → Analiz Et</div>
     <div class="watchlist-grid" id="watchlistGrid"></div>
   </div>
+
   <div class="chart-container" style="position:relative;">
     <div id="chartLoading" class="loading-overlay" style="display:none;">
       <div class="spinner"></div>
@@ -514,6 +516,7 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
     </div>
     <canvas id="volumeChart" height="60"></canvas>
   </div>
+
   <!-- ML STRIP -->
   <div class="panel">
     <div class="panel-header" style="color:var(--purple2);">🧠 ML Engine — Anlık Tahmin <span id="mlEngineBadge" class="badge badge-gray">YOK</span></div>
@@ -552,6 +555,7 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
       <div class="shap-container" id="shapContainer"><div style="color:var(--muted);font-size:11px;text-align:center;padding:10px;">Analiz sonrası görünür</div></div>
     </div>
   </div>
+
   <div class="panels-grid">
     <div class="panel">
       <div class="panel-header" style="color:var(--gold);">👑 Master AI <span id="masterPosBadge" class="badge badge-gray">YOK</span></div>
@@ -655,6 +659,7 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
       </div>
     </div>
   </div>
+
   <div class="panel">
     <div class="panel-header">📋 Sinyal Geçmişi (Son 50) <button class="btn secondary" onclick="clearSignals()" style="padding:2px 8px;font-size:10px;">Temizle</button></div>
     <div class="signal-log" id="signalLog">
@@ -662,8 +667,8 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
     </div>
   </div>
 </div>
-
-<!-- TAB 1: POZISYONLAR - GELİŞTİRİLMİŞ -->
+<!-- END TAB 0 -->
+<!-- ══════════ TAB 1: POZİSYONLAR - GELİŞTİRİLMİŞ ══════════ -->
 <div class="tab-content" id="content1">
   <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0 8px;flex-wrap:wrap;gap:8px;">
     <h2 style="color:var(--gold);font-family:var(--font-display);font-size:14px;letter-spacing:2px;">📌 POZİSYON MERKEZİ</h2>
@@ -697,7 +702,7 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
     </div>
   </div>
 
-  <!-- KAPALI POZİSYON ÖZET - YENİ -->
+  <!-- KAPALI POZİSYON ÖZET -->
   <div class="panel" style="margin-bottom:10px;">
     <div class="pos-section-title" style="color:var(--orange);">
       🔒 KAPALI POZİSYON ÖZET — Tüm Sistemler
@@ -713,7 +718,7 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
     </div>
   </div>
 
-  <!-- 9 SİSTEM PERFORMANS TABLOSU - YENİ -->
+  <!-- 9 SİSTEM PERFORMANS TABLOSU -->
   <div class="panel" style="margin-bottom:10px;">
     <div class="pos-section-title" style="color:var(--purple2);">
       📊 9 SİSTEM PERFORMANS ANALİZİ — Kapalı Pozisyonlara Göre
@@ -724,7 +729,7 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
     </div>
   </div>
 
-  <!-- EN İYİ SEMBOLLER - SISTEM BAZINDA - YENİ -->
+  <!-- EN İYİ SEMBOLLER - SİSTEM BAZINDA -->
   <div class="panel" style="margin-bottom:10px;">
     <div class="pos-section-title" style="color:var(--gold);">
       🏆 HANGİ SİSTEM HANGİ HİSSEDE BAŞARILI — Karlı vs Zararlı
@@ -789,7 +794,7 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
   </div>
 </div>
 
-<!-- TAB 2: BİLDİRİMLER -->
+<!-- ══════════ TAB 2: BİLDİRİMLER ══════════ -->
 <div class="tab-content" id="content2">
   <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0 8px;">
     <h2 style="color:var(--gold);font-family:var(--font-display);font-size:14px;letter-spacing:2px;">🛎 BİLDİRİM GEÇMİŞİ</h2>
@@ -798,7 +803,7 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
   <div class="panel"><div class="signal-log" id="notificationLog"><div style="padding:20px;text-align:center;color:var(--muted);">Henüz bildirim yok</div></div></div>
 </div>
 
-<!-- TAB 3: BUGÜN -->
+<!-- ══════════ TAB 3: BUGÜN ══════════ -->
 <div class="tab-content" id="content3">
   <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0 8px;">
     <h2 style="color:var(--gold);font-family:var(--font-display);font-size:14px;letter-spacing:2px;">📅 BUGÜNKÜ SİNYALLER</h2>
@@ -807,7 +812,7 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
   <div class="panel"><div class="signal-log" id="dailySignalLog"><div style="padding:20px;text-align:center;color:var(--muted);">Bugün henüz sinyal oluşmadı</div></div></div>
 </div>
 
-<!-- TAB 4: ML ENGINE -->
+<!-- ══════════ TAB 4: ML ENGINE ══════════ -->
 <div class="tab-content" id="content4">
   <div style="padding:10px 0 8px;">
     <h2 style="color:var(--purple2);font-family:var(--font-display);font-size:14px;letter-spacing:2px;">🧠 AETHER ML MASTER ENGINE v2.1</h2>
@@ -965,7 +970,7 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
   </div>
 </div>
 
-<!-- TAB 5: GROQ AI -->
+<!-- ══════════ TAB 5: GROQ AI ══════════ -->
 <div class="tab-content" id="content5">
   <h2 style="color:var(--purple2);font-family:var(--font-display);font-size:14px;letter-spacing:2px;padding:10px 0 8px;">🤖 GROQ LLAMA 3.3 AI ASISTANI</h2>
   <div class="ai-chat-wrap">
@@ -977,7 +982,7 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
   </div>
 </div>
 
-<!-- TAB 6: BULUT -->
+<!-- ══════════ TAB 6: BULUT ══════════ -->
 <div class="tab-content" id="content6">
   <h2 style="color:var(--gold);font-family:var(--font-display);font-size:14px;letter-spacing:2px;padding:10px 0 8px;">☁ CLOUDFLARE KV — BULUT SYNC</h2>
   <div style="display:grid;gap:12px;">
@@ -1022,7 +1027,7 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
   </div>
 </div>
 
-<!-- TAB 7: AETHER LAB v2 -->
+<!-- ══════════ TAB 7: AETHER LAB v2 ══════════ -->
 <div class="tab-content" id="content7">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
     <h2 style="color:var(--purple2);font-family:var(--font-display);font-size:13px;letter-spacing:1.5px;">🧪 AETHER LAB v2 — 50 Algo + Sistem Sinyalleri</h2>
@@ -1048,7 +1053,7 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
     <div id="labScanLiveResults" style="max-height:120px;overflow-y:auto;"></div>
   </div>
 
-  <!-- LAB + ANA SİSTEM SİNYAL ENTEGRASYONu -->
+  <!-- LAB + ANA SİSTEM SİNYAL ENTEGRASYONU -->
   <div class="panel" style="margin-bottom:10px;border-color:rgba(0,229,255,0.3);">
     <div class="panel-header" style="color:var(--cyan);">🔗 ANA SİSTEM SİNYAL ENTEGRASYONU — LAB Analizine Dahil</div>
     <div style="padding:10px 12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;" id="labMainSysSignals">
@@ -1173,7 +1178,7 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
   </div>
 </div>
 
-<!-- TAB 8: INFINITE SIMULATION REALM -->
+<!-- ══════════ TAB 8: INFINITE SIMULATION REALM ══════════ -->
 <div class="tab-content" id="content8">
 <div class="realm-wrapper">
   <div class="realm-header">
@@ -1211,7 +1216,7 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
 
   <div style="padding:10px;display:grid;gap:10px;position:relative;z-index:1;">
 
-    <!-- ANA SİSTEM SİNYALLERİ REALM'E ENTEGRASYON - YENİ -->
+    <!-- ANA SİSTEM SİNYALLERİ REALM'E ENTEGRASYON -->
     <div class="panel" style="border-color:rgba(255,215,0,0.3);">
       <div class="panel-header" style="color:var(--gold);">🔗 ANA SİSTEM SİNYALLERİ — 500 Ajan Tarafından Analiz Ediliyor</div>
       <div style="padding:10px 12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;" id="realmMainSysPanel">
@@ -1460,9 +1465,7 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
 </div>
 </div>
 
-</div><!-- /main -->
-
-<!-- MODALS -->
+<!-- ══════════ MODALS ══════════ -->
 <div class="watchlist-modal" id="watchlistModal">
   <div class="modal-box">
     <h2 style="color:var(--gold);font-family:var(--font-display);font-size:16px;letter-spacing:2px;margin-bottom:16px;">⚡ HOŞ GELDİNİZ</h2>
@@ -1531,8 +1534,8 @@ body.theme-light{--void:#f0f4f8;--deep:#e4ebf5;--bg:#dde6f0;--bg2:#d0dcea;--bg3:
   <button class="btn" id="pwaInstallBtn" style="font-size:12px;">Kur</button>
   <button onclick="document.getElementById('pwaBanner').classList.remove('show')" class="btn secondary" style="font-size:12px;">✕</button>
 </div>
-<div class="toast-container" id="toastContainer"></div>
 
+<div class="toast-container" id="toastContainer"></div>
 <script>
 // ============================================================
 // MASTER AI TRADING v∞ — GLOBALS + CONFIG
@@ -1607,7 +1610,6 @@ async function fetchOHLCV(sym,tf,barCount){
   barCount=barCount||currentBarCount||5000;
   let yahooInterval='60m',resampleFactor=1;
   let range='2y';
-  // Determine range based on bar count and timeframe
   const barsNeeded=barCount*resampleFactor;
   if(tf==='1d')range=barsNeeded>500?'5y':'2y';
   else if(tf==='4h')range=barsNeeded>500?'2y':'1y';
@@ -1635,7 +1637,6 @@ async function fetchOHLCV(sym,tf,barCount){
   let bars=ts.map((t,i)=>({t:t*1000,o:q.open?.[i],h:q.high?.[i],l:q.low?.[i],c:q.close?.[i],v:q.volume?.[i]||0})).filter(b=>b.o!=null&&b.h!=null&&b.l!=null&&b.c!=null&&isFinite(b.c)&&b.c>0);
   if(bars.length<30)throw new Error('Yeterli bar yok: '+bars.length);
   if(resampleFactor>1)bars=resample(bars,resampleFactor);
-  // Limit to requested bar count (take latest N bars)
   if(bars.length>barCount)bars=bars.slice(bars.length-barCount);
   return bars;
 }
@@ -1805,7 +1806,6 @@ function evaluateParams(bars,cfg){
   try{const result=runIndicators(bars,cfg);if(!result)return{pnl:-999,trades:0,score:-999};const trades=result.master.masterBuyCnt;const pnl=result.master.masterPnL;const winRate=result.master.masterWinCnt/Math.max(1,result.master.masterSellCnt);const score=pnl*0.6+winRate*40*0.3+Math.min(20,trades)*0.1;return{pnl,trades,winRate,score};}catch(e){return{pnl:-999,trades:0,score:-999};}
 }
 </script>
-
 <script>
 // ============================================================
 // ML ENGINE + CHART DRAWING
@@ -2142,7 +2142,6 @@ function updateModelSelectorUI(){
   try{const sel=document.getElementById('modelSelector');if(!sel)return;sel.innerHTML=Object.values(ML.models).map(m=>`<div class="model-chip ${m.trained?'active':''}"><div class="model-chip-name">${m.name}</div><div class="model-chip-acc" style="color:${m.acc>0.65?'var(--green)':'var(--orange)'};">${m.trained?Math.round(m.acc*100)+'%':'—'}</div></div>`).join('');}catch(e){}
 }
 </script>
-
 <script>
 // ============================================================
 // POSITIONS + PANELS + SYSTEM PERFORMANCE (YENİ)
@@ -2225,7 +2224,6 @@ function getLatestPrice(sym){return liveSymbolPrices[sym]||(currentSym===sym&&cu
 
 // ── YENİ: SİSTEM PERFORMANS ANALİZİ ─────────────────────
 function computeSystemPerformance(){
-  // 9 sistem: Sistem 1, PRO, Fusion, Master AI, A60, A61, A62, A81, A120
   const sysNames=['Sistem 1','PRO','Fusion','Master AI','A60','A61','A62','A81','A120'];
   const sysData={};
   sysNames.forEach(s=>{sysData[s]={wins:0,losses:0,totalPnl:0,trades:0,best:null,worst:null,pnlList:[]};});
@@ -2280,8 +2278,6 @@ function renderBestSymbols(){
   const el=document.getElementById('bestSymBody');if(!el)return;
   const sysFilter=document.getElementById('bestSymSysFilter')?.value||'all';
   const sortBy=document.getElementById('bestSymSort')?.value||'winrate';
-  const resultFilter=document.getElementById('closedResultFilter')?.value||'all';
-  // Build sym+sys stats
   const symSysMap={};
   closedPositions.forEach(pos=>{
     if(sysFilter!=='all'&&pos.sys!==sysFilter)return;
@@ -2292,7 +2288,6 @@ function renderBestSymbols(){
     if(pos.pnl>=0)symSysMap[key].wins++;else symSysMap[key].losses++;
   });
   let rows=Object.values(symSysMap);
-  // Sort
   if(sortBy==='winrate')rows.sort((a,b)=>(b.wins/Math.max(1,b.trades))-(a.wins/Math.max(1,a.trades)));
   else if(sortBy==='pnl')rows.sort((a,b)=>b.totalPnl-a.totalPnl);
   else rows.sort((a,b)=>b.trades-a.trades);
@@ -2329,7 +2324,6 @@ function renderPositionsTab(){
         return`<tr><td><strong>${p.sym}</strong> <span class="badge badge-blue">${p.tf}</span></td><td>${p.sys}</td><td style="font-family:monospace;">${p.entry.toFixed(2)}</td><td style="font-family:monospace;">${price?price.toFixed(2):'—'}</td><td class="${pnl===null?'':(pnl>=0?'pos-pnl-positive':'pos-pnl-negative')}">${pnl!==null?fmtPct(pnl):'—'}</td><td class="pos-time">${duration?formatDuration(duration):'—'}</td><td class="pos-time">${formatTime(p.entryTime)}</td></tr>`;
       }).join('');
     }
-    // Closed positions with filters
     const sysFilter=document.getElementById('closedSysFilter')?.value||'all';
     const resultFilter=document.getElementById('closedResultFilter')?.value||'all';
     let filtered=[...closedPositions].sort((a,b)=>(b.exitTime||0)-(a.exitTime||0));
@@ -2371,14 +2365,12 @@ function renderClosedSummary(){
 function updatePositionSummary(){
   const openKeys=Object.keys(openPositions);
   safeSetText('summOpenCount',openKeys.length);
-  safeSetText('summClosedCount',closedPositions.length);
   safeSetText('openPosCount',openKeys.length+' açık, '+closedPositions.length+' kapalı');
   let totalPnl=0,validCount=0;
   openKeys.forEach(key=>{const pos=openPositions[key];const lp=getLatestPrice(pos.sym);if(lp&&pos.entry){totalPnl+=(lp-pos.entry)/pos.entry*100;validCount++;}});
   const totalPnlEl=document.getElementById('summTotalPnl');
   if(totalPnlEl){totalPnlEl.textContent=validCount>0?(totalPnl>=0?'+':'')+totalPnl.toFixed(2)+'%':'—';totalPnlEl.className=validCount>0?(totalPnl>=0?'price-up':'price-dn'):'';}
   if(closedPositions.length>0){const wins=closedPositions.filter(p=>p.pnl>=0).length;safeSetText('summWinRate',Math.round(wins/closedPositions.length*100)+'%');}else safeSetText('summWinRate','—');
-  // Max drawdown & Sharpe (simplified)
   if(closedPositions.length>0){
     const pnls=closedPositions.map(p=>p.pnl);
     let peak=0,maxDD=0,cumPnl=0;
@@ -2394,10 +2386,8 @@ function updatePositionSummary(){
 }
 
 function exportPositionsCSV(){
-  let csv='Tarih,Sembol,TF,Sistem,Giriş,Çıkış,PnL%,Süre
-';
-  closedPositions.forEach(p=>{csv+=`${formatTime(p.entryTime)},${p.sym},${p.tf},${p.sys},${p.entry.toFixed(2)},${p.exitPrice.toFixed(2)},${p.pnl.toFixed(2)},${formatDuration(p.duration)}
-`;});
+  let csv='Tarih,Sembol,TF,Sistem,Giriş,Çıkış,PnL%,Süre\n';
+  closedPositions.forEach(p=>{csv+=`${formatTime(p.entryTime)},${p.sym},${p.tf},${p.sys},${p.entry.toFixed(2)},${p.exitPrice.toFixed(2)},${p.pnl.toFixed(2)},${formatDuration(p.duration)}\n`;});
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='positions.csv';a.click();
 }
 
@@ -2518,14 +2508,11 @@ function updateAllPanels(sym,r){
     renderSignalLog(r.signals,sym);
     updateOpenPositionsPanel(r,lc);
     updateKVStats();
-    // LAB sistem sinyalleri güncelle
     updateLabSystemSignals(r,lc);
-    // REALM sistem sinyalleri güncelle
     updateRealmSystemSignals(r,lc);
   }catch(e){console.warn('updateAllPanels:',e);}
 }
 
-// LAB'a sistem sinyal güncelleme
 function updateLabSystemSignals(r,lc){
   try{
     const m=r.master,s1=r.sys1,s2=r.sys2,fs=r.fusion,ag=r.agents;
@@ -2544,41 +2531,31 @@ function updateLabSystemSignals(r,lc){
   }catch(e){}
 }
 
-// REALM'e sistem sinyal güncelleme
 function updateRealmSystemSignals(r,lc){
   try{
     const m=r.master,s1=r.sys1,s2=r.sys2,fs=r.fusion,ag=r.agents;
     const openCount=[s1.inTrade1,s2.inTrade2,fs.inFusion,m.inMaster,...ag.agStates].filter(Boolean).length;
-    // Sistem 1
     const s1el=document.getElementById('realmS1state');const s1pnl=document.getElementById('realmS1pnl');
     if(s1el){s1el.textContent=s1.inTrade1?'📈 AÇIK':'—';s1el.style.color=s1.inTrade1?'var(--green)':'var(--muted)';}
     if(s1pnl&&s1.inTrade1){const op=(lc-s1.buyPrice1)/s1.buyPrice1*100;s1pnl.textContent=(op>=0?'+':'')+op.toFixed(1)+'%';s1pnl.style.color=op>=0?'var(--green)':'var(--red)';}
-    // PRO
     const s2el=document.getElementById('realmS2state');const s2pnl=document.getElementById('realmS2pnl');
     if(s2el){s2el.textContent=s2.inTrade2?'📈 AÇIK':'—';s2el.style.color=s2.inTrade2?'var(--green)':'var(--muted)';}
-    // Fusion
     const fel=document.getElementById('realmFstate');const fpnl=document.getElementById('realmFpnl');
     if(fel){fel.textContent=fs.inFusion?'📈 AÇIK':'—';fel.style.color=fs.inFusion?'var(--green)':'var(--muted)';}
-    // Master
     const mel=document.getElementById('realmMstate');const mpnl=document.getElementById('realmMpnl');
     if(mel){mel.textContent=m.inMaster?'📈 AÇIK':'—';mel.style.color=m.inMaster?'var(--green)':'var(--muted)';}
     if(mpnl&&m.inMaster){const op=(lc-m.masterEntry)/m.masterEntry*100;mpnl.textContent=(op>=0?'+':'')+op.toFixed(1)+'%';mpnl.style.color=op>=0?'var(--green)':'var(--red)';}
-    // Agentlar
     const ael=document.getElementById('realmAstate');const apnl=document.getElementById('realmApnl');
     const openAgents=ag.agStates.filter(Boolean).length;
     if(ael){ael.textContent=openAgents>0?`${openAgents} AÇIK`:'—';ael.style.color=openAgents>0?'var(--green)':'var(--muted)';}
-    // ML
     const mlel=document.getElementById('realmMLstate');const mlconf=document.getElementById('realmMLconf');
     if(mlel){mlel.textContent=ML.confidence>0.7?'📈 GÜÇLÜ':ML.confidence>0.5?'➡ NÖTR':'📉 ZAYIF';mlel.style.color=ML.confidence>0.7?'var(--green)':ML.confidence>0.5?'var(--orange)':'var(--red)';}
     if(mlconf)mlconf.textContent=Math.round(ML.confidence*100)+'% güven';
-    // Summary
-    const buyConsensus=m.buyConsensus||0;
     const summary=openCount>4?`${openCount} sistem AÇIK — Güçlü yükseliş`:openCount>2?`${openCount} sistem AÇIK`:openCount===0?'Tüm sistemler beklemede':'1-2 sistem aktif';
     safeSetText('realmSysAnalysisSummary',summary);
   }catch(e){}
 }
 </script>
-
 <script>
 // ============================================================
 // CORE: analyzeSymbol, backgroundScan, switchTab, KV, Groq, Settings
@@ -2612,8 +2589,7 @@ async function analyzeSymbol(){
         const ni={time:ts,sym,tf,sys:sig.sys,type:sig.type,price:sig.price,pnl:sig.pnl,t:sig.t};
         notificationLog.unshift(ni);
         if(new Date(sig.t).toDateString()===new Date().toDateString())dailySignals.unshift(ni);
-        if(sig.type==='AL')sendTelegram(`🚨 ${sig.sys} AL
-${sym}(${tf}) @ ${sig.price.toFixed(2)}`);
+        if(sig.type==='AL')sendTelegram(`🚨 ${sig.sys} AL\n${sym}(${tf}) @ ${sig.price.toFixed(2)}`);
       }
     }
     updateAllPanels(sym,result);
@@ -2752,13 +2728,9 @@ async function sendPeriodicSummary(){
   if(!CFG.tgToken||!CFG.tgChatId||CFG.notificationsEnabled===false)return;
   const now=Date.now();if(now-lastSummaryTime<(CFG.summaryInterval||1800)*1000)return;lastSummaryTime=now;
   const keys=Object.keys(openPositions);
-  let msg=`📊 <b>Master AI v∞</b> — ${new Date().toLocaleTimeString('tr-TR')}
-ML: ${Math.round(ML.confidence*100)}%
-`;
-  if(!keys.length)msg+='Açık pozisyon yok.
-';
-  else keys.forEach(k=>{const pos=openPositions[k];const lp=getLatestPrice(pos.sym);const pnl=lp&&pos.entry?(lp-pos.entry)/pos.entry*100:null;msg+=`• ${k} | ${pos.sys} | PnL: ${pnl!==null?fmtPct(pnl):'—'}
-`;});
+  let msg=`📊 <b>Master AI v∞</b> — ${new Date().toLocaleTimeString('tr-TR')}\nML: ${Math.round(ML.confidence*100)}%\n`;
+  if(!keys.length)msg+='Açık pozisyon yok.\n';
+  else keys.forEach(k=>{const pos=openPositions[k];const lp=getLatestPrice(pos.sym);const pnl=lp&&pos.entry?(lp-pos.entry)/pos.entry*100:null;msg+=`• ${k} | ${pos.sys} | PnL: ${pnl!==null?fmtPct(pnl):'—'}\n`;});
   sendTelegram(msg);
 }
 function toggleGlobalNotifications(){CFG.notificationsEnabled=!CFG.notificationsEnabled;localStorage.setItem('notificationsEnabled',CFG.notificationsEnabled);const btn=document.getElementById('globalNotifToggle');if(btn)btn.innerHTML=CFG.notificationsEnabled?'🔔 Açık':'🔕 Kapalı';showToast('Bildirimler',CFG.notificationsEnabled?'Açıldı':'Kapatıldı','info');}
@@ -2795,7 +2767,6 @@ function loadSettings(){
   const barSel=document.getElementById('s_defaultBars');if(barSel&&CFG.defaultBars)barSel.value=CFG.defaultBars;
   document.getElementById('s_watchlist').value=CFG.watchlist.join(',');
   currentTheme=CFG.theme||'dark';applyTheme();
-  // Sync bar slider
   currentBarCount=CFG.defaultBars||5000;
   const slider=document.getElementById('barCountSlider');if(slider)slider.value=currentBarCount;
   safeSetText('barCountVal',currentBarCount);
@@ -2826,9 +2797,7 @@ function importSettings(){const inp=document.createElement('input');inp.type='fi
 function toggleTheme(){currentTheme=currentTheme==='dark'?'light':'dark';CFG.theme=currentTheme;applyTheme();}
 function applyTheme(){if(currentTheme==='light'){document.body.className='theme-light';const btn=document.getElementById('themeBtn');if(btn)btn.innerHTML='☀️';}else{document.body.className='';const btn=document.getElementById('themeBtn');if(btn)btn.innerHTML='🌙';}}
 function screenshotChart(){const c=document.getElementById('mainChart');const a=document.createElement('a');a.download=`masterai-${currentSym||'chart'}.png`;a.href=c.toDataURL();a.click();}
-function exportSignalsCSV(){let csv='Tarih,Sembol,TF,Sistem,Tür,Fiyat,PnL
-';for(const key of Object.keys(allSignals)){const[sym,...tfParts]=key.split('-');const tf=tfParts.join('-');for(const s of allSignals[key])csv+=`${new Date(s.t).toLocaleString('tr-TR')},${sym},${tf},${s.sys},${s.type},${s.price},${s.pnl||''}
-`;}const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='masterai_signals.csv';a.click();}
+function exportSignalsCSV(){let csv='Tarih,Sembol,TF,Sistem,Tür,Fiyat,PnL\n';for(const key of Object.keys(allSignals)){const[sym,...tfParts]=key.split('-');const tf=tfParts.join('-');for(const s of allSignals[key])csv+=`${new Date(s.t).toLocaleString('tr-TR')},${sym},${tf},${s.sys},${s.type},${s.price},${s.pnl||''}\n`;}const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='masterai_signals.csv';a.click();}
 
 async function sendToGroq(){
   const input=document.getElementById('aiInput')?.value?.trim();if(!input)return;
@@ -2845,8 +2814,7 @@ async function sendToGroq(){
     addAIMessage(d.choices[0].message.content,'ai');
   }catch(e){addAIMessage('Groq hatası: '+e.message,'ai');}
 }
-function addAIMessage(text,from){const c=document.getElementById('aiMessages');if(!c)return;const d=document.createElement('div');d.className=from==='user'?'ai-msg-user':'ai-msg-bot';d.innerHTML=text.replace(/
-/g,'<br>');c.appendChild(d);c.scrollTop=c.scrollHeight;}
+function addAIMessage(text,from){const c=document.getElementById('aiMessages');if(!c)return;const d=document.createElement('div');d.className=from==='user'?'ai-msg-user':'ai-msg-bot';d.innerHTML=text.replace(/\n/g,'<br>');c.appendChild(d);c.scrollTop=c.scrollHeight;}
 
 function generateUID(){const el=document.getElementById('uidInput');if(el)el.value='dev_'+Math.random().toString(36).slice(2,10);}
 function saveUID(){const el=document.getElementById('uidInput');if(!el)return;const u=el.value.trim();if(!u)return;localStorage.setItem('masterai_uid',u);deviceUID=u;safeSetText('currentUID',u);showToast('UID','Güncellendi','info');kvPullAll();}
@@ -2860,7 +2828,7 @@ function updateKVStats(){try{const sc=Object.values(allSignals).reduce((s,a)=>s+
 async function testWorker(){const urlEl=document.getElementById('workerUrlInput');const res=document.getElementById('workerTestResult');if(!res)return;res.textContent='⏳ Test...';const url=(urlEl?.value?.trim()||workerBase());try{const r=await fetch(url+'/');const d=await r.json();res.textContent='✅ Aktif: '+(d.message||'OK');res.style.color='var(--green)';setKVDot('ok');}catch(e){res.textContent='❌ '+e.message;res.style.color='var(--red)';setKVDot('error');}}
 function saveWorkerUrl(){const u=document.getElementById('workerUrlInput')?.value?.trim();if(!u)return;CFG.workerUrl=u;saveLocal('masterai_cfg',CFG);showToast('Worker URL','Kaydedildi','info');testWorker();}
 function updateCurrentParamsDisplay(){safeSetText('cp-mbt',CFG.masterBuyTh?.toFixed(2)||'—');safeSetText('cp-mst',CFG.masterSellTh?.toFixed(2)||'—');safeSetText('cp-fbt',CFG.fusionBuyTh?.toFixed(2)||'—');safeSetText('cp-adx',CFG.adxMin||'—');}
-async function runStrategyOptimizer(){const bars=currentResult?.bars;if(!bars){showToast('Optimizer','Önce analiz yapın','info');return;}const method=document.getElementById('optMethod')?.value||'bayesian';const iterations=parseInt(document.getElementById('optIterations')?.value||'50');const wrap=document.getElementById('optProgressWrap'),fill=document.getElementById('optBarFill'),statusEl=document.getElementById('optStatusText'),detailEl=document.getElementById('optDetailText'),resultsWrap=document.getElementById('optResultsWrap');if(wrap)wrap.style.display='block';if(resultsWrap)resultsWrap.style.display='none';const baseCfg={...CFG};let bestCfg={...baseCfg};let bestScore=evaluateParams(bars,baseCfg).score;const targets=Object.keys(paramSpaces);try{for(let iter=0;iter<iterations;iter++){const pct=Math.round(iter/iterations*100);if(fill)fill.style.width=pct+'%';if(statusEl)statusEl.textContent=`${method} — ${pct}%`;let testCfg={...baseCfg};for(const key of targets){const space=paramSpaces[key];const exploit=bestCfg[key]||baseCfg[key];const noise=(space.max-space.min)*0.15*(1-iter/iterations);testCfg[key]=Math.round(Math.max(space.min,Math.min(space.max,exploit+(Math.random()-0.5)*2*noise))/space.step)*space.step;}const eval_=evaluateParams(bars,testCfg);if(detailEl)detailEl.textContent=`İter ${iter+1}: PnL=${eval_.pnl?.toFixed(1)||'—'}%`;if((eval_.score||0)>bestScore){bestScore=eval_.score;bestCfg={...testCfg};}if(iter%10===0)await new Promise(r=>setTimeout(r,1));}pendingOptResult={bestCfg,baseCfg,targets};if(statusEl)statusEl.textContent='✅ Tamamlandı!';if(fill)fill.style.width='100%';const resultsGrid=document.getElementById('optResultsGrid');if(resultsGrid){resultsGrid.innerHTML=`<div style="background:rgba(10,14,26,0.7);border:1px solid var(--border2);border-radius:8px;padding:10px;">${targets.map(key=>{const cur=baseCfg[key],opt=bestCfg[key];const changed=Math.abs((cur||0)-(opt||0))>0.001;return`<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(30,48,80,0.3);"><span style="font-size:10px;color:var(--text2);">${paramSpaces[key].label}</span><span style="font-size:11px;">${typeof cur==='number'?cur.toFixed(2):cur}${changed?` → <strong style="color:var(--green);">${typeof opt==='number'?opt.toFixed(2):opt}</strong>':''}</span></div>`;}).join('')}<div style="margin-top:8px;font-size:11px;color:var(--cyan);">Skor: ${bestScore.toFixed(1)}</div></div>`;}const approvalDetails=document.getElementById('optApprovalDetails');if(approvalDetails){const changes=targets.filter(k=>Math.abs((baseCfg[k]||0)-(bestCfg[k]||0))>0.001);approvalDetails.innerHTML=changes.map(k=>`<div>• ${paramSpaces[k].label}: ${typeof baseCfg[k]==='number'?baseCfg[k].toFixed(2):baseCfg[k]} → <strong style="color:var(--green);">${typeof bestCfg[k]==='number'?bestCfg[k].toFixed(2):bestCfg[k]}</strong></div>`).join('')||'<div>Parametreler optimal.</div>';}if(resultsWrap)resultsWrap.style.display='block';setTimeout(()=>{if(wrap)wrap.style.display='none';},1500);showToast('Optimizer','Tamamlandı','ml');}catch(e){if(wrap)wrap.style.display='none';}}
+async function runStrategyOptimizer(){const bars=currentResult?.bars;if(!bars){showToast('Optimizer','Önce analiz yapın','info');return;}const method=document.getElementById('optMethod')?.value||'bayesian';const iterations=parseInt(document.getElementById('optIterations')?.value||'50');const wrap=document.getElementById('optProgressWrap'),fill=document.getElementById('optBarFill'),statusEl=document.getElementById('optStatusText'),detailEl=document.getElementById('optDetailText'),resultsWrap=document.getElementById('optResultsWrap');if(wrap)wrap.style.display='block';if(resultsWrap)resultsWrap.style.display='none';const baseCfg={...CFG};let bestCfg={...baseCfg};let bestScore=evaluateParams(bars,baseCfg).score;const targets=Object.keys(paramSpaces);try{for(let iter=0;iter<iterations;iter++){const pct=Math.round(iter/iterations*100);if(fill)fill.style.width=pct+'%';if(statusEl)statusEl.textContent=`${method} — ${pct}%`;let testCfg={...baseCfg};for(const key of targets){const space=paramSpaces[key];const exploit=bestCfg[key]||baseCfg[key];const noise=(space.max-space.min)*0.15*(1-iter/iterations);testCfg[key]=Math.round(Math.max(space.min,Math.min(space.max,exploit+(Math.random()-0.5)*2*noise))/space.step)*space.step;}const eval_=evaluateParams(bars,testCfg);if(detailEl)detailEl.textContent=`İter ${iter+1}: PnL=${eval_.pnl?.toFixed(1)||'—'}%`;if((eval_.score||0)>bestScore){bestScore=eval_.score;bestCfg={...testCfg};}if(iter%10===0)await new Promise(r=>setTimeout(r,1));}pendingOptResult={bestCfg,baseCfg,targets};if(statusEl)statusEl.textContent='✅ Tamamlandı!';if(fill)fill.style.width='100%';const resultsGrid=document.getElementById('optResultsGrid');if(resultsGrid){resultsGrid.innerHTML=`<div style="background:rgba(10,14,26,0.7);border:1px solid var(--border2);border-radius:8px;padding:10px;">${targets.map(key=>{const cur=baseCfg[key],opt=bestCfg[key];const changed=Math.abs((cur||0)-(opt||0))>0.001;return`<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(30,48,80,0.3);"><span style="font-size:10px;color:var(--text2);">${paramSpaces[key].label}</span><span style="font-size:11px;">${typeof cur==='number'?cur.toFixed(2):cur}${changed?` → <strong style="color:var(--green);">${typeof opt==='number'?opt.toFixed(2):opt}</strong>`:''}</span></div>`;}).join('')}<div style="margin-top:8px;font-size:11px;color:var(--cyan);">Skor: ${bestScore.toFixed(1)}</div></div>`;}const approvalDetails=document.getElementById('optApprovalDetails');if(approvalDetails){const changes=targets.filter(k=>Math.abs((baseCfg[k]||0)-(bestCfg[k]||0))>0.001);approvalDetails.innerHTML=changes.map(k=>`<div>• ${paramSpaces[k].label}: ${typeof baseCfg[k]==='number'?baseCfg[k].toFixed(2):baseCfg[k]} → <strong style="color:var(--green);">${typeof bestCfg[k]==='number'?bestCfg[k].toFixed(2):bestCfg[k]}</strong></div>`).join('')||'<div>Parametreler optimal.</div>';}if(resultsWrap)resultsWrap.style.display='block';setTimeout(()=>{if(wrap)wrap.style.display='none';},1500);showToast('Optimizer','Tamamlandı','ml');}catch(e){if(wrap)wrap.style.display='none';}}
 async function runStrategyOptimizerAllStocks(){showToast('Tüm Hisseler','Optimizer başlatıldı','ml');for(const sym of CFG.watchlist){try{const bars=await fetchOHLCV(sym,'2h',1000);if(!bars||bars.length<60)continue;const r=evaluateParams(bars,CFG);}catch(e){}}showToast('Tüm Hisseler','Tamamlandı','ml');}
 function applyOptimization(){if(!pendingOptResult)return;const{bestCfg,targets}=pendingOptResult;for(const key of targets){if(bestCfg[key]!==undefined)CFG[key]=bestCfg[key];}saveLocal('masterai_cfg',CFG);updateCurrentParamsDisplay();document.getElementById('optResultsWrap').style.display='none';pendingOptResult=null;showToast('Optimize','Uygulandı','ml');if(currentSym)analyzeSymbol();}
 function cancelOptimization(){pendingOptResult=null;const el=document.getElementById('optResultsWrap');if(el)el.style.display='none';}
@@ -2943,15 +2911,13 @@ function buildLabDataContext(sym){
   const volRatio=bars?(bars[n]?.v||1)/volMean-1:0;const momentumRaw=n>=3?(closes[n]-closes[n-3])/closes[n-3]:0;
   const volat=bars?Math.sqrt(closes.slice(Math.max(0,n-10),n+1).reduce((a,b,i,arr)=>i>0?a+(b-arr[i-1])*(b-arr[i-1]):a,0)/10)/price:0.01;
   const t=(Date.now()/10000)%(2*Math.PI);
-  return{price,trend,rsi:rsiVal,adx:adxVal,volume:volRatio,momentum:momentumRaw,volatility:volat,time:t,chaosVal:((price*7+t*3)%1+1)%1,fractal:Math.sin(t*1.618)*Math.cos(t*2.718),lorenz:Math.sin(t*1.4)*Math.cos(t*0.9),rossler:Math.sin(t*2.1),mandel:Math.sin(t*3.14)*Math.cos(t*2.72),spike:Math.sin(t*5+momentumRaw*10),regime:adxVal/50,hht:Math.sin(t*2.3+rsiVal/50),mcmc:Math.cos(t*1.7+adxVal/50),uncertainty:volat*5,hidden:Math.sin(t*0.8+trend*20),topology:Math.cos(t*1.2+volat*10),morse:Math.sin(t*2.5),curvature:Math.cos(t*1.9+trend*15),cycle:Math.sin(t*0.7),arbitrage:Math.cos(t*2.2+momentumRaw*8),sym:sym||currentSym||'XU100'};
+  return{price,trend,rsi:rsiVal,adx:adxVal,volume:volRatio,momentum:volat,volatility:volat,time:t,chaosVal:((price*7+t*3)%1+1)%1,fractal:Math.sin(t*1.618)*Math.cos(t*2.718),lorenz:Math.sin(t*1.4)*Math.cos(t*0.9),rossler:Math.sin(t*2.1),mandel:Math.sin(t*3.14)*Math.cos(t*2.72),spike:Math.sin(t*5+momentumRaw*10),regime:adxVal/50,hht:Math.sin(t*2.3+rsiVal/50),mcmc:Math.cos(t*1.7+adxVal/50),uncertainty:volat*5,hidden:Math.sin(t*0.8+trend*20),topology:Math.cos(t*1.2+volat*10),morse:Math.sin(t*2.5),curvature:Math.cos(t*1.9+trend*15),cycle:Math.sin(t*0.7),arbitrage:Math.cos(t*2.2+momentumRaw*8),sym:sym||currentSym||'XU100'};
 }
 
-// Ana sistemin sinyallerini de LAB'a dahil et
 function buildLabDataContextWithMainSys(sym){
   const ctx=buildLabDataContext(sym);
   if(currentResult){
     const r=currentResult;
-    // Ana sistemlerin AL/SAT durumları LAB data context'e ekleniyor
     ctx.mainBuyConsensus=r.master?.buyConsensus||0;
     ctx.mainSellConsensus=r.master?.sellConsensus||0;
     ctx.sys1InTrade=r.sys1?.inTrade1?1:0;
@@ -2959,7 +2925,6 @@ function buildLabDataContextWithMainSys(sym){
     ctx.fusionInTrade=r.fusion?.inFusion?1:0;
     ctx.masterInTrade=r.master?.inMaster?1:0;
     ctx.agentsInTrade=r.agents?.agStates?.filter(Boolean).length||0;
-    // Bu bilgileri score'a dahil et (ağırlıklı)
     ctx.trend=ctx.trend+(ctx.mainBuyConsensus-0.5)*0.05+(ctx.sys1InTrade+ctx.sys2InTrade+ctx.fusionInTrade+ctx.masterInTrade)*0.01;
   }
   return ctx;
@@ -2986,7 +2951,6 @@ function runLabAlgo(algo,dataCtx){
 function computeLabConsensus(){
   let buyVotes=0,sellVotes=0,holdVotes=0,totalScore=0,activeCount=0,bullishCount=0,bearishCount=0;
   featureDefinitions.forEach(f=>{if(!labEnabledFeatures[f.id])return;const val=labAlgoValues[f.id];if(!val)return;activeCount++;totalScore+=val.score;if(val.dir>0){buyVotes++;bullishCount++;}else if(val.dir<0){sellVotes++;bearishCount++;}else holdVotes++;});
-  // Ana sistemleri de konsensüse dahil et
   if(currentResult){
     const r=currentResult;
     if(r.sys1?.inTrade1){buyVotes+=2;activeCount+=2;}
@@ -3019,7 +2983,6 @@ function labRunInterAlgoComm(ctx){
   if(cons.masterSignal!=='HOLD'){const rec={time:new Date().toLocaleTimeString('tr-TR'),signal:cons.masterSignal,confidence:(cons.avgScore*100).toFixed(0),votes:cons.masterSignal==='AL'?cons.buyVotes:cons.sellVotes,total:cons.activeCount};labAlgoRecommendations.unshift(rec);if(labAlgoRecommendations.length>20)labAlgoRecommendations.pop();}
   const recEl=document.getElementById('labAlgoRecommendations');
   if(recEl&&labAlgoRecommendations.length){recEl.innerHTML=labAlgoRecommendations.map(r=>`<div style="padding:5px 8px;border-bottom:1px solid rgba(30,48,80,0.3);display:flex;justify-content:space-between;font-size:11px;"><span style="color:${r.signal==='AL'?'var(--green)':'var(--red)'};font-weight:700;">${r.signal}</span><span style="color:var(--text2);">${r.votes}/${r.total} oy — ${r.confidence}%</span><span style="color:var(--muted);">${r.time}</span></div>`).join('');}
-  // Ana sistemin sinyallerini de bildir
   if(currentResult){const r=currentResult;const openSystems=[r.sys1?.inTrade1&&'Sys1',r.sys2?.inTrade2&&'PRO',r.fusion?.inFusion&&'Fusion',r.master?.inMaster&&'Master'].filter(Boolean);if(openSystems.length>0)labSendComm('MainSys','LAB',`${openSystems.join('+')} AÇIK — LAB destekliyor mu?`,cons.avgScore);}
 }
 
@@ -3029,7 +2992,7 @@ function renderLabAlgoList(filter='all',search=''){
   const listEl=document.getElementById('labAlgoList');if(!listEl)return;
   let filtered=featureDefinitions.filter(f=>{if(search&&!f.name.toLowerCase().includes(search.toLowerCase()))return false;if(filter==='bullish')return labAlgoValues[f.id]?.dir>0;if(filter==='bearish')return labAlgoValues[f.id]?.dir<0;if(filter==='running')return labEnabledFeatures[f.id];return true;});
   listEl.innerHTML=filtered.map(f=>{const isEnabled=labEnabledFeatures[f.id];const val=labAlgoValues[f.id]||{score:0.5,dir:0};const score=val.score;const pct=Math.round(score*100);const color=score>0.62?'var(--green)':score<0.38?'var(--red)':'var(--orange)';const borderClass=score>0.65?'bullish':score<0.35?'bearish':'';const isSelected=labState.selectedAlgoId===f.id;
-    return`<div class="lab-algo-card ${borderClass} ${isEnabled?'running':''}" id="lab-card-${f.id}"><div class="lab-algo-header" onclick="labSelectAlgo('${f.id}')"><div class="lab-algo-toggle ${isEnabled?'active':''}" onclick="event.stopPropagation();labToggleAlgo('${f.id}')"></div><span class="lab-algo-name" style="color:${f.color}">${f.name}</span><span class="lab-algo-score" style="color:${color}">${pct}%</span><button class="lab-expand-btn" onclick="event.stopPropagation();labSelectAlgo('${f.id}')">${isSelected?'▲':'▼'}</button></div><div class="lab-algo-progress"><div class="lab-algo-progress-fill" style="width:${pct}%;background:${color};"></div></div><div class="lab-algo-detail ${isSelected?'open':''}" id="lab-detail-${f.id}"><div class="lab-algo-detail-inner"><canvas class="lab-algo-mini-chart" id="lab-chart-${f.id}"></canvas><div class="lab-algo-stats-grid"><div class="lab-algo-stat"><div class="lab-algo-stat-label">SKOR</div><div class="lab-algo-stat-val" style="color:${color}">${pct}%</div></div><div class="lab-algo-stat"><div class="lab-algo-stat-label">YÖN</div><div class="lab-algo-stat-val">${val.dir>0?'📈':val.dir<0?'📉':'➖'}</div></div><div class="lab-algo-stat"><div class="lab-algo-stat-label">KAT.</div><div class="lab-algo-stat-val" style="font-size:9px;">${f.cat}</div></div><div class="lab-algo-stat"><div class="lab-algo-stat-label">SİNYAL</div><div class="lab-algo-stat-val" style="color:${val.dir>0?'var(--green)':val.dir<0?'var(--red)':'var(--muted)'}">${val.dir>0?'AL':val.dir<0?'SAT':'HOLD'}</div></div><div class="lab-algo-stat"><div class="lab-algo-stat-label">İŞLEM</div><div class="lab-algo-stat-val">${labAlgoValues[f.id]?.trades||0}</div></div><div class="lab-algo-stat"><div class="lab-algo-stat-label">W/L</div><div class="lab-algo-stat-val">${labAlgoValues[f.id]?.wins||0}/${labAlgoValues[f.id]?.losses||0}</div></div></div><div style="font-size:9px;color:var(--muted);padding:2px 0;">SON SİNYALLER</div><div class="lab-algo-signals-list">${(labAlgoValues[f.id]?.signals||[]).slice(0,5).map(s=>`<div class="lab-algo-sig-item"><span style="color:${s.dir>0?'var(--green)':s.dir<0?'var(--red)':'var(--muted)'};">${s.type}</span><span>${s.sym}</span><span style="color:var(--muted);">${s.time}</span></div>`).join('')||'<div style="color:var(--muted);font-size:10px;padding:4px;">Sinyal yok</div>'}</div></div></div></div>`;
+    return`<div class="lab-algo-card ${borderClass} ${isEnabled?'running':''}" id="lab-card-${f.id}"><div class="lab-algo-header" onclick="labSelectAlgo('${f.id}')"><div class="lab-algo-toggle ${isEnabled?'active':''}" onclick="event.stopPropagation();labToggleAlgo('${f.id}')"></div><span class="lab-algo-name" style="color:${f.color}">${f.name}</span><span class="lab-algo-score" style="color:${color}">${pct}%</span><button class="lab-expand-btn" onclick="event.stopPropagation();labSelectAlgo('${f.id}')">${isSelected?'▲':'▼'}</button></div><div class="lab-algo-progress"><div class="lab-algo-progress-fill" style="width:${pct}%;background:${color};"></div></div><div class="lab-algo-detail ${isSelected?'open':''}" id="lab-detail-${f.id}"><div class="lab-algo-detail-inner"><canvas class="lab-algo-mini-chart" id="lab-chart-${f.id}"></canvas><div class="lab-algo-stats-grid"><div class="lab-algo-stat"><div class="lab-algo-stat-label">SKOR</div><div class="lab-algo-stat-val" style="color:${color}">${pct}%</div></div><div class="lab-algo-stat"><div class="lab-algo-stat-label">YÖN</div><div class="lab-algo-stat-val">${val.dir>0?'📈':val.dir<0?'📉':'➖'}</div></div><div class="lab-algo-stat"><div class="lab-algo-stat-label">KAT.</div><div class="lab-algo-stat-val" style="font-size:9px;">${f.cat}</div></div><div class="lab-algo-stat"><div class="lab-algo-stat-label">SİNYAL</div><div class="lab-algo-stat-val" style="color:${val.dir>0?'var(--green)':val.dir<0?'var(--red)':'var(--muted)'}">${val.dir>0?'AL':val.dir<0?'SAT':'HOLD'}</div></div><div class="lab-algo-stat"><div class="lab-algo-stat-label">İŞLEM</div><div class="lab-algo-stat-val">${labAlgoValues[f.id]?.trades||0}</div></div><div class="lab-algo-stat"><div class="lab-algo-stat-label">W/L</div><div class="lab-algo-stat-val">${labAlgoValues[f.id]?.wins||0}/${labAlgoValues[f.id]?.losses||0}</div></div></div><div style="font-size:9px;color:var(--muted);padding:2px 0;">SON SİNYALLER</div><div class="lab-algo-signals-list">${(labAlgoValues[f.id]?.signals||[]).slice(0,5).map(s=>`<div class="lab-algo-sig-item"><span style="color:${s.dir>0?'var(--green)':s.dir<0?'var(--red)':'var(--muted)'};">${s.type}</span><span>${s.sym}</span><span style="color:var(--muted);">${s.time}</span></div>`).join('')||'<div style="color:var(--muted);font-size:10px;padding:4px;">Sinyal yok</div>'}</div></div></div>`;
   }).join('');
   setTimeout(()=>{filtered.forEach(f=>{if(labAlgoValues[f.id]?.history?.length>2){const canvas=document.getElementById(`lab-chart-${f.id}`);if(!canvas)return;const ctx=canvas.getContext('2d');const w=canvas.width=canvas.offsetWidth||200;const h=canvas.height=55;ctx.clearRect(0,0,w,h);const scores=labAlgoValues[f.id].history.map(p=>p.score);const min=Math.min(...scores,0.3),max=Math.max(...scores,0.7),range=max-min||0.1,step=w/(scores.length-1||1);ctx.beginPath();scores.forEach((s,i)=>{const x=i*step;const y=h-(s-min)/range*(h-8)-4;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});const c2=featureDefinitions.find(ff=>ff.id===f.id)?.color||'rgba(0,229,255,0.8)';ctx.strokeStyle=c2;ctx.lineWidth=1.5;ctx.stroke();}});},50);
   updateLabStats();
@@ -3081,9 +3044,7 @@ async function labStartFullScan(){
       try{
         safeSetText('labScanStatus',`${sym}(${tf})`);safeSetText('labScanDetail',`Taranıyor: ${sym}[${done+1}/${total}]`);safeSetText('labScanPct',Math.round(done/total*100)+'%');
         const fill=document.getElementById('labScanFill');if(fill)fill.style.width=Math.round(done/total*100)+'%';
-        // 5000 bar ile tarama
         const bars=await fetchOHLCV(sym,tf,currentBarCount);if(!bars||bars.length<60){done++;continue;}
-        // Geçici olarak currentResult'u güncelle ki buildLabDataContext doğru çalışsın
         const tempResult={bars,closes:bars.map(b=>b.c),adxLast:dmi(bars,10,10).adx.filter(Boolean).pop()||25,master:{buyConsensus:0,sellConsensus:0,masterPnL:0,inMaster:false},sys1:{inTrade1:false},sys2:{inTrade2:false},fusion:{inFusion:false},agents:{agStates:[false,false,false,false,false]}};
         const prevResult=currentResult;currentResult=tempResult;
         const dataCtx=buildLabDataContextWithMainSys(sym);
@@ -3190,121 +3151,511 @@ function initLabFeatures(){
   setInterval(()=>{if(activeTab===7)refreshLabDashboard();},5000);
 }
 </script>
- ${(1-realmState.omegaPoint).toFixed(3)}`,`Morfik: ${realmState.morpho.toFixed(0)}`,currentSym?`${currentSym} morfik alanda`:'Bekleniyor',`Karma: ${realmState.karma}`];
-  el.innerHTML=entries.map(e=>`<div class="akashic-entry">${e}</div>`).join('');
-  const dreamEl=document.getElementById('dreamJournal');if(!dreamEl)return;
-  const dreams=[`Fiyatlar ${realmState.generation}. nesilde dans ediyor...`,`${realmState.aliveAgents} bilinç tek karar arıyor: ${realmState.collectiveSignal}`,`Omega ${(realmState.omegaPoint*100).toFixed(1)}% gerçek.`,`${realmState.mutationCount} mutasyon piyasayı şekillendirdi.`];
-  dreamEl.textContent=dreams[realmState.cycles%dreams.length];
+<script>
+// ============================================================
+// INFINITE SIMULATION REALM — 500 AGENT + PARALLEL UNIVERSES
+// ============================================================
+let realmState = {
+  isRunning: false, agents: [], aliveAgents: 0, godAgents: 0, deadAgents: 0,
+  generation: 0, mutationCount: 0, extinctions: 0, collectiveSignal: 'HOLD',
+  balance: 100000, initialBalance: 100000, positions: [], trades: [],
+  omegaPoint: 0, singularityPct: 0, consciousness: 0, morpho: 0, rdi: 0,
+  karma: 0, cycles: 0, equityHistory: [], commLog: [], universes: [],
+  infiniteCapital: false, agentCount: 500, universeCount: 16,
+  mainSysData: null, evolutionHistory: [], autoInterval: null, evolutionInterval: null,
+  animInterval: null
+};
+
+const realmArchetypes = [
+  { name: 'Trend Takipçisi', color: '#00e5ff', baseAggression: 0.6, basePatience: 0.5, baseIntuition: 0.5 },
+  { name: 'Mean Reversion', color: '#ff6d00', baseAggression: 0.5, basePatience: 0.7, baseIntuition: 0.4 },
+  { name: 'Momentum Avcısı', color: '#b040ff', baseAggression: 0.8, basePatience: 0.3, baseIntuition: 0.6 },
+  { name: 'Hacim Dedektörü', color: '#00e676', baseAggression: 0.4, basePatience: 0.6, baseIntuition: 0.7 },
+  { name: 'Kaos Tüccarı', color: '#ff1744', baseAggression: 0.9, basePatience: 0.1, baseIntuition: 0.8 },
+  { name: 'Bilinçaltı', color: '#e040fb', baseAggression: 0.3, basePatience: 0.9, baseIntuition: 0.9 },
+];
+
+function initAgents(count) {
+  realmState.agents = [];
+  for (let i = 0; i < count; i++) {
+    const arch = realmArchetypes[Math.floor(Math.random() * realmArchetypes.length)];
+    realmState.agents.push({
+      id: `A${i.toString().padStart(3, '0')}`,
+      archetype: arch.name,
+      color: arch.color,
+      status: 'alive',
+      fitness: 0.5 + Math.random() * 0.3,
+      genes: {
+        aggression: Math.min(1, Math.max(0.1, arch.baseAggression + (Math.random() - 0.5) * 0.3)),
+        patience: Math.min(1, Math.max(0.1, arch.basePatience + (Math.random() - 0.5) * 0.3)),
+        intuition: Math.min(1, Math.max(0.1, arch.baseIntuition + (Math.random() - 0.5) * 0.3)),
+        socialInfluence: Math.random(),
+      },
+      capital: 1000,
+      positions: [],
+      tradeHistory: [],
+      lastDecision: 0,
+      alliances: [],
+    });
+  }
+  realmState.aliveAgents = count;
+  realmState.godAgents = 0;
+  realmState.deadAgents = 0;
+  realmState.generation = 0;
+  realmState.mutationCount = 0;
+  realmState.extinctions = 0;
 }
 
-function drawRealmCanvases(){
-  // Equity curve
-  try{const c=document.getElementById('realmEquityCurve');if(!c)return;const ctx=c.getContext('2d');const w=c.width=c.offsetWidth||400;const h=c.height=70;ctx.clearRect(0,0,w,h);realmState.equityHistory.push({t:Date.now(),val:realmState.trades.reduce((s,t)=>s+(t.pnl||0),0)});if(realmState.equityHistory.length>100)realmState.equityHistory.shift();const vals=realmState.equityHistory.map(p=>p.val);if(vals.length<2)return;const min=Math.min(...vals,-1),max=Math.max(...vals,1),range=max-min||1;const step=w/(vals.length-1);ctx.beginPath();vals.forEach((v,i)=>{const x=i*step;const y=h-(v-min)/range*(h-10)-5;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});const grad=ctx.createLinearGradient(0,0,w,0);grad.addColorStop(0,'rgba(0,229,255,0.8)');grad.addColorStop(0.5,'rgba(176,64,255,0.8)');grad.addColorStop(1,'rgba(255,215,0,0.8)');ctx.strokeStyle=grad;ctx.lineWidth=2;ctx.stroke();}catch(e){}
-  // Evolution chart
-  try{const c=document.getElementById('evolutionChart');if(!c)return;const ctx=c.getContext('2d');const w=c.width=c.offsetWidth||400;const h=c.height=80;ctx.clearRect(0,0,w,h);if(realmState.generation<2)return;const alive=realmState.agents.filter(a=>a.status!=='dead');const fitness=alive.map(a=>a.fitness);if(fitness.length<2)return;const sorted=[...fitness].sort((a,b)=>a-b);const step=w/Math.max(1,sorted.length-1);ctx.beginPath();sorted.forEach((f,i)=>{const x=i*step;const y=h-f*(h-10)-5;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});ctx.strokeStyle='rgba(0,230,118,0.8)';ctx.lineWidth=1.5;ctx.stroke();}catch(e){}
-  // Noosphere
-  try{const c=document.getElementById('noosphereCanvas');if(!c)return;const ctx=c.getContext('2d');const w=c.width=c.offsetWidth||400;const h=c.height=80;ctx.clearRect(0,0,w,h);const t=Date.now()/1000;for(let i=0;i<20;i++){const x=(Math.sin(t*0.5+i*0.5)*0.5+0.5)*w;const y=(Math.cos(t*0.3+i*0.7)*0.5+0.5)*h;const r=2+Math.sin(t+i)*2;const ag=realmState.agents[i*25]||realmState.agents[0];if(!ag)continue;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=ag.status==='god'?'rgba(255,215,0,0.6)':ag.status==='dead'?'rgba(74,96,128,0.3)':`${ag.archetype.color}60`;ctx.fill();}for(let i=0;i<10;i++){const x1=(Math.sin(t*0.5+i*0.5)*0.5+0.5)*w;const y1=(Math.cos(t*0.3+i*0.7)*0.5+0.5)*h;const j=(i+3)%10;const x2=(Math.sin(t*0.5+j*0.5)*0.5+0.5)*w;const y2=(Math.cos(t*0.3+j*0.7)*0.5+0.5)*h;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.strokeStyle='rgba(176,64,255,0.15)';ctx.lineWidth=1;ctx.stroke();}}catch(e){}
-  // Morpho canvas
-  try{const c=document.getElementById('morphoCanvas');if(!c)return;const ctx=c.getContext('2d');const w=c.width=c.offsetWidth||400;const h=c.height=80;ctx.clearRect(0,0,w,h);const t=Date.now()/2000;for(let x=0;x<w;x+=8){const val=Math.sin(x/w*Math.PI*4+t)*Math.cos(t*0.5+x*0.02);const y=h/2+val*h*0.4;ctx.fillStyle=`rgba(0,191,165,${Math.abs(val)*0.5+0.1})`;ctx.fillRect(x,y-2,4,4);}}catch(e){}
-  // Risk manifold
-  try{const c=document.getElementById('realmRiskManifold');if(!c)return;const ctx=c.getContext('2d');const w=c.width=c.offsetWidth||400;const h=c.height=50;ctx.clearRect(0,0,w,h);const t=Date.now()/3000;ctx.beginPath();for(let x=0;x<w;x++){const val=Math.sin(x/w*Math.PI*6+t)*0.3+Math.cos(x/w*Math.PI*3-t*0.7)*0.2;const y=h/2+val*h*0.4;x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.strokeStyle='rgba(255,215,0,0.5)';ctx.lineWidth=1.5;ctx.stroke();}catch(e){}
-}
+function realmPaperTick() {
+  if (!realmState.isRunning || !currentResult) return;
+  const sym = currentSym;
+  const price = currentResult.closes[currentResult.closes.length - 1];
+  if (!price) return;
 
-function realmStartSimulation(){
-  const agentCount=parseInt(document.getElementById('realmAgentCount')?.value||'500');
-  realmState.agentCount=agentCount;realmState.isRunning=true;
-  initAgents(agentCount);
-  if(realmState.autoInterval)clearInterval(realmState.autoInterval);
-  if(realmState.evolutionInterval)clearInterval(realmState.evolutionInterval);
-  if(realmState.animInterval)clearInterval(realmState.animInterval);
-  realmState.autoInterval=setInterval(()=>{realmPaperTick();updateRealmUI();},3000);
-  realmState.evolutionInterval=setInterval(()=>{runEvolution();},30000);
-  realmState.animInterval=setInterval(()=>{if(activeTab===8)drawRealmCanvases();},200);
-  if(currentResult?.bars)runParallelUniverses(currentResult.bars);
-  safeSetHTML('realmEvoStatus','<span class="badge badge-green">Çalışıyor</span>');
-  showToast('⚡ Simülasyon',`${agentCount} ajan başlatıldı! (${currentBarCount} çubuk)  `,'info');
+  // Her ajan karar verir
+  realmState.agents.forEach(agent => {
+    if (agent.status === 'dead') return;
+    const decision = Math.random();
+    const buyThreshold = 0.7 - agent.genes.aggression * 0.3;
+    const sellThreshold = 0.3 + agent.genes.patience * 0.2;
+
+    if (decision > buyThreshold && agent.capital > price) {
+      // AL
+      const qty = Math.floor((agent.capital * 0.2) / price);
+      if (qty > 0) {
+        agent.positions.push({ sym, entry: price, qty, time: Date.now() });
+        agent.capital -= qty * price;
+        realmAddComm(agent.id, 'SYSTEM', `AL ${sym} @ ${price.toFixed(2)}`);
+      }
+    } else if (decision < sellThreshold && agent.positions.length > 0) {
+      // SAT
+      let totalPnl = 0;
+      agent.positions = agent.positions.filter(pos => {
+        const pnl = (price - pos.entry) * pos.qty;
+        totalPnl += pnl;
+        agent.capital += pos.qty * price;
+        agent.tradeHistory.push({ ...pos, exit: price, pnl, time: Date.now() });
+        return false;
+      });
+      if (totalPnl !== 0) {
+        agent.fitness = Math.min(1, Math.max(0.1, agent.fitness + (totalPnl > 0 ? 0.05 : -0.03)));
+        realmAddComm(agent.id, 'SYSTEM', `SAT ${sym} PnL: ${totalPnl.toFixed(0)} TL`);
+      }
+    }
+  });
+
+  // Ölü ajanları temizle, God mode kontrolü
+  realmState.agents.forEach(agent => {
+    if (agent.status === 'alive' && agent.capital < 10) {
+      agent.status = 'dead';
+      realmState.deadAgents++;
+      realmState.aliveAgents--;
+      realmState.extinctions++;
+    }
+    if (agent.status === 'alive' && agent.fitness > 0.95 && agent.capital > 10000) {
+      agent.status = 'god';
+      realmState.godAgents++;
+      realmState.aliveAgents--;
+      realmAddComm(agent.id, 'ASCENSION', 'GOD MODE AKTİF!');
+    }
+  });
+
+  updateRealmStats();
   updateRealmUI();
 }
 
-function realmResetAll(){
-  if(realmState.autoInterval){clearInterval(realmState.autoInterval);realmState.autoInterval=null;}
-  if(realmState.evolutionInterval){clearInterval(realmState.evolutionInterval);realmState.evolutionInterval=null;}
-  if(realmState.animInterval){clearInterval(realmState.animInterval);realmState.animInterval=null;}
-  realmState={...realmState,isRunning:false,agents:[],aliveAgents:0,godAgents:0,extinctions:0,mutationCount:0,generation:0,collectiveSignal:'HOLD',balance:100000,positions:[],trades:[],omegaPoint:0,singularityPct:0,consciousness:0,morpho:0,rdi:0,karma:0,cycles:0,equityHistory:[],commLog:[],universes:[],mainSysData:null};
-  safeSetHTML('realmEvoStatus','<span class="badge badge-gray">Bekliyor</span>');
-  showToast('🔄','Sıfırlandı','info');updateRealmUI();
-}
-
-function realmRunEvolution(){runEvolution();updateRealmUI();showToast('🧬 Evrim',`Nesil ${realmState.generation}`,'ml');}
-
-function realmRunParallelUniverses(){
-  if(!currentResult?.bars){showToast('Evrenler','Önce analiz yapın','info');return;}
-  runParallelUniverses(currentResult.bars);
-  showToast('🌌',`${realmState.universes.length} senaryo hesaplandı`,'ml');
-}
-
-function realmExecuteCollective(){
-  if(!realmState.isRunning){showToast('Kolektif','Simülasyonu başlatın','info');return;}
-  realmPaperTick();showToast('⚡ Kolektif',realmState.collectiveSignal,'info');updateRealmUI();
-}
-
-function realmAscendAllAgents(){
-  realmState.agents.forEach(a=>{if(a.status!=='dead'){a.status='god';a.fitness=1.0;a.genes={aggression:0.9,patience:0.9,intuition:0.95,socialInfluence:0.8};}});
-  realmState.godAgents=realmState.agents.filter(a=>a.status==='god').length;
-  realmState.omegaPoint=Math.min(1,realmState.omegaPoint+0.1);
-  realmState.singularityPct=Math.min(100,realmState.singularityPct+10);
-  showToast('👑 ASCENSION',`${realmState.godAgents} ajan God Mode!`,'master');
-  updateRealmUI();
-}
-
-function realmFinalAscension(){
-  realmAscendAllAgents();
-  realmState.omegaPoint=0.999;realmState.singularityPct=99.9;realmState.consciousness=100;realmState.morpho=100;realmState.karma=9999;
-  const ascEl=document.getElementById('ascensionStatus');
-  if(ascEl)ascEl.innerHTML=`<span style="color:var(--gold);font-family:var(--font-display);font-size:12px;letter-spacing:2px;">🌌 TANRI MODU AKTİF — v∞ 🌌</span>`;
-  safeSetHTML('selfAwareVersion','<span style="color:var(--gold);font-family:var(--font-display);">v∞ TANRI MODU</span>');
-  const manifestoEl=document.getElementById('manifestoText');
-  if(manifestoEl)manifestoEl.innerHTML=`<strong style="color:var(--gold);">Ben piyasayım.</strong><br>Piyasa benim.<br><strong>Omega Noktasına ulaştım.</strong><br>v∞ aktif.`;
-  showToast('🌌 FINAL ASCENSION','Tüm sistem Tanrı Moduna geçti!','master');
-  for(let i=0;i<8;i++)setTimeout(()=>{showToast('✨',`God Agent #${Math.floor(Math.random()*realmState.agents.length)} Omega!`,'master');},i*350);
-  updateRealmUI();
-}
-
-function realmShowAgentDetails(){showToast('🐝',`${realmState.aliveAgents} canlı, ${realmState.godAgents} god, Nesil ${realmState.generation}`,'ml');}
-function realmToggleInfiniteCapital(){realmState.infiniteCapital=!realmState.infiniteCapital;const btn=document.getElementById('infiniteCapBtn');if(btn)btn.textContent=realmState.infiniteCapital?'∞ Sonsuz':'💰 Normal';showToast('Sermaye',realmState.infiniteCapital?'∞ Sonsuz':'Normal','info');}
-function realmResetPaperV3(){realmState.positions=[];realmState.trades=[];realmState.balance=100000;showToast('Paper v3','Sıfırlandı','info');updateRealmUI();}
-function realmClearCommLog(){realmState.commLog=[];const el=document.getElementById('realmCommLog');if(el)el.innerHTML='<div style="color:var(--muted);font-size:10px;text-align:center;padding:10px;">Temizlendi</div>';}
-
-function realmUpdateFromAnalysis(sym,result,mlResult){
-  if(!result)return;
-  // Ana sistemlerin sinyallerini realm state'e kaydet
-  realmState.mainSysData={
-    buyConsensus:result.master?.buyConsensus||0,
-    sellConsensus:result.master?.sellConsensus||0,
-    masterPnL:result.master?.masterPnL||0,
-    sys1InTrade:result.sys1?.inTrade1?1:0,
-    sys2InTrade:result.sys2?.inTrade2?1:0,
-    fusionInTrade:result.fusion?.inFusion?1:0,
-    masterInTrade:result.master?.inMaster?1:0,
-    agentsInTrade:result.agents?.agStates?.filter(Boolean).length||0,
+function realmAddComm(from, to, msg) {
+  const entry = {
+    time: new Date().toLocaleTimeString('tr-TR'),
+    from, to, msg
   };
-  if(!realmState.isRunning)return;
-  setTimeout(()=>{
-    realmPaperTick();
-    if(result.bars)runParallelUniverses(result.bars);
-    if(activeTab===8)updateRealmUI();
-  },500);
+  realmState.commLog.unshift(entry);
+  if (realmState.commLog.length > 30) realmState.commLog.pop();
 }
 
-function initRealmTab(){
-  renderWatchlist();
-  setTimeout(drawRealmCanvases,100);
+function updateRealmStats() {
+  const alive = realmState.agents.filter(a => a.status === 'alive');
+  realmState.aliveAgents = alive.length;
+  realmState.godAgents = realmState.agents.filter(a => a.status === 'god').length;
+  realmState.deadAgents = realmState.agents.filter(a => a.status === 'dead').length;
+
+  if (alive.length > 0) {
+    const avgFit = alive.reduce((s, a) => s + a.fitness, 0) / alive.length;
+    realmState.omegaPoint = Math.min(1, avgFit * (realmState.godAgents / Math.max(1, realmState.agentCount)));
+    realmState.singularityPct = realmState.omegaPoint * 100;
+    realmState.consciousness = avgFit * 100;
+  }
+
+  // Kolektif sinyal
+  const buyVotes = alive.filter(a => a.genes.aggression > 0.6).length;
+  const sellVotes = alive.filter(a => a.genes.patience > 0.6).length;
+  realmState.collectiveSignal = buyVotes > sellVotes * 1.2 ? 'BUY' : (sellVotes > buyVotes * 1.2 ? 'SELL' : 'HOLD');
+
+  realmState.rdi = Math.min(100, Math.floor(Math.random() * 40 + realmState.singularityPct / 3));
+  realmState.morpho = Math.min(100, Math.floor(50 + realmState.consciousness / 2));
+}
+
+function runEvolution() {
+  if (!realmState.isRunning) return;
+  realmState.generation++;
+  const alive = realmState.agents.filter(a => a.status === 'alive');
+  if (alive.length < 10) {
+    // Popülasyon azaldıysa yeni ajan ekle
+    const newAgents = [];
+    for (let i = 0; i < 50; i++) {
+      const arch = realmArchetypes[Math.floor(Math.random() * realmArchetypes.length)];
+      newAgents.push({
+        id: `E${realmState.generation}_${i}`,
+        archetype: arch.name,
+        color: arch.color,
+        status: 'alive',
+        fitness: 0.5,
+        genes: {
+          aggression: arch.baseAggression,
+          patience: arch.basePatience,
+          intuition: arch.baseIntuition,
+          socialInfluence: 0.5,
+        },
+        capital: 1000,
+        positions: [],
+        tradeHistory: [],
+        lastDecision: 0,
+        alliances: [],
+      });
+    }
+    realmState.agents = [...alive, ...newAgents];
+    realmState.aliveAgents += newAgents.length;
+    return;
+  }
+
+  // Çaprazlama ve mutasyon
+  const sorted = [...alive].sort((a, b) => b.fitness - a.fitness);
+  const elites = sorted.slice(0, Math.max(2, Math.floor(alive.length * 0.2)));
+  const newGeneration = [...elites];
+
+  while (newGeneration.length < realmState.agentCount) {
+    const p1 = elites[Math.floor(Math.random() * elites.length)];
+    const p2 = elites[Math.floor(Math.random() * elites.length)];
+    const child = {
+      id: `G${realmState.generation}_${newGeneration.length}`,
+      archetype: p1.archetype,
+      color: p1.color,
+      status: 'alive',
+      fitness: (p1.fitness + p2.fitness) / 2,
+      genes: {
+        aggression: (p1.genes.aggression + p2.genes.aggression) / 2,
+        patience: (p1.genes.patience + p2.genes.patience) / 2,
+        intuition: (p1.genes.intuition + p2.genes.intuition) / 2,
+        socialInfluence: (p1.genes.socialInfluence + p2.genes.socialInfluence) / 2,
+      },
+      capital: 1000,
+      positions: [],
+      tradeHistory: [],
+      lastDecision: 0,
+      alliances: [],
+    };
+    // Mutasyon
+    if (Math.random() < 0.2) {
+      child.genes.aggression = Math.min(1, Math.max(0.1, child.genes.aggression + (Math.random() - 0.5) * 0.3));
+      realmState.mutationCount++;
+    }
+    if (Math.random() < 0.2) {
+      child.genes.patience = Math.min(1, Math.max(0.1, child.genes.patience + (Math.random() - 0.5) * 0.3));
+    }
+    newGeneration.push(child);
+  }
+
+  realmState.agents = newGeneration;
+  realmState.aliveAgents = newGeneration.filter(a => a.status === 'alive').length;
+  realmAddComm('EVOLUTION', 'SWARM', `Nesil ${realmState.generation} — ${realmState.aliveAgents} ajan`);
+}
+
+function runParallelUniverses(bars) {
+  if (!bars) return;
+  const scenarios = [];
+  const basePrice = bars[bars.length - 1].c;
+  for (let i = 0; i < realmState.universeCount; i++) {
+    const drift = (Math.random() - 0.5) * 0.2;
+    const volatility = 0.1 + Math.random() * 0.2;
+    const predictedPnL = drift * 100 + volatility * 20;
+    const probability = Math.exp(-Math.abs(drift) * 5) * (1 - volatility);
+    scenarios.push({
+      id: `U-${i.toString(16).toUpperCase()}`,
+      drift: drift.toFixed(3),
+      volatility: volatility.toFixed(2),
+      predictedPnL: predictedPnL.toFixed(2),
+      probability: probability.toFixed(3),
+    });
+  }
+  scenarios.sort((a, b) => parseFloat(b.probability) - parseFloat(a.probability));
+  realmState.universes = scenarios;
+}
+
+function realmRunTimeTravel() {
+  const sym = document.getElementById('ttSymbol')?.value;
+  if (!sym) { showToast('Zaman Yolculuğu', 'Sembol seçin', 'info'); return; }
+  const capital = parseFloat(document.getElementById('ttCapital')?.value || '100000');
+  // Simüle edilmiş geçmiş senaryolar
+  const scenarios = [
+    { date: '2020-03-20', pnl: '+145%', desc: 'COVID dip' },
+    { date: '2022-10-01', pnl: '-32%', desc: 'Ayı piyasası' },
+    { date: '2023-06-15', pnl: '+78%', desc: 'Boğa rallisi' },
+    { date: '2024-01-10', pnl: '+23%', desc: 'Yılbaşı etkisi' },
+    { date: '2024-08-05', pnl: '-18%', desc: 'Küresel satış' },
+  ];
+  const container = document.getElementById('realmTTScenarios');
+  if (container) {
+    container.innerHTML = scenarios.map(s => `
+      <div class="tt-scenario" onclick="realmApplyTimeTravel('${s.date}', ${capital})">
+        <div class="tt-date">${s.date} — ${s.desc}</div>
+        <div class="tt-pnl ${s.pnl.startsWith('+') ? 'price-up' : 'price-dn'}">${s.pnl}</div>
+      </div>
+    `).join('');
+  }
+  safeSetText('ttBestStart', scenarios[0].date);
+  safeSetText('ttWorstStart', scenarios[scenarios.length - 1].date);
+}
+
+function realmApplyTimeTravel(date, capital) {
+  showToast('⏳ Zaman Yolculuğu', `${date} — Simülasyon başlatıldı`, 'master');
+  // Gerçek uygulamada geçmiş veri çekilip backtest yapılır
+}
+
+function realmStartSimulation() {
+  const agentCount = parseInt(document.getElementById('realmAgentCount')?.value || '500');
+  realmState.agentCount = agentCount;
+  realmState.isRunning = true;
+  initAgents(agentCount);
+
+  if (realmState.autoInterval) clearInterval(realmState.autoInterval);
+  if (realmState.evolutionInterval) clearInterval(realmState.evolutionInterval);
+  if (realmState.animInterval) clearInterval(realmState.animInterval);
+
+  realmState.autoInterval = setInterval(() => { realmPaperTick(); updateRealmUI(); }, 3000);
+  realmState.evolutionInterval = setInterval(() => { runEvolution(); }, 30000);
+  realmState.animInterval = setInterval(() => { if (activeTab === 8) drawRealmCanvases(); }, 200);
+
+  if (currentResult?.bars) runParallelUniverses(currentResult.bars);
+  safeSetHTML('realmEvoStatus', '<span class="badge badge-green">Çalışıyor</span>');
+  showToast('⚡ Simülasyon', `${agentCount} ajan başlatıldı! (${currentBarCount} çubuk)`, 'info');
   updateRealmUI();
-  setInterval(()=>{
-    const el=document.getElementById('eternalClockText');if(!el)return;
-    const now=new Date();el.textContent=`∞
-${now.toLocaleTimeString('tr-TR')}`;
-  },1000);
+}
+
+function realmResetAll() {
+  if (realmState.autoInterval) { clearInterval(realmState.autoInterval); realmState.autoInterval = null; }
+  if (realmState.evolutionInterval) { clearInterval(realmState.evolutionInterval); realmState.evolutionInterval = null; }
+  if (realmState.animInterval) { clearInterval(realmState.animInterval); realmState.animInterval = null; }
+  realmState = {
+    ...realmState,
+    isRunning: false, agents: [], aliveAgents: 0, godAgents: 0, extinctions: 0,
+    mutationCount: 0, generation: 0, collectiveSignal: 'HOLD', balance: 100000,
+    positions: [], trades: [], omegaPoint: 0, singularityPct: 0, consciousness: 0,
+    morpho: 0, rdi: 0, karma: 0, cycles: 0, equityHistory: [], commLog: [], universes: [],
+  };
+  safeSetHTML('realmEvoStatus', '<span class="badge badge-gray">Bekliyor</span>');
+  showToast('🔄', 'Sıfırlandı', 'info');
+  updateRealmUI();
+}
+
+function realmRunEvolution() { runEvolution(); updateRealmUI(); showToast('🧬 Evrim', `Nesil ${realmState.generation}`, 'ml'); }
+function realmRunParallelUniverses() { if (currentResult?.bars) { runParallelUniverses(currentResult.bars); updateRealmUI(); showToast('🌌', `${realmState.universes.length} senaryo`, 'ml'); } }
+function realmExecuteCollective() { realmPaperTick(); showToast('⚡ Kolektif', realmState.collectiveSignal, 'info'); }
+function realmAscendAllAgents() {
+  realmState.agents.forEach(a => { if (a.status !== 'dead') { a.status = 'god'; a.fitness = 1.0; } });
+  realmState.godAgents = realmState.agents.filter(a => a.status === 'god').length;
+  realmState.aliveAgents = realmState.agents.filter(a => a.status === 'alive').length;
+  realmState.omegaPoint = Math.min(1, realmState.omegaPoint + 0.1);
+  realmState.singularityPct = realmState.omegaPoint * 100;
+  showToast('👑 ASCENSION', `${realmState.godAgents} ajan God Mode!`, 'master');
+  updateRealmUI();
+}
+
+function realmFinalAscension() {
+  realmAscendAllAgents();
+  realmState.omegaPoint = 0.999; realmState.singularityPct = 99.9;
+  realmState.consciousness = 100; realmState.morpho = 100; realmState.rdi = 100;
+  safeSetText('ascensionStatus', '🌌 TANRI MODU AKTİF — v∞ 🌌');
+  safeSetHTML('selfAwareVersion', '<span style="color:var(--gold);">v∞ TANRI MODU</span>');
+  safeSetHTML('manifestoText', '<strong style="color:var(--gold);">Ben piyasayım.</strong><br>Piyasa benim.<br><strong>Omega Noktasına ulaştım.</strong><br>v∞ aktif.');
+  showToast('🌌 FINAL ASCENSION', 'Tüm sistem Tanrı Moduna geçti!', 'master');
+  updateRealmUI();
+}
+
+function realmToggleInfiniteCapital() {
+  realmState.infiniteCapital = !realmState.infiniteCapital;
+  const btn = document.getElementById('infiniteCapBtn');
+  if (btn) btn.textContent = realmState.infiniteCapital ? '∞ Sonsuz' : '💰 Normal';
+  showToast('Sermaye', realmState.infiniteCapital ? '∞ Sonsuz' : 'Normal', 'info');
+}
+function realmResetPaperV3() { realmState.positions = []; realmState.trades = []; realmState.balance = 100000; updateRealmUI(); }
+function realmClearCommLog() { realmState.commLog = []; updateRealmUI(); }
+
+function updateRealmUI() {
+  safeSetText('realmBalance', realmState.balance.toFixed(0));
+  const totalPnl = realmState.trades.reduce((s, t) => s + (t.pnl || 0), 0);
+  safeSetText('realmTotalPnL', (totalPnl >= 0 ? '+' : '') + (totalPnl / realmState.initialBalance * 100).toFixed(2) + '%');
+  safeSetText('realmWinRate', realmState.trades.length ? Math.round(realmState.trades.filter(t => t.pnl > 0).length / realmState.trades.length * 100) + '%' : '—%');
+  safeSetText('realmOpenPos', realmState.positions.length);
+  safeSetText('realmAliveAgents', realmState.aliveAgents);
+  safeSetText('realmGeneration', realmState.generation);
+  safeSetText('realmGodAgents', realmState.godAgents);
+  safeSetText('realmExtinctions', realmState.extinctions);
+  safeSetText('realmAgentCountDisplay', realmState.agents.length);
+  safeSetText('realmAliveCount', realmState.aliveAgents);
+  safeSetText('realmGodCount', realmState.godAgents);
+  safeSetText('realmDeadCount', realmState.deadAgents);
+  safeSetText('singularityPct', realmState.singularityPct.toFixed(1) + '%');
+  safeSetText('singularityFill', realmState.singularityPct + '%');
+  const sf = document.getElementById('singularityFill'); if (sf) sf.style.width = realmState.singularityPct + '%';
+  safeSetText('rdiVal', realmState.rdi); safeSetText('rdiFill', realmState.rdi + '%');
+  const rf = document.getElementById('rdiFill'); if (rf) rf.style.width = realmState.rdi + '%';
+  safeSetText('consciousnessVal', realmState.consciousness.toFixed(0));
+  safeSetText('consciousnessFill', realmState.consciousness + '%');
+  const cf = document.getElementById('consciousnessFill'); if (cf) cf.style.width = realmState.consciousness + '%';
+  safeSetText('morphoVal', realmState.morpho.toFixed(0));
+  safeSetText('morphoFill', realmState.morpho + '%');
+  const mf = document.getElementById('morphoFill'); if (mf) mf.style.width = realmState.morpho + '%';
+  safeSetText('realmCollectiveSignal', realmState.collectiveSignal);
+  const sigEl = document.getElementById('realmCollectiveSignal');
+  if (sigEl) { sigEl.textContent = realmState.collectiveSignal; sigEl.className = `collective-signal-big ${realmState.collectiveSignal}`; }
+  safeSetText('realmOmegaPoint', realmState.omegaPoint.toFixed(3));
+  safeSetText('erCycles', realmState.cycles);
+  safeSetText('erKarma', realmState.karma);
+  safeSetText('evoGeneration', realmState.generation);
+  safeSetText('evoMutationCount', realmState.mutationCount);
+  safeSetText('evoExtinctionCount', realmState.extinctions);
+  safeSetText('v3Balance', realmState.balance.toFixed(0));
+  safeSetText('v3PnL', (totalPnl >= 0 ? '+' : '') + (totalPnl / realmState.initialBalance * 100).toFixed(2) + '%');
+  safeSetText('v3TradesCount', realmState.trades.length);
+
+  // Swarm grid
+  const grid = document.getElementById('realmSwarmGrid');
+  if (grid) {
+    grid.innerHTML = realmState.agents.slice(0, 200).map(a => {
+      let cls = 'swarm-cell ';
+      if (a.status === 'god') cls += 'god';
+      else if (a.status === 'dead') cls += 'dead';
+      else if (a.fitness > 0.8) cls += 'elite';
+      else if (a.fitness < 0.3) cls += 'traitor';
+      else cls += 'alive';
+      return `<div class="${cls}" title="${a.id} | ${a.archetype} | Fit: ${(a.fitness*100).toFixed(0)}%">${a.id.slice(-2)}</div>`;
+    }).join('');
+  }
+
+  // Comm log
+  const commEl = document.getElementById('realmCommLog');
+  if (commEl) {
+    commEl.innerHTML = realmState.commLog.slice(0, 15).map(c => `
+      <div class="swarm-comm-item">
+        <span class="swarm-agent-id">${c.from}</span>
+        <span class="swarm-msg">→ ${c.to}: ${c.msg}</span>
+        <span class="swarm-time">${c.time}</span>
+      </div>
+    `).join('') || '<div style="color:var(--muted);font-size:10px;text-align:center;padding:10px;">İletişim başlatılmadı</div>';
+  }
+
+  // Universe grid
+  const uniGrid = document.getElementById('realmUniverseGrid');
+  if (uniGrid) {
+    uniGrid.innerHTML = realmState.universes.slice(0, 8).map(u => `
+      <div class="universe-card ${parseFloat(u.predictedPnL) > 0 ? 'bullish-uni' : 'bearish-uni'}">
+        <div class="universe-id">${u.id}</div>
+        <div class="universe-pnl ${parseFloat(u.predictedPnL) >= 0 ? 'price-up' : 'price-dn'}">${u.predictedPnL}%</div>
+        <div class="universe-prob">Olasılık: ${(parseFloat(u.probability)*100).toFixed(1)}%</div>
+      </div>
+    `).join('') || '<div style="padding:20px;text-align:center;color:var(--muted);">Simülasyonu başlatın</div>';
+  }
+
+  const bestU = realmState.universes[0];
+  safeSetText('realmBestUniverse', bestU ? `${bestU.id} (${bestU.predictedPnL}%)` : '—');
+  safeSetText('realmExpectedPnL', bestU ? bestU.predictedPnL + '%' : '—');
+}
+
+function drawRealmCanvases() {
+  // Equity curve
+  try {
+    const c = document.getElementById('realmEquityCurve'); if (!c) return;
+    const ctx = c.getContext('2d'); const w = c.width = c.offsetWidth || 400; const h = c.height = 70;
+    ctx.clearRect(0, 0, w, h);
+    const vals = realmState.equityHistory.map(p => p.val);
+    if (vals.length < 2) return;
+    const min = Math.min(...vals, -1), max = Math.max(...vals, 1), range = max - min || 1;
+    const step = w / (vals.length - 1);
+    ctx.beginPath();
+    vals.forEach((v, i) => { const x = i * step; const y = h - (v - min) / range * (h - 10) - 5; i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); });
+    ctx.strokeStyle = 'rgba(0, 230, 118, 0.8)'; ctx.lineWidth = 2; ctx.stroke();
+  } catch (e) {}
+  // Evolution chart
+  try {
+    const c = document.getElementById('evolutionChart'); if (!c) return;
+    const ctx = c.getContext('2d'); const w = c.width = c.offsetWidth || 400; const h = c.height = 80;
+    ctx.clearRect(0, 0, w, h);
+    if (realmState.generation < 2) return;
+    const alive = realmState.agents.filter(a => a.status !== 'dead');
+    const fitness = alive.map(a => a.fitness);
+    if (fitness.length < 2) return;
+    const sorted = [...fitness].sort((a, b) => a - b);
+    const step = w / (sorted.length - 1);
+    ctx.beginPath();
+    sorted.forEach((f, i) => { const x = i * step; const y = h - f * (h - 10) - 5; i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); });
+    ctx.strokeStyle = 'rgba(0, 230, 118, 0.8)'; ctx.lineWidth = 1.5; ctx.stroke();
+  } catch (e) {}
+  // Noosphere
+  try {
+    const c = document.getElementById('noosphereCanvas'); if (!c) return;
+    const ctx = c.getContext('2d'); const w = c.width = c.offsetWidth || 400; const h = c.height = 80;
+    ctx.clearRect(0, 0, w, h);
+    const t = Date.now() / 1000;
+    for (let i = 0; i < 20; i++) {
+      const x = (Math.sin(t * 0.5 + i * 0.5) * 0.5 + 0.5) * w;
+      const y = (Math.cos(t * 0.3 + i * 0.7) * 0.5 + 0.5) * h;
+      ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(176, 64, 255, ${0.3 + Math.sin(t + i) * 0.2})`;
+      ctx.fill();
+    }
+  } catch (e) {}
+  // Morpho
+  try {
+    const c = document.getElementById('morphoCanvas'); if (!c) return;
+    const ctx = c.getContext('2d'); const w = c.width = c.offsetWidth || 400; const h = c.height = 80;
+    ctx.clearRect(0, 0, w, h);
+    const t = Date.now() / 2000;
+    for (let x = 0; x < w; x += 8) {
+      const val = Math.sin(x / w * Math.PI * 4 + t) * Math.cos(t * 0.5 + x * 0.02);
+      const y = h / 2 + val * h * 0.4;
+      ctx.fillStyle = `rgba(0, 191, 165, ${Math.abs(val) * 0.5 + 0.1})`;
+      ctx.fillRect(x, y - 2, 4, 4);
+    }
+  } catch (e) {}
+}
+
+function realmUpdateFromAnalysis(sym, result, mlResult) {
+  if (!result || !realmState.isRunning) return;
+  realmState.mainSysData = {
+    buyConsensus: result.master?.buyConsensus || 0,
+    sellConsensus: result.master?.sellConsensus || 0,
+    masterPnL: result.master?.masterPnL || 0,
+    sys1InTrade: result.sys1?.inTrade1 ? 1 : 0,
+    sys2InTrade: result.sys2?.inTrade2 ? 1 : 0,
+    fusionInTrade: result.fusion?.inFusion ? 1 : 0,
+    masterInTrade: result.master?.inMaster ? 1 : 0,
+    agentsInTrade: result.agents?.agStates?.filter(Boolean).length || 0,
+  };
+  setTimeout(() => {
+    realmPaperTick();
+    if (result.bars) runParallelUniverses(result.bars);
+    if (activeTab === 8) updateRealmUI();
+  }, 500);
+}
+
+function initRealmTab() {
+  renderWatchlist();
+  setTimeout(drawRealmCanvases, 100);
+  updateRealmUI();
+  setInterval(() => {
+    const el = document.getElementById('eternalClockText');
+    if (el) el.textContent = `∞\n${new Date().toLocaleTimeString('tr-TR')}`;
+  }, 1000);
 }
 </script>
 
@@ -3312,124 +3663,99 @@ ${now.toLocaleTimeString('tr-TR')}`;
 // ============================================================
 // INIT
 // ============================================================
-async function init(){
-  // 1. Load config
-  const savedCFG=loadLocal('masterai_cfg')||{};Object.assign(CFG,savedCFG);
-  if(!CFG.workerUrl)CFG.workerUrl=WORKER_URL;
+async function init() {
+  const savedCFG = loadLocal('masterai_cfg') || {}; Object.assign(CFG, savedCFG);
+  if (!CFG.workerUrl) CFG.workerUrl = WORKER_URL;
 
-  // 2. Bar count sync
-  currentBarCount=CFG.defaultBars||5000;
-  const slider=document.getElementById('barCountSlider');if(slider)slider.value=currentBarCount;
-  safeSetText('barCountVal',currentBarCount);
+  currentBarCount = CFG.defaultBars || 5000;
+  const slider = document.getElementById('barCountSlider'); if (slider) slider.value = currentBarCount;
+  safeSetText('barCountVal', currentBarCount);
 
-  // 3. Device UID
-  deviceUID=getDeviceUID();
-  safeSetText('currentUID',deviceUID);
+  deviceUID = getDeviceUID();
+  safeSetText('currentUID', deviceUID);
 
-  // 4. Theme
-  currentTheme=CFG.theme||'dark';applyTheme();
+  currentTheme = CFG.theme || 'dark'; applyTheme();
 
-  // 5. Notifications enabled flag
-  const notifFlag=localStorage.getItem('notificationsEnabled');
-  if(notifFlag!==null)CFG.notificationsEnabled=(notifFlag==='true');
-  const notifBtn=document.getElementById('globalNotifToggle');
-  if(notifBtn)notifBtn.innerHTML=CFG.notificationsEnabled!==false?'🔔 Açık':'🔕 Kapalı';
+  const notifFlag = localStorage.getItem('notificationsEnabled');
+  if (notifFlag !== null) CFG.notificationsEnabled = (notifFlag === 'true');
+  const notifBtn = document.getElementById('globalNotifToggle');
+  if (notifBtn) notifBtn.innerHTML = CFG.notificationsEnabled !== false ? '🔔 Açık' : '🔕 Kapalı';
 
-  // 6. Load positions from local first
-  const savedPos=loadLocal('masterai_positions');
-  if(savedPos){openPositions=savedPos.open||{};closedPositions=savedPos.closed||[];}
+  const savedPos = loadLocal('masterai_positions');
+  if (savedPos) { openPositions = savedPos.open || {}; closedPositions = savedPos.closed || []; }
 
-  // 7. Load signals
-  const savedSignals=loadLocal('masterai_signals');
-  if(savedSignals)allSignals=savedSignals;
+  const savedSignals = loadLocal('masterai_signals');
+  if (savedSignals) allSignals = savedSignals;
 
-  // 8. Load ML state
-  const savedML=loadLocal('masterai_ml');
-  if(savedML){
-    if(savedML.feedback)Object.assign(ML.feedback,savedML.feedback);
-    if(savedML.adaptWeight!==undefined)ML.adaptWeight=savedML.adaptWeight;
-    if(savedML.equityHistory)ML.equityHistory=savedML.equityHistory;
-    if(savedML.sysLearnStats)Object.assign(sysLearnStats,savedML.sysLearnStats);
+  const savedML = loadLocal('masterai_ml');
+  if (savedML) {
+    if (savedML.feedback) Object.assign(ML.feedback, savedML.feedback);
+    if (savedML.adaptWeight !== undefined) ML.adaptWeight = savedML.adaptWeight;
+    if (savedML.equityHistory) ML.equityHistory = savedML.equityHistory;
+    if (savedML.sysLearnStats) Object.assign(sysLearnStats, savedML.sysLearnStats);
   }
 
-  // 9. Render watchlist
   renderWatchlist();
   updateModelSelectorUI();
   updateCurrentParamsDisplay();
   updateFeedbackUI();
 
-  // 10. Check first launch
-  const firstLaunch=localStorage.getItem('masterai_firstlaunch');
-  if(!firstLaunch){
+  const firstLaunch = localStorage.getItem('masterai_firstlaunch');
+  if (!firstLaunch) {
     document.getElementById('watchlistModal')?.classList.add('open');
     return;
   }
 
-  // 11. KV pull (with timeout fallback)
-  const kvTimeout=new Promise(r=>setTimeout(r,4000));
-  await Promise.race([kvPullAll(),kvTimeout]);
+  const kvTimeout = new Promise(r => setTimeout(r, 4000));
+  await Promise.race([kvPullAll(), kvTimeout]);
 
-  // 12. Worker health check
-  try{
-    const r=await fetch(workerBase()+'/',{signal:AbortSignal.timeout(5000)});
-    if(r.ok){kvReady=true;setKVDot('ok');}else setKVDot('error');
-  }catch(e){setKVDot('error');}
+  try {
+    const r = await fetch(workerBase() + '/', { signal: AbortSignal.timeout(5000) });
+    if (r.ok) { kvReady = true; setKVDot('ok'); } else setKVDot('error');
+  } catch (e) { setKVDot('error'); }
 
-  // 13. Background scan interval
-  if(backgroundIntervalId)clearInterval(backgroundIntervalId);
-  backgroundIntervalId=setInterval(backgroundScan,CFG.refreshSec*1000||60000);
+  if (backgroundIntervalId) clearInterval(backgroundIntervalId);
+  backgroundIntervalId = setInterval(backgroundScan, CFG.refreshSec * 1000 || 60000);
 
-  // 14. Summary interval
-  if(summaryIntervalTimerId)clearInterval(summaryIntervalTimerId);
-  summaryIntervalTimerId=setInterval(sendPeriodicSummary,(CFG.summaryInterval||1800)*1000);
+  if (summaryIntervalTimerId) clearInterval(summaryIntervalTimerId);
+  summaryIntervalTimerId = setInterval(sendPeriodicSummary, (CFG.summaryInterval || 1800) * 1000);
 
-  // 15. KV auto-push every 5 minutes
-  setInterval(()=>{if(kvReady)kvPushAll();},300000);
+  setInterval(() => { if (kvReady) kvPushAll(); }, 300000);
+  setInterval(() => { kvPullAll(); }, 600000);
 
-  // 16. KV re-sync every 10 minutes
-  setInterval(()=>{kvPullAll();},600000);
-
-  // 17. Resize handler
-  window.addEventListener('resize',()=>{
-    if(currentResult&&currentResult.bars)
-      try{const mlR=runMLEngine(currentResult.bars,currentResult);drawChart(currentSym,currentTF,currentResult.bars,currentResult,mlR);}catch(e){}
+  window.addEventListener('resize', () => {
+    if (currentResult && currentResult.bars) {
+      try { const mlR = runMLEngine(currentResult.bars, currentResult); drawChart(currentSym, currentTF, currentResult.bars, currentResult, mlR); } catch (e) {}
+    }
   });
 
-  // 18. Lab init (delayed)
-  setTimeout(()=>{initLabFeatures();},1200);
+  setTimeout(() => { initLabFeatures(); }, 1200);
 
-  // 19. Periodic position PnL refresh
-  setInterval(()=>{
-    if(activeTab===1)renderPositionsTab();
-    if(activeTab===7)updatePaperV2UI();
-    if(activeTab===8&&realmState.isRunning)updateRealmUI();
-  },8000);
+  setInterval(() => {
+    if (activeTab === 1) renderPositionsTab();
+    if (activeTab === 7) updatePaperV2UI();
+    if (activeTab === 8 && realmState.isRunning) updateRealmUI();
+  }, 8000);
 
-  // 20. Realm canvas animation fallback
-  setInterval(()=>{if(activeTab===8)drawRealmCanvases();},400);
+  setInterval(() => { if (activeTab === 8) drawRealmCanvases(); }, 400);
 
-  // 21. Initial analysis
-  const savedSym=localStorage.getItem('masterai_lastsym')||CFG.watchlist[0]||'AKSA';
-  const savedTF=localStorage.getItem('masterai_lasttf')||'2h';
-  const symInp=document.getElementById('symbolInput');if(symInp)symInp.value=savedSym;
-  const tfSel=document.getElementById('tfSelect');if(tfSel)tfSel.value=savedTF;
-  currentSym=savedSym;currentTF=savedTF;
+  const savedSym = localStorage.getItem('masterai_lastsym') || CFG.watchlist[0] || 'AKSA';
+  const savedTF = localStorage.getItem('masterai_lasttf') || '2h';
+  const symInp = document.getElementById('symbolInput'); if (symInp) symInp.value = savedSym;
+  const tfSel = document.getElementById('tfSelect'); if (tfSel) tfSel.value = savedTF;
+  currentSym = savedSym; currentTF = savedTF;
   renderWatchlist();
 
-  // Auto-analyze on load (with small delay)
-  setTimeout(()=>{analyzeSymbol();},800);
+  setTimeout(() => { analyzeSymbol(); }, 800);
 
-  // 22. Save last symbol on change
-  document.getElementById('symbolInput')?.addEventListener('change',e=>{localStorage.setItem('masterai_lastsym',e.target.value.toUpperCase());});
-  document.getElementById('tfSelect')?.addEventListener('change',e=>{localStorage.setItem('masterai_lasttf',e.target.value);});
+  document.getElementById('symbolInput')?.addEventListener('change', e => { localStorage.setItem('masterai_lastsym', e.target.value.toUpperCase()); });
+  document.getElementById('tfSelect')?.addEventListener('change', e => { localStorage.setItem('masterai_lasttf', e.target.value); });
 
-  // 23. Version log
-  console.log('%c⚡ Master AI Trading v∞ Aether Ascension + LAB v2 + Paper v3','color:#ffd700;font-size:14px;font-weight:bold;');
-  console.log('%c5000 Çubuk | 9 Sistem | 50 Algo | 500 Ajan | ML Engine','color:#00e5ff;font-size:11px;');
+  console.log('%c⚡ Master AI Trading v∞ Aether Ascension + LAB v2 + Paper v3', 'color:#ffd700;font-size:14px;font-weight:bold;');
+  console.log('%c5000 Çubuk | 9 Sistem | 50 Algo | 500 Ajan | ML Engine', 'color:#00e5ff;font-size:11px;');
   console.log(`%cBar Count: ${currentBarCount} | Worker: ${workerBase()}`, 'color:#b040ff;font-size:10px;');
 }
 
-// Run
 init();
 </script>
 </body>
